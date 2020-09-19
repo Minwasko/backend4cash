@@ -1,7 +1,7 @@
 services:
         - docker:stable-dind
 stages:
-        - build jar
+        #        - build jar
         - build and push docker image
         - deploy
 build:
