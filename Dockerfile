@@ -8,4 +8,4 @@ RUN mvn clean install -Dspring.profiles.active=$SPRING_ACTIVE_PROFILE && mvn pac
 FROM openjdk:16-slim
 WORKDIR /app
 COPY --from=MAVEN_BUILD /build/target/*.jar /app/Backend4Cash.jar
-ENTRYPOINT ["java", "-jar", "appdemo.jar"]
+ENTRYPOINT ["java", "-jar", "Backend4Cash.jar"]
