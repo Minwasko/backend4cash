@@ -4,16 +4,16 @@ stages:
         #        - build jar
         - build and push docker image
         - deploy
-build:
-        image: maven:3.6.3-openjdk-16 AS MAVEN_BUILD
-        stage: build jar
-        before_script:
-                - source .${CI_COMMIT_REF_NAME}.env
-        script:
-                - mvn clean install -Dspring.profiles.active=#SPRING_ACTIVE_PROFILE && mvn package -B -e -Dsping.profiles.active=#SPRING_ACTIVE_PROFILE
-        artifacts:
-                paths:
-                        - target/*.jar
+          #build:
+          # image: maven:3.6.3-openjdk-16 AS MAVEN_BUILD
+          # stage: build jar
+          # before_script:
+          #     - source .${CI_COMMIT_REF_NAME}.env
+          #script:
+          #     - mvn clean install -Dspring.profiles.active=#SPRING_ACTIVE_PROFILE && mvn package -B -e -Dsping.profiles.active=#SPRING_ACTIVE_PROFILE
+          # artifacts:
+          #    paths:
+          #             - target/*.jar
 docker build:
         image: docker:stable
         stage: build and push docker image
