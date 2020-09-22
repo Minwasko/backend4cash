@@ -5,7 +5,7 @@ stages:
         - build and push docker image
         - deploy
 build:
-        image: maven:3.6.3-openjdk-16 AS MAVEN_BUILD
+        image: maven:3.6.3-openjdk-16 #AS MAVEN_BUILD
         stage: build jar
         before_script:
                 - source .${CI_COMMIT_REF_NAME}.env
