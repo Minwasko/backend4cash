@@ -5,7 +5,7 @@ COPY pom.xml /build/
 COPY src /build/src/
 WORKDIR /build/
 # THERE WAS clean install BEFORE AND EVERYTHING WAS KINDA WORKING
-RUN mvn install -Dspring.profiles.active=$SPRING_ACTIVE_PROFILE && mvn package -o -B -e -Dspring.profiles.active=$SPRING_ACTIVE_PROFILE
+RUN mvn install -Dspring.profiles.active=$SPRING_ACTIVE_PROFILE && mvn package -B -e -Dspring.profiles.active=$SPRING_ACTIVE_PROFILE
 FROM openjdk:16-slim
 WORKDIR /app
 COPY --from=MAVEN_BUILD /build/target/*.jar /app/Backend4Cash.jar
