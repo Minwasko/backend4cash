@@ -8,6 +8,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,7 +29,7 @@ public class Backend4cashApplicationInit implements CommandLineRunner {
         coin.setDescription("description");
         CurrencyPrice price = new CurrencyPrice();
         price.setName(coin.getName());
-        price.setDatePriceMap(new HashMap<>());
+        price.setDatePriceMap(new LinkedHashMap<>());
         coin.setCurrencyPrice(price);
         List<Currency> coins = List.of(coin);
         currencyRepository.saveAll(coins);

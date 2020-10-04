@@ -21,10 +21,6 @@ public class IndexController {
     @Autowired
     private CurrencyService currencyService;
 
-    @GetMapping("{id}")
-    public Currency getCurrency(@PathVariable String id) {
-        return currencyService.findById(id);
-    }
 
     @GetMapping()
     public String index() {
@@ -32,15 +28,10 @@ public class IndexController {
     }
 
 
-    @GetMapping(value = "coins")
+    @GetMapping(value = "bitcoinInfo")
     public String hello() throws UnirestException {
         return bitcoin();
     }
-//
-//    @GetMapping("{id}")
-//    public Currency getCurrency(@PathVariable Long id) {
-//        return heroesService.findById(id);
-//    }
 
     public String bitcoin() throws UnirestException {
         HttpResponse<JsonNode> httpResponse = Unirest.get("https://api.coingecko.com/api/v3/coins/bitcoin")
