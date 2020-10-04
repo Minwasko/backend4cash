@@ -2,6 +2,7 @@ services:
         - docker:stable-dind
 stages:
         - pull the code
+        - build docker image
 
 pull:
         stage: pull the code
@@ -10,8 +11,15 @@ pull:
         script:
                 - pwd
                 - git pull git@gitlab.cs.ttu.ee:glkomi/backend4cash.git
+build:
+        stage: build docker image
+        script:
+                - pwd
 
-#docker build:
+
+
+
+        #docker build:
 #        image: docker:stable
 #        stage: build and push docker image
 #        before_script:
