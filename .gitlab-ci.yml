@@ -31,7 +31,7 @@ build docker:
                 - docker build --build-arg SPRING_ACTIVE_PROFILE=$SPRING_ACTIVE_PROFILE -t $IMAGE_NAME .
 
 run:
-        stage: run container
+        stage: run docker container
         before_script:
                 - source .${CI_COMMIT_REF_NAME}.env
                 - cd /home/ubuntu/bits4cash/backend4cash
