@@ -21,7 +21,7 @@ build:
 
 
         #docker build:
-#        image: docker:stable
+#        image: docker:stableasd
 #        stage: build and push docker image
 #        before_script:
 #                - source .${CI_COMMIT_REF_NAME}.env
