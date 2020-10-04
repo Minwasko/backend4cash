@@ -1,0 +1,32 @@
+services:
+        - docker:stable-dind
+stages:
+        - pull the code
+
+pull:
+        stage: pull the code
+        script:
+                - git pull
+
+#docker build:
+#        image: docker:stable
+#        stage: build and push docker image
+#        before_script:
+#                - source .${CI_COMMIT_REF_NAME}.env
+#        script:
+#                - docker build --build-arg SPRING_ACTIVE_PROFILE=$SPRING_ACTIVE_PROFILE -t $DOCKER_REPO .
+#                - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD docker.io
+#                - docker push $DOCKER_REPO
+#deploy:
+#        image: ubuntu:latest
+#        stage: deploy
+#        before_script:
+#                - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+#                - eval $(ssh-agent -s)
+#                - echo "${DEV_SSH_PRIVATE_KEY}" | tr -d '\r' | ssh-add -
+#                - mkdir -p ~/.ssh
+#                - chmod 700 ~/.ssh
+#                - echo -e "HOST *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+#                - source .${CI_COMMIT_REF_NAME}.env
+#        script:
+#                - ssh root@$SERVER_IP "docker login -u $DOCKER_USER -p $DOCKER_PASSWORD docker.io; docker stop $APP_NAME; docker system prune -a -f; docker pull $DOCKER_REPO; docker container run -d --name $APP_NAME -p $PORT:8080 -e SPRING_PROFILES_ACTIVE=$SPRING_ACTIVE_PROFILE $DOCKER_REPO"
