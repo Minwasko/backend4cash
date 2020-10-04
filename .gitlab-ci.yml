@@ -13,6 +13,7 @@ pull:
 build:
         stage: build docker image
         before_script:
+                - source .${CI_COMMIT_REF_NAME}.env
                 - cd /home/ubuntu/bits4cash/backend4cash
         script:
                 - docker build --build-arg SPRING_ACTIVE_PROFILE=$SPRING_ACTIVE_PROFILE -t $IMAGE_NAME .
