@@ -9,7 +9,7 @@ pull:
                 - cd /home/ubuntu/bits4cash/backend4cash
         script:
                 - pwd
-                - git pull remote/master
+                - git pull
 
 #docker build:
 #        image: docker:stable
