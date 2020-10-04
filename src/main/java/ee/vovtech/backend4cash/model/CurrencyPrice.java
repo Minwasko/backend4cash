@@ -3,7 +3,7 @@ package ee.vovtech.backend4cash.model;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import java.util.List;
+import java.util.Map;
 
 @Entity
 public class CurrencyPrice {
@@ -11,9 +11,7 @@ public class CurrencyPrice {
     @Id
     private String name;
     @ElementCollection
-    private List<String> date;
-    @ElementCollection
-    private List<Double> price;
+    private Map<String, Double> datePriceMap;
 
 
     public CurrencyPrice() {
@@ -28,19 +26,11 @@ public class CurrencyPrice {
         this.name = name;
     }
 
-    public List<String> getDate() {
-        return date;
+    public Map<String, Double> getDatePriceMap() {
+        return datePriceMap;
     }
 
-    public void setDate(List<String> date) {
-        this.date = date;
-    }
-
-    public List<Double> getPrice() {
-        return price;
-    }
-
-    public void setPrice(List<Double> price) {
-        this.price = price;
+    public void setDatePriceMap(Map<String, Double> datePriceMap) {
+        this.datePriceMap = datePriceMap;
     }
 }
