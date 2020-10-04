@@ -4,6 +4,7 @@ stages:
         - pull the code
 
 pull:
+        stage: pull the code
         script:
                 - git pull
 
