@@ -16,26 +16,12 @@ import java.net.URL;
 import java.net.URLConnection;
 
 @SpringBootApplication
-@RestController
 public class Backend4cashApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(Backend4cashApplication.class, args);
 	}
 
-	@RequestMapping(value = "/")
-	public String hello() throws IOException, UnirestException {
-		return bitcoin();
-	}
 
-	public String bitcoin() throws IOException, UnirestException {
-		HttpResponse<JsonNode> httpResponse = Unirest.get("https://api.coingecko.com/api/v3/coins/bitcoin")
-				.queryString("localization", "false")
-				.queryString("tickers", "false")
-				.queryString("market_data", "false")
-       .asJson();
-
-		return httpResponse.getBody().getObject().getJSONObject("description").get("en").toString();
-	}
 
 }
