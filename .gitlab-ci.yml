@@ -4,6 +4,7 @@ stages:
         - pull the code
         - build jar
         - build docker image
+        - run docker container
 
 pull:
         stage: pull the code
@@ -29,9 +30,17 @@ build docker:
         script:
                 - docker build --build-arg SPRING_ACTIVE_PROFILE=$SPRING_ACTIVE_PROFILE -t $IMAGE_NAME .
 
+run:
+        stage: run container
+        before_script:
+                - source .${CI_COMMIT_REF_NAME}.env
+                - cd /home/ubuntu/bits4cash/backend4cash
+        script:
+                - docker container run -d --name $APP_NAME -p $PORT:8080 -e SPRING_PROFILES_ACTIVE=$SPRING_ACTIVE_PROFILE $IMAGE_NAME
 
 
-        #docker build:
+
+                  #docker build:
 #        image: docker:stableasd
 #        stage: build and push docker image
 #        before_script:
