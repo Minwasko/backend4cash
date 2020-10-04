@@ -6,7 +6,8 @@ stages:
 pull:
         stage: pull the code
         script:
-                - git pull
+                - pwd
+                - git pull remote/master
 
 #docker build:
 #        image: docker:stable
