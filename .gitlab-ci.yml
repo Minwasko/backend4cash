@@ -5,6 +5,8 @@ stages:
 
 pull:
         stage: pull the code
+        before_script:
+                - cd /home/ubuntu/bits4cash/backend4cash
         script:
                 - pwd
                 - git pull remote/master
