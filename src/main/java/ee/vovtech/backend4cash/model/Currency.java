@@ -1,5 +1,6 @@
 package ee.vovtech.backend4cash.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
@@ -12,11 +13,10 @@ public class Currency {
     private String description;
     private String homepageLink;
     private String imageRef;
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.ALL})
     private CurrencyPrice currencyPrice;
 
     public Currency() {
-
     }
 
     public String getName() {
