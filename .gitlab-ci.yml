@@ -9,13 +9,13 @@ pull:
         before_script:
                 - cd /home/ubuntu/bits4cash/backend4cash
         script:
-                - pwd
                 - git pull git@gitlab.cs.ttu.ee:glkomi/backend4cash.git
 build:
         stage: build docker image
+        before_script:
+                - cd /home/ubuntu/bits4cash/backend4cash
         script:
-                - pwd
-
+                - docker build --build-arg SPRING_ACTIVE_PROFILE=$SPRING_ACTIVE_PROFILE -t $IMAGE_NAME .
 
 
 
