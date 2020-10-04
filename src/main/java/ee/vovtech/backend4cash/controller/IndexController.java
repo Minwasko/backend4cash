@@ -22,12 +22,6 @@ public class IndexController {
     private CurrencyService currencyService;
 
 
-    @GetMapping()
-    public String index() {
-        return "Hello there";
-    }
-
-
     @GetMapping(value = "bitcoinInfo")
     public String hello() throws UnirestException {
         return bitcoin();

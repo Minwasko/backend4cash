@@ -8,6 +8,8 @@ import ee.vovtech.backend4cash.repository.CurrencyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CurrencyService {
 
@@ -39,6 +41,17 @@ public class CurrencyService {
         Currency dbCurrency = findById(currencyId);
         dbCurrency.setCurrencyPrice(price);
         return currencyRepository.save(dbCurrency);
+    }
+
+    public void delete(String id) {
+        if (findById(id) == null) {
+            throw new CurrencyNotFoundException();
+        }
+        currencyRepository.delete(findById(id));
+    }
+
+    public List<Currency> findAll() {
+        return currencyRepository.findAll();
     }
 
 }
