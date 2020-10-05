@@ -39,8 +39,8 @@ public class CurrencyController {
     }
 
     @PutMapping("{id}")
-    public Currency updateCurrencyPrice(@RequestBody CurrencyPrice price, @PathVariable String id) {
-        return currencyService.updatePrice(id, price);
+    public Currency updateCurrency(@PathVariable String id, @RequestBody Currency currency) {
+        return currencyService.updateCurrency(id, currency);
     }
 
     @DeleteMapping("{id}")

@@ -6,9 +6,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 public class InvalidCurrencyException extends RuntimeException {
 
-    public InvalidCurrencyException() {
-    }
-
     public InvalidCurrencyException(String errorMessage) {
         super(errorMessage);
     }

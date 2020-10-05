@@ -30,16 +30,19 @@ public class CurrencyService {
     }
 
 
-    public Currency updatePrice(String currencyId, CurrencyPrice price) {
-        if (currencyId == null) {
-            throw new InvalidCurrencyException("Currency is undefined");
-        } else if (price.getDatePriceMap() == null) {
+    public Currency updateCurrency(String currencyId, Currency currency) {
+        if (currencyId == null || currencyRepository.findById(currencyId).isEmpty()) {
+            throw new InvalidCurrencyException("Currency is not present in the database");
+        } else if (currency.getCurrencyPrice().getDatePriceMap() == null) {
             throw new InvalidCurrencyException("Currency price data is empty");
-        } else if (!currencyId.equals(price.getName())) {
-            throw new InvalidCurrencyException("Price data is for a different currency");
+        } else if (!currencyId.equals(currency.getName())) {
+            throw new InvalidCurrencyException("Currencies are different");
         }
         Currency dbCurrency = findById(currencyId);
-        dbCurrency.setCurrencyPrice(price);
+        dbCurrency.setCurrencyPrice(currency.getCurrencyPrice());
+        dbCurrency.setDescription(currency.getDescription());
+        dbCurrency.setHomepageLink(currency.getHomepageLink());
+        dbCurrency.setImageRef(currency.getImageRef());
         return currencyRepository.save(dbCurrency);
     }
 
