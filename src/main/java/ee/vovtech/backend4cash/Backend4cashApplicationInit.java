@@ -3,6 +3,7 @@ package ee.vovtech.backend4cash;
 import ee.vovtech.backend4cash.model.Currency;
 import ee.vovtech.backend4cash.model.CurrencyPrice;
 import ee.vovtech.backend4cash.repository.CurrencyRepository;
+import ee.vovtech.backend4cash.service.currency.CoingeckoAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -31,5 +32,6 @@ public class Backend4cashApplicationInit implements CommandLineRunner {
         coin.setCurrencyPrice(price);
         List<Currency> coins = List.of(coin);
         currencyRepository.saveAll(coins);
+        CoingeckoAPI.updateCurrencies();
     }
 }

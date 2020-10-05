@@ -1,4 +1,4 @@
-package ee.vovtech.backend4cash.service;
+package ee.vovtech.backend4cash.service.currency;
 
 import ee.vovtech.backend4cash.exceptions.CurrencyNotFoundException;
 import ee.vovtech.backend4cash.exceptions.InvalidCurrencyException;

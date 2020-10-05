@@ -3,9 +3,8 @@ package ee.vovtech.backend4cash.controller;
 
 import ee.vovtech.backend4cash.model.Currency;
 import ee.vovtech.backend4cash.model.CurrencyPrice;
-import ee.vovtech.backend4cash.service.CurrencyPriceService;
+import ee.vovtech.backend4cash.service.currency.CurrencyPriceService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
