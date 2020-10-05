@@ -38,4 +38,4 @@ run:
                 - docker stop $APP_NAME
                 - docker container rm $APP_NAME
         script:
-                - docker container run -d --name $APP_NAME -p $PORT:8080 -e SPRING_PROFILES_ACTIVE=$SPRING_ACTIVE_PROFILE $IMAGE_NAME
+                - docker container run -d --name $APP_NAME --net=$NETWORK_NAME --net-alias=$APP_NAME -p $PORT:8080 -e SPRING_PROFILES_ACTIVE=$SPRING_ACTIVE_PROFILE $IMAGE_NAME
