@@ -23,6 +23,8 @@ public class IndexController {
     }
 
     public String bitcoin() throws UnirestException {
+
+
         HttpResponse<JsonNode> httpResponse = Unirest.get("https://api.coingecko.com/api/v3/coins/bitcoin")
                 .queryString("localization", "false")
                 .queryString("tickers", "false")

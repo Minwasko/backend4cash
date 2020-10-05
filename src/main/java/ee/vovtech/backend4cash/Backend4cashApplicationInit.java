@@ -32,6 +32,5 @@ public class Backend4cashApplicationInit implements CommandLineRunner {
         coin.setCurrencyPrice(price);
         List<Currency> coins = List.of(coin);
         currencyRepository.saveAll(coins);
-        CoingeckoAPI.updateCurrencies();
     }
 }

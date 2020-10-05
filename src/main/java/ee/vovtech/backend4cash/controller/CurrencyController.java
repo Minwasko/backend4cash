@@ -1,6 +1,7 @@
 package ee.vovtech.backend4cash.controller;
 
 import ee.vovtech.backend4cash.model.Currency;
+import ee.vovtech.backend4cash.service.currency.CoingeckoAPI;
 import ee.vovtech.backend4cash.service.currency.CurrencyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,6 +21,11 @@ public class CurrencyController {
 
     @Autowired
     private CurrencyService currencyService;
+
+    @GetMapping("/gleb")
+    public String getData() {
+        return CoingeckoAPI.updateCurrencies();
+    }
 
     @GetMapping
     public List<Currency> getCurrencies() {
