@@ -23,8 +23,8 @@ build jar:
                 - cd /home/ubuntu/bits4cash/backend4cash
         script:
                 # 1st run with tests, 2nd without. Choose one of the following here.
-                - mvn clean install -Dspring.profiles.active=$SPRING_ACTIVE_PROFILE
-                #- mvn clean install -Dmaven.test.skip=true -Dspring.profiles.active=$SPRING_ACTIVE_PROFILE
+                #- mvn clean install -Dspring.profiles.active=$SPRING_ACTIVE_PROFILE
+                - mvn clean install -Dmaven.test.skip=true -Dspring.profiles.active=$SPRING_ACTIVE_PROFILE
 
 build docker:
         stage: build docker image
