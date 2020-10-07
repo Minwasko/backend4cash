@@ -12,6 +12,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +22,8 @@ public class CurrencyService {
 
     @Autowired
     private CurrencyRepository currencyRepository;
+    @Autowired
+    private CurrencyPriceService currencyPriceService;
 
     public Currency findById(String id) {
         return currencyRepository.findById(id).orElseThrow(CurrencyNotFoundException::new);
@@ -30,9 +33,6 @@ public class CurrencyService {
         if (currency.getName() == null) {
             throw new InvalidCurrencyException("Currency is undefined");
         }
-//        else if (currency.getCurrencyPrice() == null) {
-//            throw new InvalidCurrencyException("Currency has no price data");
-//        }
         return currencyRepository.save(currency);
     }
 
@@ -71,9 +71,9 @@ public class CurrencyService {
                 createNewCoin(name);
             } else {
                 Currency oldCoin = findById(name);
-                Map<String, Double> priceData = oldCoin.getCurrencyPrice().getDatePriceMap();
+                Map<Long, BigDecimal> priceData = oldCoin.getCurrencyPrice().getDatePriceMap();
                 // currently setting time as 2020-10-07T13:58:37.811Z and price as 10618.69
-                priceData.put(coin.getString("last_updated"), coin.getDouble("current_price"));
+                priceData.put(coin.getLong("last_updated"), coin.getBigDecimal("current_price"));
                 // updating price map
                 oldCoin.getCurrencyPrice().setDatePriceMap(priceData);
             }
@@ -89,11 +89,14 @@ public class CurrencyService {
         Currency newCoin = new Currency(); // put all the data in a new entity
         newCoin.setName(id);
         // TODO fix possible path to homepage
-        newCoin.setImageRef(coin.getJSONObject("links").getJSONArray("homepage").get(0).toString());
+        newCoin.setHomepageLink(coin.getJSONObject("links").getJSONArray("homepage").get(0).toString());
         // possible TODO add a way to save full description, currently over the char limit(255)
         newCoin.setDescription(id + " with a beautiful description");
         newCoin.setImageRef(coin.getJSONObject("image").get("small").toString());
-        newCoin.setCurrencyPrice(null);
+        CurrencyPrice price = new CurrencyPrice();
+        price.setName(id);
+        price.setDatePriceMap(currencyPriceService.fillPriceData(id));
+        newCoin.setCurrencyPrice(price);
         save(newCoin); // save it to the database
         return newCoin;
     }

@@ -3,6 +3,7 @@ package ee.vovtech.backend4cash.model;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.math.BigDecimal;
 import java.util.Map;
 
 @Entity
@@ -11,7 +12,7 @@ public class CurrencyPrice {
     @Id
     private String name;
     @ElementCollection
-    private Map<String, Double> datePriceMap;
+    private Map<Long, BigDecimal> datePriceMap;
 
 
     public CurrencyPrice() {
@@ -26,11 +27,11 @@ public class CurrencyPrice {
         this.name = name;
     }
 
-    public Map<String, Double> getDatePriceMap() {
+    public Map<Long, BigDecimal> getDatePriceMap() {
         return datePriceMap;
     }
 
-    public void setDatePriceMap(Map<String, Double> datePriceMap) {
+    public void setDatePriceMap(Map<Long, BigDecimal> datePriceMap) {
         this.datePriceMap = datePriceMap;
     }
 }

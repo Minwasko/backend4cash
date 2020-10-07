@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.Instant;
 import java.util.List;
 
 @RestController
@@ -26,8 +27,8 @@ public class CurrencyController {
 
     @GetMapping("/gleb")
     public String getData() throws UnirestException {
-//        return CoingeckoAPI.getCurrency("bitcoin").get("id").toString();
-        return currencyService.updateCoinsData().toString();
+        return CoingeckoAPI.getPriceData("bitcoin").toString() + "\n" + Instant.ofEpochSecond(Instant.now().getEpochSecond() - 6000);
+//        return currencyService.updateCoinsData().toString();
     }
 
     @GetMapping

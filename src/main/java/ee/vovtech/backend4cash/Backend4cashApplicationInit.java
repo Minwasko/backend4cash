@@ -4,6 +4,7 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import ee.vovtech.backend4cash.model.Currency;
 import ee.vovtech.backend4cash.model.CurrencyPrice;
 import ee.vovtech.backend4cash.repository.CurrencyRepository;
+import ee.vovtech.backend4cash.service.currency.CurrencyPriceService;
 import ee.vovtech.backend4cash.service.currency.CurrencyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -19,6 +20,8 @@ public class Backend4cashApplicationInit implements CommandLineRunner {
     private CurrencyRepository currencyRepository;
     @Autowired
     private CurrencyService currencyService;
+    @Autowired
+    private CurrencyPriceService currencyPriceService;
 
     @Override
     public void run(String... args) throws UnirestException {
@@ -36,5 +39,6 @@ public class Backend4cashApplicationInit implements CommandLineRunner {
 //        List<Currency> coins = List.of(coin);
         List<Currency> coins = currencyService.updateCoinsData();
         currencyRepository.saveAll(coins);
+        currencyPriceService.fillPriceData("bitcoin");
     }
 }
