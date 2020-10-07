@@ -7,21 +7,16 @@ spring:
   jpa:
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.H2Dialect
+        dialect: org.hibernate.dialect.MySQLDialect
         temp:
           use_jdbc_metadata_defaults : false
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
   datasource:
-    #    url: jdbc:h2:mem:db;DB_CLOSE_DELAY=-1 # this one is in memory
-    url: jdbc:h2:./h2/bits4cash;AUTO_SERVER=TRUE # this one is on the disk, notice the h2 folder and contents it creates
-    driverClassName: org.h2.Driver
-    username: sa
-    password: sa
-  h2:
-    console:
-      #      this enables http://localhost:8080/h2-console
-      enabled: true
+    url: jdbc:mysql://${172.21.0.4:localhost}:3306/bits4data
+    driverClassName: com.mysql.cj.jdbc.Driver
+    username: root
+    password: vovan
 logging:
   file:
     path: ./logs
