@@ -1,8 +1,10 @@
 package ee.vovtech.backend4cash.controller;
 
+import com.mashape.unirest.http.exceptions.UnirestException;
 import ee.vovtech.backend4cash.model.Currency;
-import ee.vovtech.backend4cash.service.currency.CoingeckoAPI;
+import ee.vovtech.backend4cash.service.coingecko.CoingeckoAPI;
 import ee.vovtech.backend4cash.service.currency.CurrencyService;
+import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,8 +25,9 @@ public class CurrencyController {
     private CurrencyService currencyService;
 
     @GetMapping("/gleb")
-    public String getData() {
-        return CoingeckoAPI.updateCurrencies();
+    public String getData() throws UnirestException {
+//        return CoingeckoAPI.getCurrency("bitcoin").get("id").toString();
+        return currencyService.updateCoinsData().toString();
     }
 
     @GetMapping
