@@ -27,7 +27,7 @@ public class CoingeckoAPI {
     public static String updateCurrencies(){
 
         try {
-            return getCurrencyPrice("bitcoin").toString();
+            return getCurrencyPrice("bitcoin").getObject().getJSONArray("prices").toString();
         } catch (UnirestException e) {
             e.printStackTrace();
         }
@@ -36,8 +36,6 @@ public class CoingeckoAPI {
     }
 
     private static JsonNode getCurrencyPrice(String id) throws UnirestException {
-//https://api.coingecko.com/api/v3/coins/bitcoin/market_chart/range?vs_currency=usd&from=1601904231&to=1601904241
-//https://api.coingecko.com/api/v3/coins/bitcoin/market_chart/range?vs_currency=usd&from=1601900000&to=1601900525
 
         return Unirest.get(PRICE_URL + id + "/market_chart/range")
                 .queryString("vs_currency", DEFAULT_CURRENCY)
