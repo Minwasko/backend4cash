@@ -11,7 +11,7 @@ pull:
         before_script:
                 - cd /home/ubuntu/bits4cash/backend4cash
         script:
-                - git pull git@gitlab.cs.ttu.ee:glkomi/backend4cash.git
+                - git pull git@gitlab.cs.ttu.ee:glkomi/backend4cash.git origin ${CI_COMMIT_REF_NAME}
 
 
 build jar:
