@@ -13,7 +13,7 @@ pull:
                 - cd /home/ubuntu/bits4cash/backend4cash
         script:
                 - git reset --hard origin/${CI_COMMIT_REF_NAME}
-                #- git pull git@gitlab.cs.ttu.ee:glkomi/backend4cash.git remote ${CI_COMMIT_REF_NAME}
+                - git pull git@gitlab.cs.ttu.ee:glkomi/backend4cash.git remote ${CI_COMMIT_REF_NAME}
 
 
 build jar:
