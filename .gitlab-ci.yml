@@ -12,7 +12,7 @@ pull:
         before_script:
                 - cd /home/ubuntu/bits4cash/backend4cash
         script:
-                - git reset --hard origin/${CI_COMMIT_REF_NAME}
+                - git reset --hard HEAD
                 - git pull git@gitlab.cs.ttu.ee:glkomi/backend4cash.git ${CI_COMMIT_REF_NAME}
 
 
@@ -22,8 +22,9 @@ build jar:
                 - source .${CI_COMMIT_REF_NAME}.env
                 - cd /home/ubuntu/bits4cash/backend4cash
         script:
-                # Skipping tests here right now since building the jar in the
-                - mvn install -Dmaven.test.skip=true -Dspring.profiles.active=$SPRING_ACTIVE_PROFILE
+                # 1st run with tests, 2nd without. Choose one of the following here.
+                #- mvn clean install -Dspring.profiles.active=$SPRING_ACTIVE_PROFILE
+                - mvn clean install -Dmaven.test.skip=true -Dspring.profiles.active=$SPRING_ACTIVE_PROFILE
 
 build docker:
         stage: build docker image
