@@ -14,7 +14,7 @@ spring:
       ddl-auto: update
   datasource:
     #TODO DONT FORGET TO MAKE ALL THE STUFF ENV VARS THAT ARE LOADED IN THE SPECIAL SCRIPT :)
-    url: jdbc:mysql://172.21.0.4:33060/bits4data
+    url: jdbc:mysql://172.21.0.4:3306/bits4data
     driverClassName: com.mysql.cj.jdbc.Driver
     username: root
     password: vovan
