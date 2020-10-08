@@ -1,5 +1,3 @@
-services:
-        - docker:stable-dind
 stages:
         - pull the code
         - build jar
