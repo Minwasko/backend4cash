@@ -13,7 +13,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/coins")
-@CrossOrigin(origins = "localhost:4200")
 public class CurrencyController {
 
     @Autowired
