@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@CrossOrigin(origins = "localhost:4003")
+@CrossOrigin(origins = "localhost:4200")
 public class CurrencyPriceController {
 
     @Autowired
