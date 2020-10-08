@@ -5,13 +5,10 @@ import ee.vovtech.backend4cash.model.Currency;
 import ee.vovtech.backend4cash.model.CurrencyPrice;
 import ee.vovtech.backend4cash.service.currency.CurrencyPriceService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@CrossOrigin(origins = "localhost:4003")
 public class CurrencyPriceController {
 
     @Autowired
