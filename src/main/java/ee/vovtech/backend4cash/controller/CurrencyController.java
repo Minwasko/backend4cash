@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
 import java.util.List;
-
+@CrossOrigin(origins = "http://localhost:8069", maxAge = 3600)
 @RestController
 @RequestMapping("/coins")
 public class CurrencyController {
