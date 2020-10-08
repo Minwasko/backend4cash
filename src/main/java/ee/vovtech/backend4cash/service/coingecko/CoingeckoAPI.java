@@ -36,8 +36,8 @@ public class CoingeckoAPI {
     // Api url to get coins price
     private final static String PRICE_URL = "https://api.coingecko.com/api/v3/coins/";
     private final static String DEFAULT_CURRENCY = "usd";
-    private final static int AMOUNT_OF_CURRENCIES = 8;
-    private final static int SECONDS_TO_FROM_PRICE_DATA = 6000;
+    public final static int AMOUNT_OF_CURRENCIES = 8;
+    private final static int SECONDS_TO_FROM_PRICE_DATA = 600;
     private static final Logger log = LoggerFactory.getLogger(CoingeckoAPI.class);
 
     // get top 10 currencies, amount changed as a variable

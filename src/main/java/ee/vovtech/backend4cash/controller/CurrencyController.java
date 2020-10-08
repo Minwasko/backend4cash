@@ -31,6 +31,11 @@ public class CurrencyController {
 //        return currencyService.updateCoinsData().toString();
     }
 
+    @GetMapping("/kek")
+    public List<Currency> getFilledData() {
+        return getCurrencies();
+    }
+
     @GetMapping
     public List<Currency> getCurrencies() {
        return currencyService.findAll();

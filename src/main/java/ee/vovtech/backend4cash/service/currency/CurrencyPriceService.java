@@ -17,6 +17,7 @@ import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 @Service
 public class CurrencyPriceService {
@@ -26,12 +27,15 @@ public class CurrencyPriceService {
     @Autowired
     private CurrencyService currencyService;
 
-    public Map<Long, BigDecimal> fillPriceData(String id) throws UnirestException {
+    public Map<Long, String> fillPriceData(String id) throws UnirestException {
         JSONArray data = CoingeckoAPI.getPriceData(id); // getting json with price data
-        LinkedHashMap<Long, BigDecimal> priceData = new LinkedHashMap<>();
+        LinkedHashMap<Long, String> priceData = new LinkedHashMap<>();
         for (int i = 0; i < data.length(); i++) { // add key=date value=price to map
             JSONArray datePrice = data.getJSONArray(i);
-            priceData.put(datePrice.getLong(0), datePrice.getBigDecimal(1));
+            Long timestamp = datePrice.getLong(0) / 1000;
+            String price = datePrice.get(1).toString();
+            priceData.put(timestamp, price);
+
         }
         return priceData;
     }
@@ -55,4 +59,11 @@ public class CurrencyPriceService {
         dbCurrency.setCurrencyPrice(price);
         return currencyRepository.save(dbCurrency);
     }
-}
+
+    public Map<Long, String> getPriceBetween(String id, long from, long to) {
+        return currencyService.findById(id).getCurrencyPrice().getDatePriceMap().entrySet().stream()
+                .filter(e -> e.getKey() >= from && e.getKey() <= to)
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        }
+    }
+
