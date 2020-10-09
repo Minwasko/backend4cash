@@ -1,6 +1,7 @@
 package ee.vovtech.backend4cash.controller;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
+import com.mysql.cj.xdevapi.JsonArray;
 import ee.vovtech.backend4cash.model.Currency;
 import ee.vovtech.backend4cash.service.coingecko.CoingeckoAPI;
 import ee.vovtech.backend4cash.service.currency.CurrencyService;
@@ -22,6 +23,11 @@ public class CurrencyController {
     public String getData() throws UnirestException {
         return CoingeckoAPI.getPriceData("bitcoin").toString() + "\n" + Instant.ofEpochSecond(Instant.now().getEpochSecond() - 6000);
 //        return currencyService.updateCoinsData().toString();
+    }
+
+    @GetMapping("getPrices/{id}")
+    public JSONArray getPrices(@PathVariable String id) throws UnirestException {
+        return CoingeckoAPI.getPriceData(id);
     }
 
     @GetMapping
