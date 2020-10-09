@@ -6,6 +6,7 @@ import ee.vovtech.backend4cash.model.Currency;
 import ee.vovtech.backend4cash.service.coingecko.CoingeckoAPI;
 import ee.vovtech.backend4cash.service.currency.CurrencyService;
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +27,7 @@ public class CurrencyController {
     }
 
     @GetMapping("getPrices/{id}")
-    public JSONArray getPrices(@PathVariable String id) throws UnirestException {
+    public JSONObject getPrices(@PathVariable String id) throws UnirestException {
         return CoingeckoAPI.getPriceData(id);
     }
 

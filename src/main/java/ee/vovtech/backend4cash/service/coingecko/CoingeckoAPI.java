@@ -37,7 +37,7 @@ public class CoingeckoAPI {
     private final static String PRICE_URL = "https://api.coingecko.com/api/v3/coins/";
     private final static String DEFAULT_CURRENCY = "usd";
     public final static int AMOUNT_OF_CURRENCIES = 8;
-    private final static int SECONDS_TO_FROM_PRICE_DATA = 600;
+    private final static int SECONDS_TO_FROM_PRICE_DATA = 600_000_000;
     private static final Logger log = LoggerFactory.getLogger(CoingeckoAPI.class);
 
     // get top 10 currencies, amount changed as a variable
@@ -57,11 +57,11 @@ public class CoingeckoAPI {
     }
 
     // get Price history for exact currency
-    public static JSONArray getPriceData(String id) throws UnirestException {
+    public static JSONObject getPriceData(String id) throws UnirestException {
         long unixTimeNow = Instant.now().getEpochSecond();
         HttpResponse<JsonNode> response = Unirest.get("https://api.coingecko.com/api/v3/coins/" + id + "/market_chart/range?vs_currency=usd&from="
                 + (unixTimeNow - SECONDS_TO_FROM_PRICE_DATA) +  "&to=" + unixTimeNow).asJson();
-        return response.getBody().getObject().getJSONArray("prices");
+        return response.getBody().getObject();
     }
 
 
