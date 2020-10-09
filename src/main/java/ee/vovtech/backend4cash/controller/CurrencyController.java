@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
 import java.util.List;
-@CrossOrigin(origins = {"http://localhost:4003", "http://localhost:4003"}, maxAge = 3600)
+@CrossOrigin(origins = {"http://localhost:4003", "http://localhost:4200"}, maxAge = 3600)
 @RestController
 @RequestMapping("/coins")
 public class CurrencyController {
