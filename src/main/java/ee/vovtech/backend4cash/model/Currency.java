@@ -1,20 +1,12 @@
 package ee.vovtech.backend4cash.model;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Inheritance;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
-import javax.persistence.UniqueConstraint;
-import java.lang.annotation.Inherited;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "coins")
@@ -29,9 +21,6 @@ public class Currency {
     private String homepageLink;
     @JoinColumn(name = "image_link")
     private String imageRef;
-    @Transient
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    private CurrencyPrice currencyPrice;
 
     @OneToMany(mappedBy = "currency", cascade = CascadeType.ALL)
     private List<TimestampPrice> timestampPrices;
@@ -69,14 +58,6 @@ public class Currency {
 
     public void setImageRef(String imageRef) {
         this.imageRef = imageRef;
-    }
-
-    public CurrencyPrice getCurrencyPrice() {
-        return currencyPrice;
-    }
-
-    public void setCurrencyPrice(CurrencyPrice currencyPrice) {
-        this.currencyPrice = currencyPrice;
     }
 
     public List<TimestampPrice> getTimestampPrices() {

@@ -4,7 +4,6 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import ee.vovtech.backend4cash.model.CurrencyPrice;
 import ee.vovtech.backend4cash.repository.CurrencyRepository;
 import ee.vovtech.backend4cash.service.currency.CurrencyService;
 import org.json.JSONArray;
@@ -13,14 +12,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.sql.Array;
-import java.sql.Time;
-import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.ArrayList;
+
 
 @Service
 public class CoingeckoAPI {

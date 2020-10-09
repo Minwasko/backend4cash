@@ -2,17 +2,22 @@ package ee.vovtech.backend4cash.controller;
 
 
 import ee.vovtech.backend4cash.model.Currency;
-import ee.vovtech.backend4cash.model.CurrencyPrice;
+import ee.vovtech.backend4cash.model.TimestampPrice;
 import ee.vovtech.backend4cash.service.currency.CurrencyPriceService;
+import ee.vovtech.backend4cash.service.currency.CurrencyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "localhost:4200")
 public class CurrencyPriceController {
 
     @Autowired
-    CurrencyPriceService currencyPriceService;
+    private CurrencyPriceService currencyPriceService;
+    @Autowired
+    private CurrencyService currencyService;
 
     @GetMapping("/coins/{id}/price_between")
     public String getCurrencyPriceBetween(@PathVariable String id, @RequestParam long from, @RequestParam long to) {
@@ -20,12 +25,12 @@ public class CurrencyPriceController {
     }
 
     @GetMapping("/coins/{id}/pricedata")
-    public CurrencyPrice getCurrencyPriceData(@PathVariable String id) {
-        return currencyPriceService.findById(id);
+    public List<TimestampPrice> getCurrencyPriceData(@PathVariable String id) {
+        return currencyService.findById(id).getTimestampPrices();
     }
 
     @PutMapping("/coins/{id}/pricedata")
-    public Currency updateCurrencyPriceData(@PathVariable String id, @RequestBody CurrencyPrice currencyPrice) {
-        return currencyPriceService.update(id, currencyPrice);
+    public Currency updateCurrencyPriceData(@PathVariable String id, @RequestBody List<TimestampPrice> timestampPrices) {
+        return currencyPriceService.update(id, timestampPrices);
     }
 }

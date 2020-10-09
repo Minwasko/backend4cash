@@ -4,7 +4,6 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import ee.vovtech.backend4cash.exceptions.CurrencyNotFoundException;
 import ee.vovtech.backend4cash.exceptions.InvalidCurrencyException;
 import ee.vovtech.backend4cash.model.Currency;
-import ee.vovtech.backend4cash.model.CurrencyPrice;
 import ee.vovtech.backend4cash.model.TimestampPrice;
 import ee.vovtech.backend4cash.repository.CurrencyRepository;
 import ee.vovtech.backend4cash.service.coingecko.CoingeckoAPI;
@@ -14,11 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
-import java.util.Set;
 
 @Service
 public class CurrencyService {
@@ -44,13 +40,11 @@ public class CurrencyService {
     public Currency updateCurrency(String currencyId, Currency currency) {
         if (currencyId == null || currencyRepository.findById(currencyId).isEmpty()) {
             throw new InvalidCurrencyException("Currency is not present in the database");
-        } else if (currency.getCurrencyPrice().getDatePriceMap() == null) {
-            throw new InvalidCurrencyException("Currency price data is empty");
-        } else if (!currencyId.equals(currency.getName())) {
+        }  else if (!currencyId.equals(currency.getName())) {
             throw new InvalidCurrencyException("Currencies are different");
         }
         Currency dbCurrency = findById(currencyId);
-        dbCurrency.setCurrencyPrice(currency.getCurrencyPrice());
+        dbCurrency.setTimestampPrices(currency.getTimestampPrices());
         dbCurrency.setDescription(currency.getDescription());
         dbCurrency.setHomepageLink(currency.getHomepageLink());
         dbCurrency.setImageRef(currency.getImageRef());
@@ -58,28 +52,18 @@ public class CurrencyService {
     }
 
     public void delete(String id) {
-        if (findById(id) == null) {
-            throw new CurrencyNotFoundException();
-        }
+        if (findById(id) == null) { throw new CurrencyNotFoundException(); }
         currencyRepository.delete(findById(id));
     }
 
 
-    public List<Currency> updateCoinsData() throws UnirestException {
+    public List<Currency> updateCoinsData() throws UnirestException { // TODO Currently only adds a new coin!!!!
         JSONArray coins = CoingeckoAPI.getTopCurrencies(); // get top 10 coins
         for (int i = 0; i < coins.length(); i++) {
             JSONObject coin = coins.getJSONObject(i); // data of each coin
             String name = coin.get("id").toString();
-            // if coin doesnt exist, create a new one, else update price data
             if (currencyRepository.findById(name).isEmpty()) {
                 createNewCoin(name);
-            } else {
-                Currency oldCoin = findById(name);
-                Map<Long, String> priceData = oldCoin.getCurrencyPrice().getDatePriceMap();
-                // currently setting time as 2020-10-07T13:58:37.811Z and price as 10618.69
-                priceData.put(coin.getLong("last_updated"), coin.getString("current_price"));
-                // updating price map
-                oldCoin.getCurrencyPrice().setDatePriceMap(priceData);
             }
         }
         return currencyRepository.findAll();
@@ -92,17 +76,12 @@ public class CurrencyService {
         JSONObject coin = CoingeckoAPI.getCurrency(id); // get coin data
         Currency newCoin = new Currency(); // put all the data in a new entity
         newCoin.setName(id);
-        // TODO fix possible path to homepage
         newCoin.setHomepageLink(coin.getJSONObject("links").getJSONArray("homepage").get(0).toString());
         // possible TODO add a way to save full description, currently over the char limit(255)
         newCoin.setDescription(id + " with a beautiful description");
         newCoin.setImageRef(coin.getJSONObject("image").get("small").toString());
-        CurrencyPrice price = new CurrencyPrice();
-        price.setName(id);
         Map<Long, String> priceMap = currencyPriceService.fillPriceData(id);
-        price.setDatePriceMap(priceMap);
-        newCoin.setCurrencyPrice(price);
-        // make a new TimestampPrice and add them all to currency
+        // make new TimestampPrices and add them all to currency
         List<TimestampPrice> timestampPriceSet = new ArrayList<>();
         for (Map.Entry<Long, String> entry : priceMap.entrySet()) {
             timestampPriceSet.add(new TimestampPrice(newCoin, entry.getKey(), entry.getValue()));
