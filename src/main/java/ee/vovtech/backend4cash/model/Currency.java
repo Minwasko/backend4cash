@@ -1,5 +1,7 @@
 package ee.vovtech.backend4cash.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -23,6 +25,7 @@ public class Currency {
     private String imageRef;
 
     @OneToMany(mappedBy = "currency", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<TimestampPrice> timestampPrices;
 
     public Currency() {

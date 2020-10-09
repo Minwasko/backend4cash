@@ -1,8 +1,10 @@
 package ee.vovtech.backend4cash.controller;
 
 
+import com.mashape.unirest.http.exceptions.UnirestException;
 import ee.vovtech.backend4cash.model.Currency;
 import ee.vovtech.backend4cash.model.TimestampPrice;
+import ee.vovtech.backend4cash.service.coingecko.CoingeckoAPI;
 import ee.vovtech.backend4cash.service.currency.CurrencyPriceService;
 import ee.vovtech.backend4cash.service.currency.CurrencyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,13 @@ public class CurrencyPriceController {
     public String getCurrencyPriceBetween(@PathVariable String id, @RequestParam long from, @RequestParam long to) {
         return currencyPriceService.getPriceBetween(id, from , to).toString();
     }
+
+
+    @GetMapping("/coins/{id}/all_time_pricedata")
+    public String getPrices(@PathVariable String id) throws UnirestException {
+        return CoingeckoAPI.getPriceData(id).toString();
+    }
+
 
     @GetMapping("/coins/{id}/pricedata")
     public List<TimestampPrice> getCurrencyPriceData(@PathVariable String id) {
