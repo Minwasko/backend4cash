@@ -10,6 +10,7 @@ import ee.vovtech.backend4cash.service.currency.CurrencyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
 import java.util.List;
 
 @RestController
@@ -22,7 +23,10 @@ public class CurrencyPriceController {
     private CurrencyService currencyService;
 
 
-    @GetMapping("/coins/{id}")
+    @GetMapping("/coins/{id}/price_past_day")
+    public String getPricePastDay(@PathVariable String id){
+        return currencyPriceService.getPriceBetween(id, Instant.now().getEpochSecond() - (60 * 60 * 24), Instant.now().getEpochSecond()).toString();
+    }
 
     @GetMapping("/coins/{id}/price_between")
     public String getCurrencyPriceBetween(@PathVariable String id, @RequestParam long from, @RequestParam long to) {
