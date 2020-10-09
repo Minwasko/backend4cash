@@ -25,7 +25,7 @@ public class CurrencyPriceController {
 
     @GetMapping("/coins/{id}/price_past_day")
     public String getPricePastDay(@PathVariable String id){
-        return currencyPriceService.getPriceBetween(id, Instant.now().getEpochSecond() - (60 * 60 * 24), Instant.now().getEpochSecond()).toString();
+        return currencyPriceService.getPriceBetween(id, Instant.now().getEpochSecond() - (60 * 60 * 24 - 10), Instant.now().getEpochSecond()).toString();
     }
 
     @GetMapping("/coins/{id}/price_between")
