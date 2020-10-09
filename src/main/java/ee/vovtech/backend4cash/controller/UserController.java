@@ -59,5 +59,9 @@ public class UserController {
         return forumPostService.findAll(id);
     }
 
+    @GetMapping("{id}/forum_post/{forum_post_id}")
+    public ForumPost getForumPost(@PathVariable("id") Long id, @PathVariable("forum_post_id") Long forumPostId) {
+        return forumPostService.findById(id, forumPostId);
+    }
 
 }

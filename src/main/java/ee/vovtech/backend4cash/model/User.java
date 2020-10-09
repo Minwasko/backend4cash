@@ -21,7 +21,7 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<ForumPost> forumPosts;
+    private List<ForumPost> forumPosts = new ArrayList<>();
 
     public User() {
 
@@ -51,12 +51,4 @@ public class User {
         this.forumPosts = forumPosts;
     }
 
-    public void addForumPost(ForumPost forumPost) {
-        if (forumPosts == null) {
-            forumPosts = new ArrayList<>();
-        }
-        List<ForumPost> posts = this.forumPosts;
-        posts.add(forumPost);
-        this.forumPosts = posts;
-    }
 }

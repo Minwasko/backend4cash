@@ -16,11 +16,9 @@ public class UserService {
     private UserRepository userRepository;
 
     public User save(User user) {
-        if (userRepository.findById(user.getId()).isEmpty()) {
-            return userRepository.save(user);
-        }
-        throw new InvalidUserException("User with this ID already exists");
+        return userRepository.save(user);
     }
+
 
     public User findById(Long id) {
         if (userRepository.findById(id).isPresent()) {

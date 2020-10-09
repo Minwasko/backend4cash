@@ -18,8 +18,8 @@ public class ForumPost {
     }
 
     public ForumPost(String message, User user) {
-        this.message = message;
         this.user = user;
+        this.message = message;
     }
 
     public long getId() {
