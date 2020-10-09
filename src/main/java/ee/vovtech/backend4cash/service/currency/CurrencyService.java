@@ -5,6 +5,7 @@ import ee.vovtech.backend4cash.exceptions.CurrencyNotFoundException;
 import ee.vovtech.backend4cash.exceptions.InvalidCurrencyException;
 import ee.vovtech.backend4cash.model.Currency;
 import ee.vovtech.backend4cash.model.CurrencyPrice;
+import ee.vovtech.backend4cash.model.TimestampPrice;
 import ee.vovtech.backend4cash.repository.CurrencyRepository;
 import ee.vovtech.backend4cash.service.coingecko.CoingeckoAPI;
 import org.json.JSONArray;
@@ -12,13 +13,16 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.util.LinkedHashMap;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
+import java.util.Set;
 
 @Service
 public class CurrencyService {
+
 
     @Autowired
     private CurrencyRepository currencyRepository;
@@ -71,9 +75,9 @@ public class CurrencyService {
                 createNewCoin(name);
             } else {
                 Currency oldCoin = findById(name);
-                Map<Long, BigDecimal> priceData = oldCoin.getCurrencyPrice().getDatePriceMap();
+                Map<Long, String> priceData = oldCoin.getCurrencyPrice().getDatePriceMap();
                 // currently setting time as 2020-10-07T13:58:37.811Z and price as 10618.69
-                priceData.put(coin.getLong("last_updated"), coin.getBigDecimal("current_price"));
+                priceData.put(coin.getLong("last_updated"), coin.getString("current_price"));
                 // updating price map
                 oldCoin.getCurrencyPrice().setDatePriceMap(priceData);
             }
@@ -95,8 +99,15 @@ public class CurrencyService {
         newCoin.setImageRef(coin.getJSONObject("image").get("small").toString());
         CurrencyPrice price = new CurrencyPrice();
         price.setName(id);
-        price.setDatePriceMap(currencyPriceService.fillPriceData(id));
+        Map<Long, String> priceMap = currencyPriceService.fillPriceData(id);
+        price.setDatePriceMap(priceMap);
         newCoin.setCurrencyPrice(price);
+        // make a new TimestampPrice and add them all to currency
+        List<TimestampPrice> timestampPriceSet = new ArrayList<>();
+        for (Map.Entry<Long, String> entry : priceMap.entrySet()) {
+            timestampPriceSet.add(new TimestampPrice(newCoin, entry.getKey(), entry.getValue()));
+        }
+        newCoin.setTimestampPrices(timestampPriceSet);
         save(newCoin); // save it to the database
         return newCoin;
     }

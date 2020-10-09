@@ -2,7 +2,6 @@ package ee.vovtech.backend4cash;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
 import ee.vovtech.backend4cash.model.Currency;
-import ee.vovtech.backend4cash.model.CurrencyPrice;
 import ee.vovtech.backend4cash.repository.CurrencyRepository;
 import ee.vovtech.backend4cash.service.currency.CurrencyPriceService;
 import ee.vovtech.backend4cash.service.currency.CurrencyService;
@@ -10,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import java.util.LinkedHashMap;
 import java.util.List;
 
 @Component
@@ -37,8 +35,8 @@ public class Backend4cashApplicationInit implements CommandLineRunner {
 //        price.setDatePriceMap(new LinkedHashMap<>());
 //        coin.setCurrencyPrice(price);
 //        List<Currency> coins = List.of(coin);
-        List<Currency> coins = currencyService.updateCoinsData();
-        currencyRepository.saveAll(coins);
-        currencyPriceService.fillPriceData("bitcoin");
+//        currencyPriceService.fillPriceData("bitcoin");
+        List<Currency> coins = currencyService.updateCoinsData(); // get data from server
+        currencyRepository.saveAll(coins); // adding coins to database
     }
 }

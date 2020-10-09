@@ -14,6 +14,10 @@ public class CurrencyPriceController {
     @Autowired
     CurrencyPriceService currencyPriceService;
 
+    @GetMapping("/coins/{id}/price_between")
+    public String getCurrencyPriceBetween(@PathVariable String id, @RequestParam long from, @RequestParam long to) {
+        return currencyPriceService.getPriceBetween(id, from , to).toString();
+    }
 
     @GetMapping("/coins/{id}/pricedata")
     public CurrencyPrice getCurrencyPriceData(@PathVariable String id) {
