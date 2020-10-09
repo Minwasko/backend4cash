@@ -28,7 +28,7 @@ public class CurrencyPriceService {
     private CurrencyService currencyService;
 
     public Map<Long, String> fillPriceData(String id) throws UnirestException {
-        JSONArray data = CoingeckoAPI.getPriceData(id); // getting json with price data
+        JSONArray data = CoingeckoAPI.getPriceData(id).getJSONArray("prices"); // getting json with price data
         LinkedHashMap<Long, String> priceData = new LinkedHashMap<>();
         for (int i = 0; i < data.length(); i++) { // add key=date value=price to map
             JSONArray datePrice = data.getJSONArray(i);
