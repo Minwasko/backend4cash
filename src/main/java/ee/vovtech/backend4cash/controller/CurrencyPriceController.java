@@ -7,11 +7,13 @@ import ee.vovtech.backend4cash.model.TimestampPrice;
 import ee.vovtech.backend4cash.service.coingecko.CoingeckoAPI;
 import ee.vovtech.backend4cash.service.currency.CurrencyPriceService;
 import ee.vovtech.backend4cash.service.currency.CurrencyService;
+import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @CrossOrigin(origins = {"http://localhost:4003", "http://localhost:4200"}, maxAge = 3600)
@@ -24,8 +26,8 @@ public class CurrencyPriceController {
 
 
     @GetMapping("/coins/{id}/price_past_day")
-    public String getPricePastDay(@PathVariable String id){
-        return currencyPriceService.getPriceBetween(id, Instant.now().getEpochSecond() - (60 * 60 * 24 - 10), Instant.now().getEpochSecond()).toString();
+    public Map<Long, String> getPricePastDay(@PathVariable String id){
+        return currencyPriceService.getPriceBetween(id, Instant.now().getEpochSecond() - (60 * 60 * 24 - 10), Instant.now().getEpochSecond());
     }
 
     @GetMapping("/coins/{id}/price_between")
