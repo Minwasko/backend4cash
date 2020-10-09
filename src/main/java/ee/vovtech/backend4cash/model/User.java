@@ -1,8 +1,14 @@
 package ee.vovtech.backend4cash.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class User {
@@ -12,6 +18,10 @@ public class User {
     private long id;
 
     private String nickname;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<ForumPost> forumPosts;
 
     public User() {
 
@@ -31,5 +41,22 @@ public class User {
 
     public void setNickname(String nickname) {
         this.nickname = nickname;
+    }
+
+    public List<ForumPost> getForumPosts() {
+        return forumPosts;
+    }
+
+    public void setForumPosts(List<ForumPost> forumPosts) {
+        this.forumPosts = forumPosts;
+    }
+
+    public void addForumPost(ForumPost forumPost) {
+        if (forumPosts == null) {
+            forumPosts = new ArrayList<>();
+        }
+        List<ForumPost> posts = this.forumPosts;
+        posts.add(forumPost);
+        this.forumPosts = posts;
     }
 }

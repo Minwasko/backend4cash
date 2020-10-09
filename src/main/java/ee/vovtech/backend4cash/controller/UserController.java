@@ -2,7 +2,9 @@ package ee.vovtech.backend4cash.controller;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import ee.vovtech.backend4cash.model.ForumPost;
 import ee.vovtech.backend4cash.model.User;
+import ee.vovtech.backend4cash.service.user.ForumPostService;
 import ee.vovtech.backend4cash.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -22,7 +24,10 @@ import java.util.List;
 public class UserController {
 
     @Autowired
-    UserService userService;
+    private UserService userService;
+
+    @Autowired
+    private ForumPostService forumPostService;
 
     @PostMapping
     public User saveUser(@RequestBody User user) {
@@ -43,5 +48,16 @@ public class UserController {
     public void deleteUser(@PathVariable Long id) {
         userService.delete(id);
     }
+
+    @PostMapping("{id}/forum_post")
+    public ForumPost saveForumPost(@PathVariable Long id, @RequestBody String message) {
+        return forumPostService.save(id, message);
+    }
+
+    @GetMapping("{id}/forum_post")
+    public List<ForumPost> getForumPosts(@PathVariable Long id) {
+        return forumPostService.findAll(id);
+    }
+
 
 }
