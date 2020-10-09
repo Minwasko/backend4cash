@@ -26,7 +26,7 @@ public class CurrencyController {
 //        return currencyService.updateCoinsData().toString();
     }
 
-    @GetMapping("getPrices/{id}")
+    @GetMapping("get_prices/{id}")
     public String getPrices(@PathVariable String id) throws UnirestException {
         return CoingeckoAPI.getPriceData(id).toString();
     }
