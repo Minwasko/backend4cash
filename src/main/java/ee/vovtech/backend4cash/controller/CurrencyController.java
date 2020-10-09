@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
+import java.util.LinkedList;
 import java.util.List;
 @CrossOrigin(origins = "http://localhost:4003", maxAge = 3600)
 @RestController
@@ -22,6 +23,11 @@ public class CurrencyController {
     public String getData() throws UnirestException {
         return CoingeckoAPI.getPriceData("bitcoin").toString() + "\n" + Instant.ofEpochSecond(Instant.now().getEpochSecond() - 6000);
 //        return currencyService.updateCoinsData().toString();
+    }
+
+    @GetMapping("/getPricesData/{id}")
+    public JSONArray getPrices(@PathVariable String id) throws UnirestException {
+        return CoingeckoAPI.getPriceData(id);
     }
 
     @GetMapping
