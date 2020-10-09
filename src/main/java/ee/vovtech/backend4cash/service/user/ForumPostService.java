@@ -47,4 +47,15 @@ public class ForumPostService {
         }
     }
 
+    public ForumPost deleteForumPost(Long id, Long forumPostId) {
+        User user = userService.findById(id);
+        ForumPost forumPost = findById(id, forumPostId);
+        List<ForumPost> forumPosts = user.getForumPosts();
+        forumPost.setUser(null);
+        forumPosts.remove(forumPost);
+        user.setForumPosts(forumPosts);
+        userService.save(user);
+        return forumPost;
+    }
+
 }

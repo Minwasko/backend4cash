@@ -64,4 +64,8 @@ public class UserController {
         return forumPostService.findById(id, forumPostId);
     }
 
+    @DeleteMapping("{id}/forum_post/{forum_post_id}")
+    public ForumPost deleteForumPost(@PathVariable("id") Long id, @PathVariable("forum_post_id") Long forumPostId) {
+        return forumPostService.deleteForumPost(id, forumPostId);
+    }
 }

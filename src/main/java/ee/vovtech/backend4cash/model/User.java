@@ -27,6 +27,12 @@ public class User {
 
     }
 
+    public User(Long id, String nickname, List<ForumPost> posts) {
+        this.id = id;
+        this.nickname = nickname;
+        this.forumPosts = posts;
+    }
+
     public long getId() {
         return id;
     }
