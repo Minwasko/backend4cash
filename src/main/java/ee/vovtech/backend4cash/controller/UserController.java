@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController("/users")
-@CrossOrigin(origins = "http://localhost:4003", maxAge = 3600)
+@CrossOrigin(origins = {"http://localhost:4003", "http://localhost:4200"}, maxAge = 3600)
 
 public class UserController {
 
