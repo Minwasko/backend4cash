@@ -46,10 +46,14 @@ public class CurrencyPriceService {
         return currencyRepository.save(dbCurrency);
     }
 
-    public Map<Long, String> getPriceBetween(String id, long from, long to) {
+    public List<TimestampPrice> getPriceBetween(String id, long from, long to) {
+//        return currencyService.findById(id).getTimestampPrices().stream()
+//                .filter(e -> e.getTimestamp() >= from && e.getTimestamp() <= to)
+//                .collect(Collectors.toMap(TimestampPrice::getTimestamp, TimestampPrice::getPrice));
+
         return currencyService.findById(id).getTimestampPrices().stream()
                 .filter(e -> e.getTimestamp() >= from && e.getTimestamp() <= to)
-                .collect(Collectors.toMap(TimestampPrice::getTimestamp, TimestampPrice::getPrice));
+                .collect(Collectors.toList());
         }
     }
 
