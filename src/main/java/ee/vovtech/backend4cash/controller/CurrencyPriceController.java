@@ -21,6 +21,9 @@ public class CurrencyPriceController {
     @Autowired
     private CurrencyService currencyService;
 
+
+    @GetMapping("/coins/{id}")
+
     @GetMapping("/coins/{id}/price_between")
     public String getCurrencyPriceBetween(@PathVariable String id, @RequestParam long from, @RequestParam long to) {
         return currencyPriceService.getPriceBetween(id, from , to).toString();
