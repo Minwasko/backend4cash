@@ -58,6 +58,13 @@ public class CoingeckoAPI {
         return response.getBody().getObject();
     }
 
+    public static JSONObject getPriceDataBetween(String id, long from, long to) throws UnirestException {
+        long unixTimeNow = Instant.now().getEpochSecond();
+        HttpResponse<JsonNode> response = Unirest.get("https://api.coingecko.com/api/v3/coins/" + id + "/market_chart/range?vs_currency=usd&from="
+                + from +  "&to=" + to).asJson();
+        return response.getBody().getObject();
+    }
+
 
     public static String updateCurrencies(){
 

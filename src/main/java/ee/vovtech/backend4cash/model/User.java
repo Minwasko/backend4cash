@@ -19,7 +19,7 @@ public class User {
 
     private String nickname;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<ForumPost> forumPosts = new ArrayList<>();
 

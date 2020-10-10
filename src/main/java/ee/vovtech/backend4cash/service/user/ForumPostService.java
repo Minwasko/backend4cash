@@ -49,10 +49,14 @@ public class ForumPostService {
         throw new UserNotFoundException();
     }
 
-    public void deleteForumPost(long id) {
+    public void deleteForumPostFromUser(long id) {
         ForumPost forumPost = findById(id);
         userService.deletePost(forumPost.getUser().getId(), id);
         forumPostRepository.delete(forumPost);
+    }
+
+    public void deleteForumPost(long id) {
+        forumPostRepository.delete(findById(id));
     }
 
 }
