@@ -29,8 +29,8 @@ public class ForumPostController {
     }
 
     @DeleteMapping("{id}")
-    public ForumPost deleteForumPost(@PathVariable("id") long id) {
-        return forumPostService.deleteForumPost(id);
+    public void deleteForumPost(@PathVariable("id") long id) {
+        forumPostService.deleteForumPost(id);
     }
 
 
