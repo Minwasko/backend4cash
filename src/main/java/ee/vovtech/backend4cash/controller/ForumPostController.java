@@ -28,10 +28,17 @@ public class ForumPostController {
         return forumPostService.findById(id);
     }
 
+    @GetMapping
+    public List<ForumPost> getAllForumPosts(){
+        return forumPostService.findAll();
+    }
+
     @DeleteMapping("{id}")
     public void deleteForumPost(@PathVariable("id") long id) {
         forumPostService.deleteForumPost(id);
     }
+
+
 
 
 }

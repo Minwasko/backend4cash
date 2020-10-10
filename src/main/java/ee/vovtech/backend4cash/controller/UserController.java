@@ -51,7 +51,7 @@ public class UserController {
     @GetMapping("{id}/posts")
     // See users forum posts
     public List<ForumPost> getUserForumPosts(@PathVariable Long id) {
-        return forumPostService.findAll(id);
+        return userService.findPostsByUser(id);
     }
 
 

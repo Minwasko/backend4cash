@@ -38,8 +38,8 @@ public class ForumPostService {
         return forumPost;
     }
 
-    public List<ForumPost> findAll(long id) {
-        return userService.findById(id).getForumPosts();
+    public List<ForumPost> findAll() {
+        return forumPostRepository.findAll();
     }
 
     public ForumPost findById(long id) {
@@ -51,13 +51,8 @@ public class ForumPostService {
 
     public void deleteForumPost(long id) {
         ForumPost forumPost = findById(id);
-        User user = forumPost.getUser();
-        List<ForumPost> forumPosts = user.getForumPosts();
-        forumPost.setUser(null);
-        forumPosts.remove(forumPost);
-        user.setForumPosts(forumPosts);
-        forumPostRepository.delete(findById(id));
-        userService.save(userService.findById(id));
+        userService.deletePost(forumPost.getUser().getId(), id);
+        forumPostRepository.delete(forumPost);
     }
 
 }
