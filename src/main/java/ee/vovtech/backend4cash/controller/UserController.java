@@ -25,7 +25,6 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-
     @Autowired
     private ForumPostService forumPostService;
 
@@ -49,23 +48,11 @@ public class UserController {
         userService.delete(id);
     }
 
-    @PostMapping("{id}/forum_post")
-    public ForumPost saveForumPost(@PathVariable Long id, @RequestBody String message) {
-        return forumPostService.save(id, message);
-    }
-
-    @GetMapping("{id}/forum_post")
-    public List<ForumPost> getForumPosts(@PathVariable Long id) {
+    @GetMapping("{id}/posts")
+    // See users forum posts
+    public List<ForumPost> getUserForumPosts(@PathVariable Long id) {
         return forumPostService.findAll(id);
     }
 
-    @GetMapping("{id}/forum_post/{forum_post_id}")
-    public ForumPost getForumPost(@PathVariable("id") Long id, @PathVariable("forum_post_id") Long forumPostId) {
-        return forumPostService.findById(id, forumPostId);
-    }
 
-    @DeleteMapping("{id}/forum_post/{forum_post_id}")
-    public ForumPost deleteForumPost(@PathVariable("id") Long id, @PathVariable("forum_post_id") Long forumPostId) {
-        return forumPostService.deleteForumPost(id, forumPostId);
-    }
 }
