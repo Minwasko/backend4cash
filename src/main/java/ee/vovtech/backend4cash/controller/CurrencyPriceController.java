@@ -27,12 +27,12 @@ public class CurrencyPriceController {
 
     @GetMapping("/coins/{id}/price_past_day")
     public List<TimestampPrice> getPricePastDay(@PathVariable String id){
-        return currencyPriceService.getPriceBetween(id, Instant.now().getEpochSecond() - (60 * 60 * 24 - 10), Instant.now().getEpochSecond());
+        return currencyPriceService.getPriceBetweenFromDB(id, Instant.now().getEpochSecond() - (60 * 60 * 24 - 10), Instant.now().getEpochSecond());
     }
 
     @GetMapping("/coins/{id}/price_between")
-    public String getCurrencyPriceBetween(@PathVariable String id, @RequestParam long from, @RequestParam long to) {
-        return currencyPriceService.getPriceBetween(id, from , to).toString();
+    public String getCurrencyPriceBetween(@PathVariable String id, @RequestParam long from, @RequestParam long to) throws UnirestException {
+        return currencyPriceService.getPriceBetweenFromAPI(id, from , to).toString();
     }
 
 

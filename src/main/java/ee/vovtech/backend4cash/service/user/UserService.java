@@ -8,6 +8,7 @@ import ee.vovtech.backend4cash.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -15,6 +16,9 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ForumPostService forumPostService;
 
     public User save(User user) {
         return userRepository.save(user);
@@ -51,6 +55,18 @@ public class UserService {
         forumPost.setUser(null);
         forumPosts.remove(forumPost);
         user.setForumPosts(forumPosts);
+        save(user);
+    }
+
+    public void deleteAllPosts(long userId) {
+        User user = findById(userId);
+        List<ForumPost> posts = user.getForumPosts();
+        for (ForumPost post : posts) {
+            post.setUser(null);
+            forumPostService.deleteForumPost(post.getId());
+        }
+        posts.clear();
+        user.setForumPosts(posts);
         save(user);
     }
 

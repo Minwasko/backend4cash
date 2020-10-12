@@ -7,6 +7,7 @@ import ee.vovtech.backend4cash.model.TimestampPrice;
 import ee.vovtech.backend4cash.repository.CurrencyRepository;
 import ee.vovtech.backend4cash.service.coingecko.CoingeckoAPI;
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -46,14 +47,14 @@ public class CurrencyPriceService {
         return currencyRepository.save(dbCurrency);
     }
 
-    public List<TimestampPrice> getPriceBetween(String id, long from, long to) {
-//        return currencyService.findById(id).getTimestampPrices().stream()
-//                .filter(e -> e.getTimestamp() >= from && e.getTimestamp() <= to)
-//                .collect(Collectors.toMap(TimestampPrice::getTimestamp, TimestampPrice::getPrice));
-
+    public List<TimestampPrice> getPriceBetweenFromDB(String id, long from, long to) {
         return currencyService.findById(id).getTimestampPrices().stream()
                 .filter(e -> e.getTimestamp() >= from && e.getTimestamp() <= to)
                 .collect(Collectors.toList());
         }
+
+    public JSONObject getPriceBetweenFromAPI(String id, long from, long to) throws UnirestException {
+        return CoingeckoAPI.getPriceDataBetween(id, from, to);
     }
+}
 

@@ -54,5 +54,11 @@ public class UserController {
         return userService.findPostsByUser(id);
     }
 
+    @DeleteMapping("{id}/posts")
+    // See users forum posts
+    public void deleteAllUserForumPosts(@PathVariable Long id) {
+        userService.deleteAllPosts(id);
+    }
+
 
 }
