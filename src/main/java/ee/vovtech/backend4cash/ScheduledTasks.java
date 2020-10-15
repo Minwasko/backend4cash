@@ -17,7 +17,7 @@ public class ScheduledTasks {
 
     @Scheduled(fixedDelay = 1000)
     public void updatePrices(){
-        currencyService.findAll().stream().forEach(currency -> currencyPriceService.updatePrice(currency.getName(), CurrencyPriceService.UpdateTime.HOUR));
+        currencyService.findAll().forEach(currency -> currencyPriceService.updatePrice(currency.getName(), CurrencyPriceService.UpdateTime.HOUR));
     }
 
 }

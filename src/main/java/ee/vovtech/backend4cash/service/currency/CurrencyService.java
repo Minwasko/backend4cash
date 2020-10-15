@@ -55,7 +55,7 @@ public class CurrencyService {
     }
 
 
-    public List<Currency> updateCoinsData() throws UnirestException {
+    public List<Currency> initCoins() throws UnirestException {
         JSONArray coins = CoingeckoAPI.getTopCurrencies(); // get top 10 coins
         System.out.println(coins.length());
         System.out.println(coins.toString());

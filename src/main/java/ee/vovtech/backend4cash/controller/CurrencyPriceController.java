@@ -21,9 +21,6 @@ public class CurrencyPriceController {
     @Autowired
     private CurrencyService currencyService;
 
-    // get prices from db somehow :)
-
-
     @GetMapping("/coins/{id}/pricedata")
     public List<TimestampPrice> getCurrencyPriceData(@PathVariable String id) {
         return currencyService.findById(id).getTimestampPrices();
@@ -33,4 +30,5 @@ public class CurrencyPriceController {
     public Currency updateCurrencyPriceData(@PathVariable String id, @RequestBody List<TimestampPrice> timestampPrices) {
         return currencyPriceService.updateDB(id, timestampPrices);
     }
+
 }
