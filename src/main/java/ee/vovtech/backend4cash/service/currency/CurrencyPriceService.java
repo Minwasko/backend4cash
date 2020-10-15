@@ -7,13 +7,10 @@ import ee.vovtech.backend4cash.model.TimestampPrice;
 import ee.vovtech.backend4cash.repository.CurrencyRepository;
 import ee.vovtech.backend4cash.service.coingecko.CoingeckoAPI;
 import org.json.JSONArray;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,17 +21,25 @@ public class CurrencyPriceService {
     @Autowired
     private CurrencyService currencyService;
 
-    public Map<Long, String> fillPriceData(String id) throws UnirestException {
-        JSONArray data = CoingeckoAPI.getPriceData(id).getJSONArray("prices"); // getting json with price data
-        LinkedHashMap<Long, String> priceData = new LinkedHashMap<>();
-        for (int i = 0; i < data.length(); i++) { // add key=date value=price to map
-            JSONArray datePrice = data.getJSONArray(i);
-            priceData.put(datePrice.getLong(0) / 1000, datePrice.get(1).toString());
+    enum UpdateTime {DAY, HOUR};
+
+    public void updatePrice(String id, UpdateTime updateTime) throws UnirestException {
+        JSONArray data;
+        if (updateTime.equals(UpdateTime.DAY)) data = CoingeckoAPI.getCurrencyPriceLastDay(id);
+        else data = CoingeckoAPI.getCurrencyPriceLastHour(id);
+
+        List<TimestampPrice> timestampPrices = new ArrayList<>();
+        Currency toUpdate = currencyService.findById(id);
+
+        for(int i = 0; i < data.length(); i++) {
+            JSONArray timestampPrice = data.getJSONArray(i);
+            timestampPrices.add(new TimestampPrice(toUpdate, timestampPrice.getLong(0) / 1000, timestampPrice.get(1).toString()));
         }
-        return priceData;
+        updateDB(id, timestampPrices);
+
     }
 
-    public Currency update(String id, List<TimestampPrice> timestampPrices) {
+    public Currency updateDB(String id, List<TimestampPrice> timestampPrices) {
         if (currencyRepository.findById(id).isEmpty()) {
             throw new InvalidCurrencyException("No such currency exception");
         } else if (timestampPrices.isEmpty()) {
@@ -44,17 +49,7 @@ public class CurrencyPriceService {
         }
         Currency dbCurrency = currencyRepository.findById(id).get();
         dbCurrency.setTimestampPrices(timestampPrices);
-        return currencyRepository.save(dbCurrency);
-    }
-
-    public List<TimestampPrice> getPriceBetweenFromDB(String id, long from, long to) {
-        return currencyService.findById(id).getTimestampPrices().stream()
-                .filter(e -> e.getTimestamp() >= from && e.getTimestamp() <= to)
-                .collect(Collectors.toList());
-        }
-
-    public JSONObject getPriceBetweenFromAPI(String id, long from, long to) throws UnirestException {
-        return CoingeckoAPI.getPriceDataBetween(id, from, to);
+        currencyRepository.save(dbCurrency);
     }
 }
 

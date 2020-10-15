@@ -57,9 +57,14 @@ public class CurrencyService {
 
     public List<Currency> updateCoinsData() throws UnirestException { // TODO Currently only adds a new coin!!!!
         JSONArray coins = CoingeckoAPI.getTopCurrencies(); // get top 10 coins
+        System.out.println(coins.length());
+        System.out.println(coins.toString());
         for (int i = 0; i < coins.length(); i++) {
-            JSONObject coin = coins.getJSONObject(i); // data of each coin
+            JSONObject coin = coins.getJSONObject(i);
+            System.out.println(coin.toString());// data of each coin
             String name = coin.get("id").toString();
+            System.out.println(name);
+            System.out.println(currencyRepository.findAll());
             if (currencyRepository.findById(name).isEmpty()) {
                 createNewCoin(name);
             }

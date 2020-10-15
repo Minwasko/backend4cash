@@ -7,13 +7,10 @@ import ee.vovtech.backend4cash.model.TimestampPrice;
 import ee.vovtech.backend4cash.service.coingecko.CoingeckoAPI;
 import ee.vovtech.backend4cash.service.currency.CurrencyPriceService;
 import ee.vovtech.backend4cash.service.currency.CurrencyService;
-import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.Instant;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @CrossOrigin(origins = {"http://localhost:4003", "http://localhost:4200"}, maxAge = 3600)
@@ -24,16 +21,7 @@ public class CurrencyPriceController {
     @Autowired
     private CurrencyService currencyService;
 
-    @GetMapping("/coins/{id}/price_between")
-    public String getCurrencyPriceBetween(@PathVariable String id, @RequestParam long from, @RequestParam long to) throws UnirestException {
-        return currencyPriceService.getPriceBetweenFromAPI(id, from , to).toString();
-    }
-
-
-    @GetMapping("/coins/{id}/all_time_pricedata")
-    public String getPrices(@PathVariable String id) throws UnirestException {
-        return CoingeckoAPI.getPriceData(id).toString();
-    }
+    // get prices from db somehow :)
 
 
     @GetMapping("/coins/{id}/pricedata")
@@ -43,6 +31,6 @@ public class CurrencyPriceController {
 
     @PutMapping("/coins/{id}/pricedata")
     public Currency updateCurrencyPriceData(@PathVariable String id, @RequestBody List<TimestampPrice> timestampPrices) {
-        return currencyPriceService.update(id, timestampPrices);
+        return currencyPriceService.updateDB(id, timestampPrices);
     }
 }

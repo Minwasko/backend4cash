@@ -4,6 +4,7 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import com.mysql.cj.xdevapi.JsonArray;
 import ee.vovtech.backend4cash.repository.CurrencyRepository;
 import ee.vovtech.backend4cash.service.currency.CurrencyService;
 import org.json.JSONArray;
@@ -28,51 +29,58 @@ public class CoingeckoAPI {
     // https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=10page=1&sparkline=false
 
     // Api url to get coins price
-    private final static String PRICE_URL = "https://api.coingecko.com/api/v3/coins/";
+    private final static String COINS_URL = "https://api.coingecko.com/api/v3/coins/";
     private final static String DEFAULT_CURRENCY = "usd";
     public final static int AMOUNT_OF_CURRENCIES = 8;
     private final static int MONTH_SECONDS = 2_592_000;
     private static final Logger log = LoggerFactory.getLogger(CoingeckoAPI.class);
     // TODO: refactor stuff here
     // get top 10 currencies, amount changed as a variable
+
     public static JSONArray getTopCurrencies() throws UnirestException {
-        HttpResponse<JsonNode> response = Unirest
-                .get("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page="
-                        + AMOUNT_OF_CURRENCIES + "&page=1&sparkline=false")
-                .asJson();
+        HttpResponse<JsonNode> response = Unirest.get(COINS_URL + "markets?")
+                .queryString("vs_currency", DEFAULT_CURRENCY)
+                .queryString("order", "market_cap_decs")
+                .queryString("per_page", AMOUNT_OF_CURRENCIES)
+                .queryString("page", 1)
+                .queryString("sparkline", "false").asJson();
         return response.getBody().getArray();
     }
 
     // get data for exact currency
     public static JSONObject getCurrency(String id) throws UnirestException {
-        HttpResponse<JsonNode> response = Unirest.get("https://api.coingecko.com/api/v3/coins/"
-                + id + "?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false").asJson();
-        return response.getBody().getObject();
+        HttpResponse<JsonNode> response1 = Unirest.get(COINS_URL + id + "?")
+                .queryString("localization", "false")
+                .queryString("tickers", "false")
+                .queryString("market_data", "true")
+                .queryString("community_data", "false")
+                .queryString("developer_data", "false")
+                .queryString("sparkline", "false")
+                .asJson();
+        return response1.getBody().getObject();
     }
 
-    // get Price history for exact currency
-    public static JSONObject getPriceData(String id) throws UnirestException {
-        long unixTimeNow = Instant.now().getEpochSecond();
-        HttpResponse<JsonNode> response = Unirest.get("https://api.coingecko.com/api/v3/coins/" + id + "/market_chart/range?vs_currency=usd&from="
-                + (unixTimeNow - MONTH_SECONDS) +  "&to=" + unixTimeNow).asJson();
-        return response.getBody().getObject();
+    public static JSONArray getCurrencyPriceLastHour(String id) throws UnirestException {
+        return getPriceDataBetween(id, Instant.now().getEpochSecond() - 3600, Instant.now().getEpochSecond());
+
     }
 
-    public static JSONObject getPriceDataBetween(String id, long from, long to) throws UnirestException {
-        long unixTimeNow = Instant.now().getEpochSecond();
-        HttpResponse<JsonNode> response = Unirest.get("https://api.coingecko.com/api/v3/coins/" + id + "/market_chart/range?vs_currency=usd&from="
-                + from +  "&to=" + to).asJson();
-        return response.getBody().getObject();
+    public static JSONArray getCurrencyPriceLastDay(String id) throws UnirestException {
+        return getPriceDataBetween(id, Instant.now().getEpochSecond() - 86400, Instant.now().getEpochSecond());
+
     }
 
-    private static JsonNode getCurrencyPrice(String id) throws UnirestException {
-        // TODO get price.now() from the api instead of the following nonsense
-        return Unirest.get(PRICE_URL + id + "/market_chart/range")
+
+    private static JSONArray getPriceDataBetween(String id, long from, long to) throws UnirestException {
+        HttpResponse<JsonNode> response = Unirest.get(COINS_URL + id + "/market_chart/range?")
                 .queryString("vs_currency", DEFAULT_CURRENCY)
-                .queryString("from", String.valueOf(Instant.now().getEpochSecond() - 600))
-                .queryString("to", String.valueOf(Instant.now().getEpochSecond())).asJson().getBody();
-
-
+                .queryString("from", from)
+                .queryString("to", to)
+                .asJson();
+        // return only needed shit and only that
+        return response.getBody().getObject().getJSONArray("prices");
     }
+
+
 
 }
