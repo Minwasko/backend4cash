@@ -16,7 +16,7 @@ public class ForumPostController {
     @Autowired
     private ForumPostService forumPostService;
 
-    @PostMapping("")
+    @PostMapping
     // to post a forum post. Takes message and user id from the frontend and is passed to forumpostservice
     // be saved in the dee bee
     public ForumPost saveForumPost(@RequestBody String message, @RequestParam long userId) {

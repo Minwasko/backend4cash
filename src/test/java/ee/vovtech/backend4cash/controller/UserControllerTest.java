@@ -1,6 +1,7 @@
 package ee.vovtech.backend4cash.controller;
 
 import ee.vovtech.backend4cash.model.Currency;
+import ee.vovtech.backend4cash.model.ForumPost;
 import ee.vovtech.backend4cash.model.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,9 +11,15 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,6 +28,8 @@ class UserControllerTest {
 
 
     public static final ParameterizedTypeReference<List<User>> LIST_OF_USERS =
+            new ParameterizedTypeReference<>() {};
+    public static final ParameterizedTypeReference<List<ForumPost>> LIST_OF_POSTS =
             new ParameterizedTypeReference<>() {};
     public static long TEST_USER_ID;
 
@@ -63,15 +72,54 @@ class UserControllerTest {
         User dbUser = exchange.getBody();
         assertNotNull(dbUser);
         dbUser.setNickname("testUserUpdated");
-        ResponseEntity<User> exchangeUpdated = testRestTemplate.exchange("/coins/" + dbUser.getId(), HttpMethod.PUT, new HttpEntity<>(dbUser), User.class);
+        System.out.println(dbUser.getId());
+        ResponseEntity<User> exchangeUpdated = testRestTemplate.exchange("/users/" + dbUser.getId(), HttpMethod.PUT, new HttpEntity<>(dbUser), User.class);
         User dbUserUpdated = exchangeUpdated.getBody();
         assertNotNull(dbUserUpdated);
         assertEquals("testUserUpdated", dbUserUpdated.getNickname());
+        TEST_USER_ID = dbUser.getId();
     }
 
     @Test
     void deleteUser() {
+        ResponseEntity<User> exchange = testRestTemplate.exchange("/users/" + TEST_USER_ID , HttpMethod.GET, null, User.class);
+        User dbUser = exchange.getBody();
+        assertNotNull(dbUser);
+        testRestTemplate.exchange("/users/" + dbUser.getId(), HttpMethod.DELETE, new HttpEntity<>(dbUser), Currency.class);
+        ResponseEntity<List<User>> exchangeUsers = testRestTemplate.exchange("/users", HttpMethod.GET, null, LIST_OF_USERS);
+        assertNotNull(exchangeUsers.getBody());
+        assertFalse(exchangeUsers.getBody().contains(dbUser));
+    }
 
+    @Test
+    void deleteUserForumPosts() {
+        ResponseEntity<List<User>> exchange = testRestTemplate.exchange("/users", HttpMethod.GET, null, LIST_OF_USERS);
+        assertNotNull(exchange.getBody());
+        User dbUser = exchange.getBody().get(0);
+        System.out.println(dbUser.getNickname());
+        testRestTemplate.exchange("/users/" + dbUser.getId() + "/posts", HttpMethod.DELETE, null, User.class);
+        ResponseEntity<List<User>> exchangeAfterDelete = testRestTemplate.exchange("/users", HttpMethod.GET, null, LIST_OF_USERS);
+        assertNotNull(exchangeAfterDelete.getBody());
+        User userAfterDeletion = exchangeAfterDelete.getBody().get(0);
+        assertEquals(new ArrayList<>(), userAfterDeletion.getForumPosts());
+    }
+
+    @Test
+    void getUserForumPosts() {
+        ResponseEntity<List<User>> exchange = testRestTemplate.exchange("/users", HttpMethod.GET, null, LIST_OF_USERS);
+        assertNotNull(exchange.getBody());
+        User dbUser = exchange.getBody().get(0);
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(testRestTemplate.getRootUri() + "/users/" + dbUser.getId() + "/posts")
+                .queryParam("message", "testMessage")
+                .queryParam("userId", dbUser.getId());
+
+        testRestTemplate.exchange("/posts?message=testMessage&userId=" + dbUser.getId() , HttpMethod.POST, new HttpEntity<>("testMessage"), ForumPost.class);
+        ResponseEntity<List<ForumPost>> exchangeUserPosts = testRestTemplate.exchange("/users/" + dbUser.getId() + "/posts" , HttpMethod.GET, null, LIST_OF_POSTS);
+        assertNotNull(exchangeUserPosts);
+        List<ForumPost> posts = exchangeUserPosts.getBody();
+        assertNotNull(posts);
+        assertEquals("testMessage", posts.get(0).getMessage());
+        assertEquals(dbUser.getNickname(), posts.get(0).getUser().getNickname());
     }
 
 }
