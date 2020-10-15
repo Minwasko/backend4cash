@@ -1,13 +1,10 @@
 package ee.vovtech.backend4cash.controller;
 
-import com.mashape.unirest.http.exceptions.UnirestException;
 import ee.vovtech.backend4cash.model.Currency;
-import ee.vovtech.backend4cash.service.coingecko.CoingeckoAPI;
 import ee.vovtech.backend4cash.service.currency.CurrencyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.Instant;
 import java.util.List;
 @CrossOrigin(origins = {"http://localhost:4003", "http://localhost:4200"}, maxAge = 3600)
 @RestController

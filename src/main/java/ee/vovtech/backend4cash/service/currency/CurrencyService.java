@@ -89,5 +89,4 @@ public class CurrencyService {
     public List<Currency> findAll() {
         return currencyRepository.findAll();
     }
-
 }
