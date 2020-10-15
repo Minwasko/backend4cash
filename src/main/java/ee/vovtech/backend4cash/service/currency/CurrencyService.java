@@ -55,7 +55,7 @@ public class CurrencyService {
     }
 
 
-    public List<Currency> updateCoinsData() throws UnirestException { // TODO Currently only adds a new coin!!!!
+    public List<Currency> updateCoinsData() throws UnirestException {
         JSONArray coins = CoingeckoAPI.getTopCurrencies(); // get top 10 coins
         System.out.println(coins.length());
         System.out.println(coins.toString());
@@ -81,14 +81,8 @@ public class CurrencyService {
         newCoin.setName(id);
         newCoin.setHomepageLink(coin.getJSONObject("links").getJSONArray("homepage").get(0).toString());
         newCoin.setImageRef(coin.getJSONObject("image").get("small").toString());
-        Map<Long, String> priceMap = currencyPriceService.fillPriceData(id);
-        // make new TimestampPrices and add them all to currency
-        List<TimestampPrice> timestampPriceSet = new ArrayList<>();
-        for (Map.Entry<Long, String> entry : priceMap.entrySet()) {
-            timestampPriceSet.add(new TimestampPrice(newCoin, entry.getKey(), entry.getValue()));
-        }
-        newCoin.setTimestampPrices(timestampPriceSet);
         save(newCoin); // save it to the database
+        currencyPriceService.updatePrice(id, CurrencyPriceService.UpdateTime.DAY);
         return newCoin;
     }
 

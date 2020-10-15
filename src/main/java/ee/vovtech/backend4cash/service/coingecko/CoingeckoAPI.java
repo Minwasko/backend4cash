@@ -60,23 +60,29 @@ public class CoingeckoAPI {
         return response1.getBody().getObject();
     }
 
-    public static JSONArray getCurrencyPriceLastHour(String id) throws UnirestException {
+    public static JSONArray getCurrencyPriceLastHour(String id) {
         return getPriceDataBetween(id, Instant.now().getEpochSecond() - 3600, Instant.now().getEpochSecond());
 
     }
 
-    public static JSONArray getCurrencyPriceLastDay(String id) throws UnirestException {
+    public static JSONArray getCurrencyPriceLastDay(String id) {
         return getPriceDataBetween(id, Instant.now().getEpochSecond() - 86400, Instant.now().getEpochSecond());
 
     }
 
 
-    private static JSONArray getPriceDataBetween(String id, long from, long to) throws UnirestException {
-        HttpResponse<JsonNode> response = Unirest.get(COINS_URL + id + "/market_chart/range?")
-                .queryString("vs_currency", DEFAULT_CURRENCY)
-                .queryString("from", from)
-                .queryString("to", to)
-                .asJson();
+    private static JSONArray getPriceDataBetween(String id, long from, long to){
+
+        HttpResponse<JsonNode> response = null;
+        try {
+            response = Unirest.get(COINS_URL + id + "/market_chart/range?")
+                    .queryString("vs_currency", DEFAULT_CURRENCY)
+                    .queryString("from", from)
+                    .queryString("to", to)
+                    .asJson();
+        } catch (UnirestException e) {
+            e.printStackTrace();
+        }
         // return only needed shit and only that
         return response.getBody().getObject().getJSONArray("prices");
     }

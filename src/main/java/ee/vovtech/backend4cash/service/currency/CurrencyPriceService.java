@@ -21,9 +21,9 @@ public class CurrencyPriceService {
     @Autowired
     private CurrencyService currencyService;
 
-    enum UpdateTime {DAY, HOUR};
+    public enum UpdateTime {DAY, HOUR};
 
-    public void updatePrice(String id, UpdateTime updateTime) throws UnirestException {
+    public void updatePrice(String id, UpdateTime updateTime) {
         JSONArray data;
         if (updateTime.equals(UpdateTime.DAY)) data = CoingeckoAPI.getCurrencyPriceLastDay(id);
         else data = CoingeckoAPI.getCurrencyPriceLastHour(id);
@@ -50,6 +50,7 @@ public class CurrencyPriceService {
         Currency dbCurrency = currencyRepository.findById(id).get();
         dbCurrency.setTimestampPrices(timestampPrices);
         currencyRepository.save(dbCurrency);
+        return dbCurrency;
     }
 }
 
