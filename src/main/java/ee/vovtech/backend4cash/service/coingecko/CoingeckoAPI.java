@@ -65,18 +65,6 @@ public class CoingeckoAPI {
         return response.getBody().getObject();
     }
 
-
-    public static String updateCurrencies(){
-        // TODO remove this method
-        try {
-            return getCurrencyPrice("bitcoin").getObject().getJSONArray("prices").toString();
-        } catch (UnirestException e) {
-            e.printStackTrace();
-        }
-
-        return "";
-    }
-
     private static JsonNode getCurrencyPrice(String id) throws UnirestException {
         // TODO get price.now() from the api instead of the following nonsense
         return Unirest.get(PRICE_URL + id + "/market_chart/range")

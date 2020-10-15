@@ -44,8 +44,6 @@ public class CurrencyService {
             throw new InvalidCurrencyException("Currencies are different");
         }
         Currency dbCurrency = findById(currencyId);
-        dbCurrency.setTimestampPrices(currency.getTimestampPrices());
-        dbCurrency.setDescription(currency.getDescription());
         dbCurrency.setHomepageLink(currency.getHomepageLink());
         dbCurrency.setImageRef(currency.getImageRef());
         return currencyRepository.save(dbCurrency);
@@ -77,8 +75,6 @@ public class CurrencyService {
         Currency newCoin = new Currency(); // put all the data in a new entity
         newCoin.setName(id);
         newCoin.setHomepageLink(coin.getJSONObject("links").getJSONArray("homepage").get(0).toString());
-        // possible TODO add a way to save full description, currently over the char limit(255)
-        newCoin.setDescription(id + " with a beautiful description");
         newCoin.setImageRef(coin.getJSONObject("image").get("small").toString());
         Map<Long, String> priceMap = currencyPriceService.fillPriceData(id);
         // make new TimestampPrices and add them all to currency
