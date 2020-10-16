@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
+@RequestMapping("/paintings")
 public class PaintingController {
 
     private ArtCollector artCollector = new ArtCollector();
