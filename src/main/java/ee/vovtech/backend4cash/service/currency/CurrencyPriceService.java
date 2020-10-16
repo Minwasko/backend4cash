@@ -39,6 +39,7 @@ public class CurrencyPriceService {
 
     }
 
+    // TODO fix this sh*t (sorry za matK)
     public Currency updateDB(String id, List<TimestampPrice> timestampPrices) {
         if (currencyRepository.findById(id).isEmpty()) {
             throw new InvalidCurrencyException("No such currency exception");
