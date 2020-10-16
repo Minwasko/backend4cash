@@ -1,4 +1,4 @@
-package a_theory.question4;
+package ee.vovtech.backend4cash.a_theory.question4;
 
 public class DependencyInjection {
 

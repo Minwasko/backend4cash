@@ -1,4 +1,4 @@
-package a_theory.question1;
+package ee.vovtech.backend4cash.a_theory.question1;
 
 public class Compilation {
 

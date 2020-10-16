@@ -1,4 +1,4 @@
-package a_theory.question3;
+package ee.vovtech.backend4cash.a_theory.question3;
 
 import org.springframework.data.util.Pair;
 

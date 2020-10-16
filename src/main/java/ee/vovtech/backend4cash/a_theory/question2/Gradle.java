@@ -1,4 +1,4 @@
-package a_theory.question2;
+package ee.vovtech.backend4cash.a_theory.question2;
 
 public class Gradle {
 
