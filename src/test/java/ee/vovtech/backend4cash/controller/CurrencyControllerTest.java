@@ -81,7 +81,7 @@ class CurrencyControllerTest {
         ResponseEntity<Currency> exchange = testRestTemplate.exchange("/coins/" + "testCurrency", HttpMethod.GET, null, Currency.class);
         Currency currency = exchange.getBody();
         assertNotNull(currency);
-        testRestTemplate.exchange("/coins/" + "testCurrency", HttpMethod.DELETE, new HttpEntity<>(currency), Currency.class);
+        testRestTemplate.exchange("/coins/" + "testCurrency", HttpMethod.DELETE, null, Currency.class);
         ResponseEntity<List<Currency>> newCoinsList = testRestTemplate.exchange("/coins", HttpMethod.GET, null, LIST_OF_CURRENCIES);
         List<Currency> currencies = newCoinsList.getBody();
         assertNotNull(currencies);
