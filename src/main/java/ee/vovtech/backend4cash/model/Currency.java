@@ -58,7 +58,7 @@ public class Currency {
     public List<TimestampPrice> getTimestampPrices() {
         return timestampPrices;
     }
-
+    // TODO add instead of set so less time?
     public void setTimestampPrices(List<TimestampPrice> timestampPrices) {
         this.timestampPrices = timestampPrices;
     }

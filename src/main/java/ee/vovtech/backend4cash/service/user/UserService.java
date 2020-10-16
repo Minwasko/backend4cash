@@ -53,6 +53,10 @@ public class UserService {
         return findById(userId).getForumPosts();
     }
 
+
+
+    //TODO refactor so we dont pass userID here + maybe rename method to deletePostFromUser cause
+    // its what it does
     public void deletePost(long userId, long postId){
         User user = findById(userId);
         List<ForumPost> forumPosts = user.getForumPosts();

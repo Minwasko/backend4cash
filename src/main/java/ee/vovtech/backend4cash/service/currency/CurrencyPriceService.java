@@ -44,9 +44,10 @@ public class CurrencyPriceService {
             throw new InvalidCurrencyException("No such currency exception");
         } else if (timestampPrices.isEmpty()) {
             throw new InvalidCurrencyException("New price data is empty");
-        } else if (!id.equals(timestampPrices.get(0).getCurrency().getName())) {
-            throw new InvalidCurrencyException("Price data is for a different currency");
         }
+//        } else if (!id.equals(timestampPrices.get(0).getCurrency().getName())) {
+//            throw new InvalidCurrencyException("Price data is for a different currency");
+//        }
         Currency dbCurrency = currencyRepository.findById(id).get();
         dbCurrency.setTimestampPrices(timestampPrices);
         currencyRepository.save(dbCurrency);

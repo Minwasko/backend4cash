@@ -15,10 +15,10 @@ public class DependencyInjection {
     // Bring example from your code of Dependency Injection.
     // Paste your code here, but comment it out
     //
-    // from: TimestampPrice.java
-    //public void setCurrency(Currency currency) {
-    //        this.currency = currency;
-    //    }
+    // @Autowired
+    // private CurrencyPriceService currencyPriceService;
+    // @Autowired
+    // private CurrencyService currencyService;
 
     //todo p3
     // Name 2 benefits of Dependency Injection
