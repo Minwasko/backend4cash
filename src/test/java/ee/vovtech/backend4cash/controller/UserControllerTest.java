@@ -72,7 +72,6 @@ class UserControllerTest {
         User dbUser = exchange.getBody();
         assertNotNull(dbUser);
         dbUser.setNickname("testUserUpdated");
-        System.out.println(dbUser.getId());
         ResponseEntity<User> exchangeUpdated = testRestTemplate.exchange("/users/" + dbUser.getId(), HttpMethod.PUT, new HttpEntity<>(dbUser), User.class);
         User dbUserUpdated = exchangeUpdated.getBody();
         assertNotNull(dbUserUpdated);
@@ -96,7 +95,6 @@ class UserControllerTest {
         ResponseEntity<List<User>> exchange = testRestTemplate.exchange("/users", HttpMethod.GET, null, LIST_OF_USERS);
         assertNotNull(exchange.getBody());
         User dbUser = exchange.getBody().get(0);
-        System.out.println(dbUser.getNickname());
         testRestTemplate.exchange("/users/" + dbUser.getId() + "/posts", HttpMethod.DELETE, null, User.class);
         ResponseEntity<List<User>> exchangeAfterDelete = testRestTemplate.exchange("/users", HttpMethod.GET, null, LIST_OF_USERS);
         assertNotNull(exchangeAfterDelete.getBody());
@@ -109,11 +107,7 @@ class UserControllerTest {
         ResponseEntity<List<User>> exchange = testRestTemplate.exchange("/users", HttpMethod.GET, null, LIST_OF_USERS);
         assertNotNull(exchange.getBody());
         User dbUser = exchange.getBody().get(0);
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(testRestTemplate.getRootUri() + "/users/" + dbUser.getId() + "/posts")
-                .queryParam("message", "testMessage")
-                .queryParam("userId", dbUser.getId());
-
-        testRestTemplate.exchange("/posts?message=testMessage&userId=" + dbUser.getId() , HttpMethod.POST, new HttpEntity<>("testMessage"), ForumPost.class);
+        testRestTemplate.exchange("/posts?userId=" + dbUser.getId() , HttpMethod.POST, new HttpEntity<>("testMessage"), ForumPost.class);
         ResponseEntity<List<ForumPost>> exchangeUserPosts = testRestTemplate.exchange("/users/" + dbUser.getId() + "/posts" , HttpMethod.GET, null, LIST_OF_POSTS);
         assertNotNull(exchangeUserPosts);
         List<ForumPost> posts = exchangeUserPosts.getBody();
