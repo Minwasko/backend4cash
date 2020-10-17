@@ -4,17 +4,12 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import ee.vovtech.backend4cash.model.Currency;
-import ee.vovtech.backend4cash.repository.CurrencyRepository;
-import ee.vovtech.backend4cash.service.CurrencyService;
+import ee.vovtech.backend4cash.service.currency.CurrencyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
-
+@Deprecated
 @RestController("/")
 public class IndexController {
 
@@ -28,6 +23,8 @@ public class IndexController {
     }
 
     public String bitcoin() throws UnirestException {
+
+
         HttpResponse<JsonNode> httpResponse = Unirest.get("https://api.coingecko.com/api/v3/coins/bitcoin")
                 .queryString("localization", "false")
                 .queryString("tickers", "false")
