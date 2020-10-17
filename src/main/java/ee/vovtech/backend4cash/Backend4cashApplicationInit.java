@@ -34,6 +34,8 @@ public class Backend4cashApplicationInit implements CommandLineRunner {
         user.setNickname("meme");
         ForumPost forumPost = new ForumPost("good", user);
         user.setForumPosts(List.of(forumPost));
+        user.setEmail("kek@kek.ee");
+        user.setPassword("12345lol");
         userRepository.save(user);
     }
 }
