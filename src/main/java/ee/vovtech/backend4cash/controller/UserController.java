@@ -39,6 +39,11 @@ public class UserController {
         return userService.findById(id);
     }
 
+    @GetMapping("check/{id}")
+    public boolean idIsTaken(@PathVariable Long id){
+        return userService.idIsTaken(id);
+    }
+
     @PutMapping("{id}")
     public User updateUser(@PathVariable Long id, @RequestBody User user) {
         return userService.update(id, user);
