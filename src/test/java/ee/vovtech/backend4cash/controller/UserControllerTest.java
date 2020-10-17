@@ -58,7 +58,7 @@ class UserControllerTest {
 
     @Test
     void saveUser() {
-        User user = new User((long) 999, "testUser", new ArrayList<>());
+        User user = new User((long) 999, "testUser", "yo@yo,com", "12345lol", new ArrayList<>());
         ResponseEntity<User> exchange = testRestTemplate.exchange("/users", HttpMethod.POST, new HttpEntity<>(user), User.class);
         User dbUser = exchange.getBody();
         assertNotNull(dbUser);
