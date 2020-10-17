@@ -20,7 +20,7 @@ http://localhost:8080/api/h2-console
 
 ### ...or if you only want to take a look  
 Just type the following line in the terminal and go to localhost:4003  
-ssh -L 4003:localhost:4003 -L 8069:localhost:8069 root@193.40.156.55
+ssh -L 4003:localhost:4004 -L 8069:localhost:8069 root@193.40.156.55
 
 
 ### Team  
