@@ -39,6 +39,15 @@ public class UserController {
         return userService.findById(id);
     }
 
+    @GetMapping
+    public List<User> getUsers(@RequestParam(required = false) String nickName, @RequestParam(required = false) String email) {
+        if (nickName != null) {
+            return userService.findByNickname(nickName);
+        } else if (email != null) {
+            return userService.findByEmail(email);
+        }
+        return userService.findAll();
+    }
     @GetMapping("check/{id}")
     public boolean idIsTaken(@PathVariable Long id){
         return userService.idIsTaken(id);
@@ -47,11 +56,6 @@ public class UserController {
     @PutMapping("{id}")
     public User updateUser(@PathVariable Long id, @RequestBody User user) {
         return userService.update(id, user);
-    }
-
-    @GetMapping
-    public List<User> getUsers() {
-        return userService.findAll();
     }
 
     @DeleteMapping("{id}")

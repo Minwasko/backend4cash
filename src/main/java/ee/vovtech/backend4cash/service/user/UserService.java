@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -35,6 +36,14 @@ public class UserService {
             return userRepository.findById(id).get();
         }
         throw new UserNotFoundException();
+    }
+
+    public List<User> findByNickname(String nickName) {
+        return findAll().stream().filter(user -> user.getNickname().equals(nickName)).collect(Collectors.toList());
+    }
+
+    public List<User> findByEmail(String email) {
+        return findAll().stream().filter(user -> user.getEmail().equals(email)).collect(Collectors.toList());
     }
 
     public List<User> findAll() {
@@ -83,5 +92,4 @@ public class UserService {
         user.setForumPosts(posts);
         save(user);
     }
-
 }
