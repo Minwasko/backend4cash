@@ -50,9 +50,15 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> getUsers() {
+    public List<User> getUsers(@RequestParam(required = false) String nickName, @RequestParam(required = false) String email) {
+        if (nickName != null) {
+            return userService.findByNickname(nickName);
+        } else if (email != null) {
+            return userService.findByEmail(email);
+        }
         return userService.findAll();
     }
+
 
     @DeleteMapping("{id}")
     public void deleteUser(@PathVariable Long id) {

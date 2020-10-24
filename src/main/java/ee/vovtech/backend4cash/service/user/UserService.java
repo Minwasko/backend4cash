@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -58,6 +59,15 @@ public class UserService {
         return userRepository.existsById(userID);
     }
 
+
+
+    public List<User> findByNickname(String nickName) {
+        return findAll().stream().filter(user -> user.getNickname().equals(nickName)).collect(Collectors.toList());
+    }
+
+    public List<User> findByEmail(String email) {
+        return findAll().stream().filter(user -> user.getEmail().equals(email)).collect(Collectors.toList());
+    }
 
 
     //TODO refactor so we dont pass userID here + maybe rename method to deletePostFromUser cause
