@@ -19,7 +19,7 @@ http://localhost:8080/api/h2-console
 4.run the script  
 
 ### ...or if you only want to take a look  
-Just use your browser to connect to this website: http://193.40.156.55
+Just use your browser to connect to this website: http://bits4cash.tk
 
 
 ### Team  
