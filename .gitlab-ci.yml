@@ -30,7 +30,7 @@ build docker:
                 - source .${CI_COMMIT_REF_NAME}.env
                 - cd /home/ubuntu/bits4cash/backend4cash
         script:
-                - docker build --volume ~/logs4cash:/app/logs --build-arg SPRING_ACTIVE_PROFILE=$SPRING_ACTIVE_PROFILE -t $IMAGE_NAME .
+                - docker build -v ~/logs4cash:/app/logs --build-arg SPRING_ACTIVE_PROFILE=$SPRING_ACTIVE_PROFILE -t $IMAGE_NAME .
 
 stop current:
         stage: stop current container
