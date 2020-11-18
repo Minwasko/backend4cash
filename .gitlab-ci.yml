@@ -22,7 +22,7 @@ build jar:
         script:
                 # 1st run with tests, 2nd without. Choose one of the following here..
                 #- mvn clean install -Dspring.profiles.active=$SPRING_ACTIVE_PROFILE
-                - mvn clean install -Dmaven.test.skip=false -Dspring.profiles.active=$SPRING_ACTIVE_PROFILE
+                - mvn clean install -Dmaven.test.yaml.skip=false -Dspring.profiles.active=$SPRING_ACTIVE_PROFILE
 
 build docker:
         stage: build docker image
