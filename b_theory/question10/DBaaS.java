@@ -5,7 +5,7 @@ public class DBaaS {
     //todo A
     // What is DBaaS (Database as a service)?
     // Answer: computing service that allows users to use a cloud based database without the need
-    // to purchase hardware and set it up
+    // to purchase hardware and set it up themselves
 
     //todo B
     // Name 2 examples of DBaaS.

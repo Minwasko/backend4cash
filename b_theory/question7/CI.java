@@ -9,7 +9,7 @@ public class CI {
     //todo B
     // What makes integration continuous?
     // Answer: multiple developers work on code at the same time and make small commits that go through automated
-    // testing, this ensures that everyone is working on the same code
+    // testing, this ensures that everyone is working on the same code and code doesn't have any bugs
 
     //todo C
     // In the class we had 3 stages in our CI/CD process, tick [x] which ones stand for continuous integration
