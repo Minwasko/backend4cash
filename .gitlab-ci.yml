@@ -37,23 +37,18 @@ stop current:
         stage: stop current container
         # allow failure cause sometimes there might not be any container with given name running
         allow_failure: true
-        before_script:
-                - source .${CI_COMMIT_REF_NAME}.env
-                - cd /home/ubuntu/bits4cash/backend4cash
         script:
                 # cool shell magic
-                - docker stop $(docker ps -f "name=back" -q)
+                - docker stop $(docker ps -f "name=backend4cash" -q)
 
 
 remove current:
         stage: remove stopped container
         allow_failure: true
-        before_script:
-                - cd /home/ubuntu/bits4cash/backend4cash
         script:
                 # a to print all containers, cause otherwise the one we've just stopped wont appear
                 # (found out the hard way)
-                - docker container rm $(docker ps -af "name=back" -q)
+                - docker container rm $(docker ps -af "name=backend4cash" -q)
 
 run:
         stage: run docker container
