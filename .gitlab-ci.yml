@@ -42,7 +42,9 @@ stop current:
         script:
                 # cool shell magic
                 - docker stop $(docker ps -f "name=back" -q)
-                - docker container rm $(docker ps -f "name=back" -q)
+                # a to print all containers, cause otherwise the one we've just stopped wont appear
+                # (found out the hard way)
+                - docker container rm $(docker ps -af "name=back" -q)
 
 run:
         stage: run docker container
