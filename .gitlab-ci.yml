@@ -3,6 +3,7 @@ stages:
         - build jar
         - build docker image
         - stop current container
+        - remove stopped container
         - run docker container
 
 pull:
@@ -42,6 +43,14 @@ stop current:
         script:
                 # cool shell magic
                 - docker stop $(docker ps -f "name=back" -q)
+
+
+remove current:
+        stage: remove stopped container
+        allow_failure: true
+        before_script:
+                - cd /home/ubuntu/bits4cash/backend4cash
+        script:
                 # a to print all containers, cause otherwise the one we've just stopped wont appear
                 # (found out the hard way)
                 - docker container rm $(docker ps -af "name=back" -q)
