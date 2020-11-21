@@ -4,6 +4,7 @@ public class Nr4isI {
 
     //todo this is a contribution based question so make sure to keep commits separate
     //todo A What does I stand for in SOLID? Explain the principle.
+    // Answer: Interface segregation principle, client should not be forced to implement a function they do not need
     //todo B Give an example. Write actual or pseudo code.
     public interface BarkWoof {
             public void bork() {
