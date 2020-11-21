@@ -38,6 +38,14 @@ public class UserService {
         throw new UserNotFoundException();
     }
 
+    public List<User> findByNickname(String nickName) {
+        return findAll().stream().filter(user -> user.getNickname().equals(nickName)).collect(Collectors.toList());
+    }
+
+    public List<User> findByEmail(String email) {
+        return findAll().stream().filter(user -> user.getEmail().equals(email)).collect(Collectors.toList());
+    }
+
     public List<User> findAll() {
         return userRepository.findAll();
     }
@@ -93,5 +101,4 @@ public class UserService {
         user.setForumPosts(posts);
         save(user);
     }
-
 }
