@@ -68,16 +68,6 @@ public class UserService {
     }
 
 
-
-    public List<User> findByNickname(String nickName) {
-        return findAll().stream().filter(user -> user.getNickname().equals(nickName)).collect(Collectors.toList());
-    }
-
-    public List<User> findByEmail(String email) {
-        return findAll().stream().filter(user -> user.getEmail().equals(email)).collect(Collectors.toList());
-    }
-
-
     //TODO refactor so we dont pass userID here + maybe rename method to deletePostFromUser cause
     // its what it does
     public void deletePost(long userId, long postId){
