@@ -56,4 +56,4 @@ run:
                 - source .${CI_COMMIT_REF_NAME}.env
                 - cd /home/ubuntu/bits4cash/backend4cash
         script:
-                - docker container run -v ~/logs4cash:/app/logs -d --name $APP_NAME --net=$NETWORK_NAME --net-alias=$APP_NAME -p $PORT:8080 -e SPRING_PROFILES_ACTIVE=$SPRING_ACTIVE_PROFILE $IMAGE_NAME
+                - docker container run -v ~/logs4cash:/app/logs -d --name $APP_NAME --net=$NETWORK_NAME --net-alias=backend4cashdev -p $PORT:8080 -e SPRING_PROFILES_ACTIVE=$SPRING_ACTIVE_PROFILE $IMAGE_NAME
