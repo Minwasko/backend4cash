@@ -3,6 +3,7 @@ stages:
         - build jar
         - build docker image
         - stop current container
+        - remove stopped container
         - run docker container
 
 pull:
@@ -22,7 +23,7 @@ build jar:
         script:
                 # 1st run with tests, 2nd without. Choose one of the following here..
                 #- mvn clean install -Dspring.profiles.active=$SPRING_ACTIVE_PROFILE
-                - mvn clean install -Dmaven.test.skip=false -Dspring.profiles.active=$SPRING_ACTIVE_PROFILE
+                - mvn clean install -Dmaven.test.yaml.skip=false -Dspring.profiles.active=$SPRING_ACTIVE_PROFILE
 
 build docker:
         stage: build docker image
@@ -36,12 +37,18 @@ stop current:
         stage: stop current container
         # allow failure cause sometimes there might not be any container with given name running
         allow_failure: true
-        before_script:
-                - source .${CI_COMMIT_REF_NAME}.env
-                - cd /home/ubuntu/bits4cash/backend4cash
         script:
-                - docker stop $APP_NAME
-                - docker container rm $APP_NAME
+                # cool shell magic
+                - docker stop $(docker ps -f "name=backend4cash" -q)
+
+
+remove current:
+        stage: remove stopped container
+        allow_failure: true
+        script:
+                # a to print all containers, cause otherwise the one we've just stopped wont appear
+                # (found out the hard way)
+                - docker container rm $(docker ps -af "name=backend4cash" -q)
 
 run:
         stage: run docker container
@@ -49,4 +56,4 @@ run:
                 - source .${CI_COMMIT_REF_NAME}.env
                 - cd /home/ubuntu/bits4cash/backend4cash
         script:
-                - docker container run -d --name $APP_NAME --net=$NETWORK_NAME --net-alias=backend4cashdev -p $PORT:8080 -e SPRING_PROFILES_ACTIVE=$SPRING_ACTIVE_PROFILE $IMAGE_NAME
+                - docker container run -v ~/logs4cash:/app/logs -d --name $APP_NAME --net=$NETWORK_NAME --net-alias=$APP_NAME -p $PORT:8080 -e SPRING_PROFILES_ACTIVE=$SPRING_ACTIVE_PROFILE $IMAGE_NAME
