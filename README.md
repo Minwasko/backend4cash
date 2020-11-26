@@ -17,4 +17,4 @@ Just use your browser to connect to this website: http://bits4cash.tk
 
 
 ### Team  
-Gleb Komissarov Heino Kiik Kirill Grishin Mihhail Kohhantsuk
+Gleb Komissarov ⚰️Heino Kiik⚰️ Kirill Grishin Mihhail Kohhantsuk
