@@ -58,7 +58,6 @@ public class UserController {
         return userService.update(id, user);
     }
 
-
     @DeleteMapping("{id}")
     public void deleteUser(@PathVariable Long id) {
         userService.delete(id);
@@ -67,13 +66,13 @@ public class UserController {
     @GetMapping("{id}/posts")
     // See users forum posts
     public List<ForumPost> getUserForumPosts(@PathVariable Long id) {
-        return userService.findPostsByUser(id);
+        return forumPostService.findAllPostsByUserId(id);
     }
 
     @DeleteMapping("{id}/posts")
     // See users forum posts
     public void deleteAllUserForumPosts(@PathVariable Long id) {
-        userService.deleteAllPosts(id);
+        forumPostService.deleteAllPostsFromUser(id);
     }
 
 

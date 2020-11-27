@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import java.util.ArrayList;
@@ -19,10 +18,7 @@ public class User {
     private String nickname;
     private String email;
     private String password;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
-    private List<ForumPost> forumPosts = new ArrayList<>();
+    private long cash;
 
     public User() {
 
@@ -33,7 +29,6 @@ public class User {
         this.nickname = nickname;
         this.email = email;
         this.password = password;
-        this.forumPosts = posts;
     }
 
     public long getId() {
@@ -68,12 +63,11 @@ public class User {
         this.password = password;
     }
 
-    public List<ForumPost> getForumPosts() {
-        return forumPosts;
+    public long getCash() {
+        return cash;
     }
 
-    public void setForumPosts(List<ForumPost> forumPosts) {
-        this.forumPosts = forumPosts;
+    public void setCash(long cash) {
+        this.cash = cash;
     }
-
 }
