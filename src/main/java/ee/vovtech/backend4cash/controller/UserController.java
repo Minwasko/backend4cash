@@ -74,9 +74,15 @@ public class UserController {
     }
 
     @PutMapping("{id}/coins/{coinId}")
-    public boolean tryToBuyCoins(@PathVariable("id") Long id, @PathVariable("coinId") String coinId, @RequestParam String amount) {
-        return currencyPriceService.tryToBuyCoins(id, coinId, amount);
+    public boolean tryToBuyOrSellCoins(@PathVariable("id") Long id, @PathVariable("coinId") String coinId, @RequestParam String amount, @RequestParam boolean buy) {
+        if (buy) return currencyPriceService.tryToBuyCoins(id, coinId, amount);
+        return currencyPriceService.tryToSellCoins(id, coinId, amount);
     }
+
+//    @PutMapping("{id}/coins/{coinId}")
+//    public boolean tryToSellCoins(@PathVariable("id") Long id, @PathVariable("coinId") String coinId, @RequestParam String amount) {
+//        return currencyPriceService.tryToSellCoins(id, coinId, amount);
+//    }
 
 
 }
