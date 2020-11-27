@@ -96,10 +96,15 @@ class UserControllerTest {
         assertNotNull(exchange.getBody());
         User dbUser = exchange.getBody().get(0);
         testRestTemplate.exchange("/users/" + dbUser.getId() + "/posts", HttpMethod.DELETE, null, User.class);
-        ResponseEntity<List<User>> exchangeAfterDelete = testRestTemplate.exchange("/users", HttpMethod.GET, null, LIST_OF_USERS);
+        // old version with user having link to posts
+//        ResponseEntity<List<User>> exchangeAfterDelete = testRestTemplate.exchange("/users", HttpMethod.GET, null, LIST_OF_USERS);
+//        assertNotNull(exchangeAfterDelete.getBody());
+//        User userAfterDeletion = exchangeAfterDelete.getBody().get(0);
+        // new version
+        ResponseEntity<List<ForumPost>> exchangeAfterDelete = testRestTemplate.exchange("/users/" + dbUser.getId() + "/posts", HttpMethod.GET, null, LIST_OF_POSTS);
         assertNotNull(exchangeAfterDelete.getBody());
-        User userAfterDeletion = exchangeAfterDelete.getBody().get(0);
-        assertEquals(new ArrayList<>(), userAfterDeletion.getForumPosts());
+        List<ForumPost> postsAfterDelete = exchangeAfterDelete.getBody();
+        assertEquals(new ArrayList<>(), postsAfterDelete);
     }
 
     @Test

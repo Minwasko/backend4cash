@@ -5,6 +5,7 @@ import ee.vovtech.backend4cash.model.Currency;
 import ee.vovtech.backend4cash.model.ForumPost;
 import ee.vovtech.backend4cash.model.User;
 import ee.vovtech.backend4cash.repository.CurrencyRepository;
+import ee.vovtech.backend4cash.repository.ForumPostRepository;
 import ee.vovtech.backend4cash.repository.UserRepository;
 import ee.vovtech.backend4cash.service.currency.CurrencyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,8 @@ public class Backend4cashApplicationInit implements CommandLineRunner {
     private CurrencyService currencyService;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private ForumPostRepository forumPostRepository;
 
     @Override
     public void run(String... args) throws UnirestException {
@@ -32,10 +35,10 @@ public class Backend4cashApplicationInit implements CommandLineRunner {
         User user = new User();
         user.setId(1);
         user.setNickname("meme");
-        ForumPost forumPost = new ForumPost("good", user);
-        user.setForumPosts(List.of(forumPost));
         user.setEmail("kek@kek.ee");
         user.setPassword("12345lol");
         userRepository.save(user);
+        ForumPost forumPost = new ForumPost("good", user);
+        forumPostRepository.save(forumPost);
     }
 }

@@ -10,12 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ForumPostService {
-
-    @Autowired
-    private UserRepository userRepository;
 
     @Autowired
     private UserService userService;
@@ -28,12 +26,8 @@ public class ForumPostService {
             throw new InvalidForumPostException("ForumPost message is too long");
         }
         User user = userService.findById(id);
-        List<ForumPost> posts = user.getForumPosts();
         ForumPost forumPost = new ForumPost(message, user);
-        posts.add(forumPost);
-        user.setForumPosts(posts);
-        userService.save(user);
-        return forumPost;
+        return forumPostRepository.save(forumPost);
     }
 
     public List<ForumPost> findAll() {
@@ -41,20 +35,21 @@ public class ForumPostService {
     }
 
     public ForumPost findById(long id) {
-        if (forumPostRepository.findById(id).isPresent()) {
-            return forumPostRepository.findById(id).get();
-        }
+        if (forumPostRepository.findById(id).isPresent()) return forumPostRepository.findById(id).get();
         throw new UserNotFoundException();
-    }
-
-    public void deleteForumPostFromUser(long id) {
-        ForumPost forumPost = findById(id);
-        userService.deletePost(forumPost.getUser().getId(), id);
-        forumPostRepository.delete(forumPost);
     }
 
     public void deleteForumPost(long id) {
         forumPostRepository.delete(findById(id));
+    }
+
+    public List<ForumPost> findAllPostsByUserId(long id) {
+        return findAll().stream().filter(post -> post.getUser().getId() == id).collect(Collectors.toList());
+    }
+
+    public void deleteAllPostsFromUser(long id) {
+        List<ForumPost> posts = findAll().stream().filter(e -> e.getUser().getId() == id).collect(Collectors.toList());
+        posts.forEach(post -> deleteForumPost(post.getId()));
     }
 
 }

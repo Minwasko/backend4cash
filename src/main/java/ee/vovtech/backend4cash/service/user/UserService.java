@@ -58,47 +58,9 @@ public class UserService {
         }
     }
 
-    public List<ForumPost> findPostsByUser(long userId){
-        return findById(userId).getForumPosts();
-    }
-
     // !!! temporary solution for id thingies in users. Has to be fixed l8r
     public boolean idIsTaken(long userID){
         return userRepository.existsById(userID);
     }
 
-
-
-    public List<User> findByNickname(String nickName) {
-        return findAll().stream().filter(user -> user.getNickname().equals(nickName)).collect(Collectors.toList());
-    }
-
-    public List<User> findByEmail(String email) {
-        return findAll().stream().filter(user -> user.getEmail().equals(email)).collect(Collectors.toList());
-    }
-
-
-    //TODO refactor so we dont pass userID here + maybe rename method to deletePostFromUser cause
-    // its what it does
-    public void deletePost(long userId, long postId){
-        User user = findById(userId);
-        List<ForumPost> forumPosts = user.getForumPosts();
-        ForumPost forumPost = forumPosts.stream().filter(post -> post.getId() == postId).findFirst().get();
-        forumPost.setUser(null);
-        forumPosts.remove(forumPost);
-        user.setForumPosts(forumPosts);
-        save(user);
-    }
-
-    public void deleteAllPosts(long userId) {
-        User user = findById(userId);
-        List<ForumPost> posts = user.getForumPosts();
-        for (ForumPost post : posts) {
-            post.setUser(null);
-            forumPostService.deleteForumPost(post.getId());
-        }
-        posts.clear();
-        user.setForumPosts(posts);
-        save(user);
-    }
 }
