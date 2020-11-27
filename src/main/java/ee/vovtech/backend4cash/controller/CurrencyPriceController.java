@@ -32,4 +32,9 @@ public class CurrencyPriceController {
         return currencyPriceService.updateDB(id, timestampPrices);
     }
 
+    @GetMapping("{id}/price")
+    public String getCurrentPrice(@PathVariable String id) {
+        return currencyPriceService.getCurrentPrice(id);
+    }
+
 }

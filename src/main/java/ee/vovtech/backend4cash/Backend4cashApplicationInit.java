@@ -34,6 +34,7 @@ public class Backend4cashApplicationInit implements CommandLineRunner {
 
         User user = new User();
         user.setId(1);
+        user.setCash("100");
         user.setNickname("meme");
         user.setEmail("kek@kek.ee");
         user.setPassword("12345lol");

@@ -3,6 +3,7 @@ package ee.vovtech.backend4cash.controller;
 
 import ee.vovtech.backend4cash.model.ForumPost;
 import ee.vovtech.backend4cash.model.User;
+import ee.vovtech.backend4cash.service.currency.CurrencyPriceService;
 import ee.vovtech.backend4cash.service.user.ForumPostService;
 import ee.vovtech.backend4cash.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,8 @@ public class UserController {
     private UserService userService;
     @Autowired
     private ForumPostService forumPostService;
+    @Autowired
+    private CurrencyPriceService currencyPriceService;
 
     @PostMapping
     public User saveUser(@RequestBody User user) {
@@ -41,11 +44,8 @@ public class UserController {
 
     @GetMapping
     public List<User> getUsers(@RequestParam(required = false) String nickName, @RequestParam(required = false) String email) {
-        if (nickName != null) {
-            return userService.findByNickname(nickName);
-        } else if (email != null) {
-            return userService.findByEmail(email);
-        }
+        if (nickName != null) return userService.findByNickname(nickName);
+        else if (email != null) return userService.findByEmail(email);
         return userService.findAll();
     }
     @GetMapping("check/{id}")
@@ -64,15 +64,18 @@ public class UserController {
     }
 
     @GetMapping("{id}/posts")
-    // See users forum posts
     public List<ForumPost> getUserForumPosts(@PathVariable Long id) {
         return forumPostService.findAllPostsByUserId(id);
     }
 
     @DeleteMapping("{id}/posts")
-    // See users forum posts
     public void deleteAllUserForumPosts(@PathVariable Long id) {
         forumPostService.deleteAllPostsFromUser(id);
+    }
+
+    @PutMapping("{id}/coins/{coinId}")
+    public boolean tryToBuyCoins(@PathVariable("id") Long id, @PathVariable("coinId") String coinId, @RequestParam String amount) {
+        return currencyPriceService.tryToBuyCoins(id, coinId, amount);
     }
 
 

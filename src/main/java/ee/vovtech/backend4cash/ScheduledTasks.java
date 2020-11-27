@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-@Deprecated
 @Component
 public class ScheduledTasks {
 
@@ -16,9 +15,10 @@ public class ScheduledTasks {
     @Autowired
     CurrencyService currencyService;
 
-    @Scheduled(fixedDelay = 1000)
+    @Scheduled(fixedDelay = 5000)
     public void updatePrices(){
-        currencyService.findAll().forEach(currency -> currencyPriceService.updatePrice(currency.getName(), CurrencyPriceService.UpdateTime.HOUR));
+        System.out.println("Scheduling the Scheduled Schedule");
+//        currencyService.findAll().forEach(currency -> currencyPriceService.updatePrice(currency.getName(), CurrencyPriceService.UpdateTime.HOUR));
     }
 
 }

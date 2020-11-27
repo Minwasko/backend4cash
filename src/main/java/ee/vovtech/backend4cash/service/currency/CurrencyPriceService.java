@@ -4,12 +4,15 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import ee.vovtech.backend4cash.exceptions.InvalidCurrencyException;
 import ee.vovtech.backend4cash.model.Currency;
 import ee.vovtech.backend4cash.model.TimestampPrice;
+import ee.vovtech.backend4cash.model.User;
 import ee.vovtech.backend4cash.repository.CurrencyRepository;
 import ee.vovtech.backend4cash.service.coingecko.CoingeckoAPI;
+import ee.vovtech.backend4cash.service.user.UserService;
 import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -20,8 +23,10 @@ public class CurrencyPriceService {
     private CurrencyRepository currencyRepository;
     @Autowired
     private CurrencyService currencyService;
+    @Autowired
+    private UserService userService;
 
-    public enum UpdateTime {DAY, HOUR};
+    public enum UpdateTime {DAY, HOUR}
 
     public void updatePrice(String id, UpdateTime updateTime) {
         JSONArray data;
@@ -46,13 +51,27 @@ public class CurrencyPriceService {
         } else if (timestampPrices.isEmpty()) {
             throw new InvalidCurrencyException("New price data is empty");
         }
-//        } else if (!id.equals(timestampPrices.get(0).getCurrency().getName())) {
-//            throw new InvalidCurrencyException("Price data is for a different currency");
-//        }
         Currency dbCurrency = currencyRepository.findById(id).get();
         dbCurrency.setTimestampPrices(timestampPrices);
         currencyRepository.save(dbCurrency);
         return dbCurrency;
+    }
+
+    public String getCurrentPrice(String id) {
+        Currency dbCurrency = currencyService.findById(id);
+        return dbCurrency.getTimestampPrices().get(dbCurrency.getTimestampPrices().size() - 1).getPrice();
+    }
+
+    public boolean tryToBuyCoins(long userId, String coinId, String amount) {
+        User dbUser = userService.findById(userId);
+        BigDecimal totalPrice = new BigDecimal(getCurrentPrice(coinId)).multiply(new BigDecimal(amount));
+        if (totalPrice.compareTo(new BigDecimal(dbUser.getCash())) < 0) {
+            dbUser.addCoins(coinId, amount);
+            dbUser.setCash(new BigDecimal(dbUser.getCash()).subtract(totalPrice).toString());
+            userService.save(dbUser);
+            return true;
+        }
+        return false;
     }
 }
 

@@ -3,11 +3,14 @@ package ee.vovtech.backend4cash.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.CascadeType;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Entity
 public class User {
@@ -18,13 +21,15 @@ public class User {
     private String nickname;
     private String email;
     private String password;
-    private long cash;
+    private String cash;
+    @ElementCollection
+    private List<SimpleEntry<String, String>> ownedCoins = new ArrayList<>();
 
     public User() {
 
     }
 
-    public User(Long id, String nickname, String email, String password, List<ForumPost> posts) {
+    public User(Long id, String nickname, String email, String password) {
         this.id = id;
         this.nickname = nickname;
         this.email = email;
@@ -63,11 +68,21 @@ public class User {
         this.password = password;
     }
 
-    public long getCash() {
+    public String getCash() {
         return cash;
     }
 
-    public void setCash(long cash) {
+    public void setCash(String cash) {
         this.cash = cash;
+    }
+
+    public List<SimpleEntry<String, String>> getOwnedCoins() {
+        return ownedCoins;
+    }
+
+    public void addCoins(String coinId, String amount) {
+        Optional<SimpleEntry<String, String>> coin = ownedCoins.stream().filter(e -> e.getKey().equals(coinId)).findAny();
+        if(coin.isPresent()) coin.get().setValue(coin.get().getValue() + amount);
+        else ownedCoins.add(new SimpleEntry<>(coinId, amount));
     }
 }
