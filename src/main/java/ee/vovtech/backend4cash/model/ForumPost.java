@@ -1,9 +1,13 @@
 package ee.vovtech.backend4cash.model;
 
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
 
-@Entity
+@Entity @Getter @Setter @NoArgsConstructor
 public class ForumPost {
     @Id
     @GeneratedValue
@@ -15,35 +19,8 @@ public class ForumPost {
     @JoinColumn(name = "FK_UserId")
     private User user;
 
-    public ForumPost() {
-    }
-
     public ForumPost(String message, User user) {
         this.user = user;
         this.message = message;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 }
