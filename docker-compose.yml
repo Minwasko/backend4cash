@@ -48,7 +48,7 @@ services:
 
   certbot:
     depends_on:
-      - ngimx
+      - nginx
     image: certbot/certbot
     volumes:
       - ./data/certbot/conf:/etc/letsencrypt
