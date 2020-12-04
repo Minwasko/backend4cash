@@ -48,6 +48,7 @@ services:
 
   certbot:
     depends_on:
+      #comment
       - nginx
     image: certbot/certbot
     volumes:
