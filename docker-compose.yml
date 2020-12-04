@@ -15,6 +15,9 @@ services:
       - ~/mysql-stuff:/
 
   backend:
+    restart: on-failure
+    depends_on:
+      - database
     image: backend4cash/dev
     container_name: backend4cash
     networks:
@@ -22,21 +25,34 @@ services:
     hostname: backend4cashdev
     ports:
       - "8069:8080"
+    env_file: backend4cash/.dev.env
+    build:
+      context: backend4cash/
+      dockerfile: Dockerfile
     volumes:
       - ~/logs4cash:/app/logs
 
   frontend:
+    depends_on:
+      - backend
     image: frontend4cash/dev
     container_name: frontend4cash
     ports:
       - "80:80"
       - "443:443"
+    env_file: frontend4cash/.dev.env
+    build:
+      context: frontend4cash/
+      dockerfile: Dockerfile
     volumes:
       - ~/logs4front:/var/log/nginx/
       - ./data/nginx:/etc/nginx/conf.d
       - ./data/certbot/conf:/etc/letsencrypt
       - ./data/certbot/www:/var/www/certbot
+
   certbot:
+    depends_on:
+      - frontend
     image: certbot/certbot
     volumes:
       - ./data/certbot/conf:/etc/letsencrypt
