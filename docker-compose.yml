@@ -2,7 +2,7 @@ version: '3'
 services:
 
   database:
-    image: mysql/latest
+    image: mysql:latest
     container_name: data4cash
     hostname: mysql
     expose:
@@ -16,7 +16,6 @@ services:
     restart: on-failure
     depends_on:
       - database
-    image: backend4cash/dev
     container_name: backend4cash
     hostname: backend4cashdev
     ports:
@@ -31,7 +30,6 @@ services:
   nginx:
     depends_on:
       - backend
-    image: frontend4cash/dev
     container_name: frontend4cash
     ports:
       - "80:80"
