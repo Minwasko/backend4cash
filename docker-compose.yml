@@ -1,0 +1,43 @@
+version: '3'
+services:
+
+  database:
+    image: mysql/latest
+    container_name: data4cash
+    hostname: mysql
+    expose:
+      - 3306
+    networks:
+      - network4cash
+    environment:
+      - MYSQL_ROOT_PASSWORD=vovan
+    volumes:
+      - ~/mysql-stuff:/
+
+  backend:
+    image: backend4cash/dev
+    container_name: backend4cash
+    networks:
+      - network4cash
+    hostname: backend4cashdev
+    ports:
+      - "8069:8080"
+    volumes:
+      - ~/logs4cash:/app/logs
+
+  frontend:
+    image: frontend4cash/dev
+    container_name: frontend4cash
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ~/logs4front:/var/log/nginx/
+      - ./data/nginx:/etc/nginx/conf.d
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
