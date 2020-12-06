@@ -24,6 +24,7 @@ public class User {
     private String email;
     private String password;
     private String cash;
+    private String status;
     @ElementCollection
     private List<SimpleEntry<String, String>> ownedCoins = new ArrayList<>();
 

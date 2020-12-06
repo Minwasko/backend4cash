@@ -53,9 +53,24 @@ public class UserController {
         return userService.idIsTaken(id);
     }
 
-    @PutMapping("{id}")
-    public User updateUser(@PathVariable Long id, @RequestBody User user) {
-        return userService.update(id, user);
+    @PutMapping("{id}/email") // email, nickname, password, status
+    public boolean updateUserEmail(@PathVariable Long id, @RequestParam String email) {
+        return userService.update(id, "email", email);
+    }
+
+    @PutMapping("{id}/nickname")
+    public boolean updateUserNickname(@PathVariable Long id, @RequestParam String nickname) {
+        return userService.update(id, "nickname", nickname);
+    }
+
+    @PutMapping("{id}/password")
+    public boolean updateUserPassword(@PathVariable Long id, @RequestParam String password) {
+        return userService.update(id, "password", password);
+    }
+
+    @PutMapping("{id}/status")
+    public boolean updateUserStatus(@PathVariable Long id, @RequestParam String status) {
+        return userService.update(id, "status", status);
     }
 
     @DeleteMapping("{id}")
@@ -72,17 +87,5 @@ public class UserController {
     public void deleteAllUserForumPosts(@PathVariable Long id) {
         forumPostService.deleteAllPostsFromUser(id);
     }
-
-    @PutMapping("{id}/coins/{coinId}")
-    public boolean tryToBuyOrSellCoins(@PathVariable("id") Long id, @PathVariable("coinId") String coinId, @RequestParam String amount, @RequestParam boolean buy) {
-        if (buy) return currencyPriceService.tryToBuyCoins(id, coinId, amount);
-        return currencyPriceService.tryToSellCoins(id, coinId, amount);
-    }
-
-//    @PutMapping("{id}/coins/{coinId}")
-//    public boolean tryToSellCoins(@PathVariable("id") Long id, @PathVariable("coinId") String coinId, @RequestParam String amount) {
-//        return currencyPriceService.tryToSellCoins(id, coinId, amount);
-//    }
-
 
 }

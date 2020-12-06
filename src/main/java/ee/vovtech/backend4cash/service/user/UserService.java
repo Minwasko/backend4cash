@@ -16,20 +16,33 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private ForumPostService forumPostService;
-
     public User save(User user) {
         return userRepository.save(user);
     }
 
-    public User update(Long id, User user) {
+    public boolean update(Long id, String infoToChange, String value) {
         User dbUser = findById(id);
-        dbUser.setNickname(user.getNickname());
+        switch (infoToChange) {
+            case "email":
+                if (findAll().stream().noneMatch(user -> user.getEmail().equals(value))) {
+                    dbUser.setEmail(value);
+                }
+                else return false;
+                break;
+            case "nickname":
+                if (findAll().stream().noneMatch(user -> user.getNickname().equals(value))) dbUser.setNickname(value);
+                else return false;
+                break;
+            case "password":
+                dbUser.setPassword(value);
+                break;
+            case "status":
+                dbUser.setStatus(value);
+                break;
+        }
         save(dbUser);
-        return dbUser;
+        return true;
     }
-
 
     public User findById(Long id) {
         if (userRepository.findById(id).isPresent()) {
