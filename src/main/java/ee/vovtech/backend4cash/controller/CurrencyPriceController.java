@@ -23,7 +23,7 @@ public class CurrencyPriceController {
     private CurrencyService currencyService;
 
     @GetMapping("{id}/pricedata")
-    public List<TimestampPrice> getCurrencyPriceData(@PathVariable String id) {
+    public List<TimestampPrice> getCurrencyPriceData(@PathVariable String id) throws UnirestException {
         return currencyService.findById(id).getTimestampPrices();
     }
 
@@ -33,7 +33,7 @@ public class CurrencyPriceController {
     }
 
     @GetMapping("{id}/price")
-    public String getCurrentPrice(@PathVariable String id) {
+    public String getCurrentPrice(@PathVariable String id) throws UnirestException {
         return currencyPriceService.getCurrentPrice(id);
     }
 

@@ -1,5 +1,6 @@
 package ee.vovtech.backend4cash.service.currency;
 
+import com.mashape.unirest.http.exceptions.UnirestException;
 import ee.vovtech.backend4cash.exceptions.InvalidCurrencyException;
 import ee.vovtech.backend4cash.model.Currency;
 import ee.vovtech.backend4cash.model.TimestampPrice;
@@ -26,7 +27,7 @@ public class CurrencyPriceService {
 
     public enum UpdateTime {DAY, HOUR}
 
-    public void updatePrice(String id, UpdateTime updateTime) {
+    public void updatePrice(String id, UpdateTime updateTime) throws UnirestException {
         JSONArray data;
         if (updateTime.equals(UpdateTime.DAY)) data = CoingeckoAPI.getCurrencyPriceLastDay(id);
         else data = CoingeckoAPI.getCurrencyPriceLastHour(id);
@@ -52,12 +53,12 @@ public class CurrencyPriceService {
         return dbCurrency;
     }
 
-    public String getCurrentPrice(String id) {
+    public String getCurrentPrice(String id) throws UnirestException {
         Currency dbCurrency = currencyService.findById(id);
         return dbCurrency.getTimestampPrices().get(dbCurrency.getTimestampPrices().size() - 1).getPrice();
     }
 
-    public boolean tryToBuyCoins(long userId, String coinId, String amount) {
+    public boolean tryToBuyCoins(long userId, String coinId, String amount) throws UnirestException {
         User dbUser = userService.findById(userId);
         BigDecimal totalPrice = new BigDecimal(getCurrentPrice(coinId)).multiply(new BigDecimal(amount));
         if (totalPrice.compareTo(new BigDecimal(dbUser.getCash())) < 0) {
@@ -69,7 +70,7 @@ public class CurrencyPriceService {
         return false;
     }
 
-    public boolean tryToSellCoins(long userId, String coinId, String amount) {
+    public boolean tryToSellCoins(long userId, String coinId, String amount) throws UnirestException {
         User dbUser = userService.findById(userId);
         String coinPrice = getCurrentPrice(coinId);
         AbstractMap.SimpleEntry<String, String> userCoin = dbUser.getOwnedCoinByCoinId(coinId);

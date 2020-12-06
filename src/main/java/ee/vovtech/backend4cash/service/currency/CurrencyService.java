@@ -8,6 +8,7 @@ import ee.vovtech.backend4cash.model.TimestampPrice;
 import ee.vovtech.backend4cash.repository.CurrencyRepository;
 import ee.vovtech.backend4cash.service.coingecko.CoingeckoAPI;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,8 +26,10 @@ public class CurrencyService {
     @Autowired
     private CurrencyPriceService currencyPriceService;
 
-    public Currency findById(String id) {
-        return currencyRepository.findById(id).orElseThrow(CurrencyNotFoundException::new);
+    public Currency findById(String id) throws UnirestException {
+        if (currencyRepository.findById(id).isPresent()) return currencyRepository.findById(id).get();
+        createNewCoin(id);
+        return findById(id);
     }
 
     public Currency save(Currency currency) {
@@ -37,7 +40,7 @@ public class CurrencyService {
     }
 
 
-    public Currency updateCurrency(String currencyId, Currency currency) {
+    public Currency updateCurrency(String currencyId, Currency currency) throws UnirestException {
         if (currencyId == null || currencyRepository.findById(currencyId).isEmpty()) {
             throw new InvalidCurrencyException("Currency is not present in the database");
         }  else if (!currencyId.equals(currency.getName())) {
@@ -49,7 +52,7 @@ public class CurrencyService {
         return currencyRepository.save(dbCurrency);
     }
 
-    public void delete(String id) {
+    public void delete(String id) throws UnirestException {
         if (findById(id) == null) { throw new CurrencyNotFoundException(); }
         currencyRepository.delete(findById(id));
     }
@@ -65,9 +68,7 @@ public class CurrencyService {
             String name = coin.get("id").toString();
             System.out.println(name);
             System.out.println(currencyRepository.findAll());
-            if (currencyRepository.findById(name).isEmpty()) {
-                createNewCoin(name);
-            }
+            if (currencyRepository.findById(name).isEmpty()) createNewCoin(name);
         }
         return currencyRepository.findAll();
     }
@@ -77,13 +78,17 @@ public class CurrencyService {
             throw new InvalidCurrencyException("Currency already exists");
         }
         JSONObject coin = CoingeckoAPI.getCurrency(id); // get coin data
-        Currency newCoin = new Currency(); // put all the data in a new entity
-        newCoin.setName(id);
-        newCoin.setHomepageLink(coin.getJSONObject("links").getJSONArray("homepage").get(0).toString());
-        newCoin.setImageRef(coin.getJSONObject("image").get("small").toString());
-        save(newCoin); // save it to the database
-        currencyPriceService.updatePrice(id, CurrencyPriceService.UpdateTime.DAY);
-        return newCoin;
+        try {
+            Currency newCoin = new Currency(); // put all the data in a new entity
+            newCoin.setName(id);
+            newCoin.setHomepageLink(coin.getJSONObject("links").getJSONArray("homepage").get(0).toString());
+            newCoin.setImageRef(coin.getJSONObject("image").get("small").toString());
+            save(newCoin); // save it to the database
+            currencyPriceService.updatePrice(id, CurrencyPriceService.UpdateTime.DAY);
+            return newCoin;
+        } catch (JSONException e) {
+            throw new CurrencyNotFoundException();
+        }
     }
 
     public List<Currency> findAll() {

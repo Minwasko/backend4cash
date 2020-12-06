@@ -1,5 +1,6 @@
 package ee.vovtech.backend4cash.controller;
 
+import com.mashape.unirest.http.exceptions.UnirestException;
 import ee.vovtech.backend4cash.model.Currency;
 import ee.vovtech.backend4cash.service.currency.CurrencyPriceService;
 import ee.vovtech.backend4cash.service.currency.CurrencyService;
@@ -24,7 +25,7 @@ public class CurrencyController {
     }
 
     @GetMapping("{id}")
-    public Currency getCurrency(@PathVariable String id) {
+    public Currency getCurrency(@PathVariable String id) throws UnirestException {
         return currencyService.findById(id);
     }
 
@@ -34,22 +35,22 @@ public class CurrencyController {
     }
 
     @PutMapping("{id}")
-    public Currency updateCurrency(@PathVariable String id, @RequestBody Currency currency) {
+    public Currency updateCurrency(@PathVariable String id, @RequestBody Currency currency) throws UnirestException {
         return currencyService.updateCurrency(id, currency);
     }
 
     @DeleteMapping("{id}")
-    public void deleteCurrency(@PathVariable String id) {
+    public void deleteCurrency(@PathVariable String id) throws UnirestException {
         currencyService.delete(id);
     }
 
     @PutMapping("{coinId}/buy")
-    public boolean buyCoins(@PathVariable("coinId") String coinId, @RequestParam String amount, @RequestParam Long userId) {
+    public boolean buyCoins(@PathVariable("coinId") String coinId, @RequestParam String amount, @RequestParam Long userId) throws UnirestException {
         return currencyPriceService.tryToBuyCoins(userId, coinId, amount);
     }
 
     @PutMapping("{coinId}/sell")
-    public boolean sellCoins(@PathVariable("coinId") String coinId, @RequestParam String amount, @RequestParam Long userId) {
+    public boolean sellCoins(@PathVariable("coinId") String coinId, @RequestParam String amount, @RequestParam Long userId) throws UnirestException {
         return currencyPriceService.tryToSellCoins(userId, coinId, amount);
     }
 }
