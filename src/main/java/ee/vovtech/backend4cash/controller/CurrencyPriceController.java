@@ -14,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/coins")
-@CrossOrigin(origins = {"http://bits4cash.tk", "http://www.bits4cash.tk"}, maxAge = 3600)
+@CrossOrigin(origins = {"https://bits4cash.tk", "https://www.bits4cash.tk"}, maxAge = 3600)
 public class CurrencyPriceController {
 
     @Autowired
