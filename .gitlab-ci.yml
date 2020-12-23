@@ -21,7 +21,9 @@ build jar:
                 - source .${CI_COMMIT_REF_NAME}.env
                 - cd /home/ubuntu/bits4cash/backend4cash
         script:
-                - mvn clean install -Dmaven.test.skip=true -Dspring.profiles.active=$SPRING_ACTIVE_PROFILE
+                # 1st run with tests, 2nd without. Choose one of the following here..
+                #- mvn clean install -Dspring.profiles.active=$SPRING_ACTIVE_PROFILE
+                - mvn clean install -Dmaven.test.yaml.skip=false -Dspring.profiles.active=$SPRING_ACTIVE_PROFILE
 
 build docker:
         stage: build docker image
@@ -54,4 +56,4 @@ run:
                 - source .${CI_COMMIT_REF_NAME}.env
                 - cd /home/ubuntu/bits4cash/backend4cash
         script:
-                - docker container run -v ~/logs4cash:/app/logs -d --name $APP_NAME --net=$NETWORK_NAME --net-alias=backend4cashdev -p $PORT:8080 -p 8443:8443 -e SPRING_PROFILES_ACTIVE=$SPRING_ACTIVE_PROFILE $IMAGE_NAME
+                - docker container run -v ~/logs4cash:/app/logs -d --name $APP_NAME --net=$NETWORK_NAME --net-alias=backend4cashdev -p $PORT:8080 -e SPRING_PROFILES_ACTIVE=$SPRING_ACTIVE_PROFILE $IMAGE_NAME
