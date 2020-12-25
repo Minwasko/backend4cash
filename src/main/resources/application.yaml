@@ -13,4 +13,10 @@ spring:
     url: jdbc:mysql://mysql:3306/bits4data?createDatabaseIfNotExist=true
     username: root
     password: vovan
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri:
+          jwk-ser-uri:
 
