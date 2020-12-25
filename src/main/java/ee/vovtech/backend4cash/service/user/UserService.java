@@ -30,7 +30,7 @@ public class UserService {
                 else return false;
                 break;
             case "nickname":
-                if (findAll().stream().noneMatch(user -> user.getNickname().equals(value))) dbUser.setNickname(value);
+                if (findAll().stream().noneMatch(user -> user.getUsername().equals(value))) dbUser.setUsername(value);
                 else return false;
                 break;
             case "password":
@@ -52,7 +52,7 @@ public class UserService {
     }
 
     public List<User> findByNickname(String nickName) {
-        return findAll().stream().filter(user -> user.getNickname().equals(nickName)).collect(Collectors.toList());
+        return findAll().stream().filter(user -> user.getUsername().equals(nickName)).collect(Collectors.toList());
     }
 
     public List<User> findByEmail(String email) {

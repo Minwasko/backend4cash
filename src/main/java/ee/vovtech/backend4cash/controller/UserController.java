@@ -29,8 +29,10 @@ public class UserController {
     private UserService userService;
     @Autowired
     private ForumPostService forumPostService;
-    @Autowired
-    private CurrencyPriceService currencyPriceService;
+
+    // register -> create account
+
+    // login -> generate token for frontend
 
     @PostMapping
     public User saveUser(@RequestBody User user) {

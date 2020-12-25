@@ -1,12 +1,11 @@
 package ee.vovtech.backend4cash.model;
 
+import ee.vovtech.backend4cash.security.DbRole;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
@@ -20,17 +19,19 @@ public class User {
     @Id
     private long id;
 
-    private String nickname;
+    private String username;
     private String email;
     private String password;
     private String cash;
     private String status;
+    @Enumerated(EnumType.STRING)
+    private DbRole role;
     @ElementCollection
     private List<SimpleEntry<String, String>> ownedCoins = new ArrayList<>();
 
-    public User(Long id, String nickname, String email, String password) {
+    public User(Long id, String username, String email, String password) {
         this.id = id;
-        this.nickname = nickname;
+        this.username = username;
         this.email = email;
         this.password = password;
     }

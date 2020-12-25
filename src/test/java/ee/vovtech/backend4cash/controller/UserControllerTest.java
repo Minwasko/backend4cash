@@ -54,7 +54,7 @@ class UserControllerTest {
         User user = exchangeUser.getBody();
         assertNotNull(user);
         assertEquals(dbUser.getId(), user.getId());
-        assertEquals("meme", user.getNickname());
+        assertEquals("meme", user.getUsername());
     }
 
     @Test
@@ -63,7 +63,7 @@ class UserControllerTest {
         ResponseEntity<User> exchange = testRestTemplate.exchange("/users", HttpMethod.POST, new HttpEntity<>(user), User.class);
         User dbUser = exchange.getBody();
         assertNotNull(dbUser);
-        assertEquals("testUser", dbUser.getNickname());
+        assertEquals("testUser", dbUser.getUsername());
         TEST_USER_ID = dbUser.getId();
     }
     // TODO: fix update test
@@ -120,7 +120,7 @@ class UserControllerTest {
         List<ForumPost> posts = exchangeUserPosts.getBody();
         assertNotNull(posts);
         assertEquals("testMessage", posts.get(0).getMessage());
-        assertEquals(dbUser.getNickname(), posts.get(0).getUser().getNickname());
+        assertEquals(dbUser.getUsername(), posts.get(0).getUser().getUsername());
     }
 
 }
