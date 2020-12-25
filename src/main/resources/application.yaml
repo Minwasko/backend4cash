@@ -1,0 +1,16 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+  jooq:
+    sql-dialect: org.hibernate.dialect.MySQLDialect
+  datasource:
+    url: jdbc:mysql://mysql:3306/bits4data?createDatabaseIfNotExist=true
+    username: root
+    password: vovan
+
