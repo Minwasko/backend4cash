@@ -27,7 +27,7 @@
 #logging:
 #  file:
 #    path: ./logs
-#
+
 
 
 # vvv do not comment these  vvv
@@ -40,7 +40,10 @@ coins:
 # ^^^ do not comment these  ^^^
 
 
- upper is for local testing, bottom is for server
+# upper is for local testing, bottom is for server
+
+
+
 server:
   port: 8080
   servlet:

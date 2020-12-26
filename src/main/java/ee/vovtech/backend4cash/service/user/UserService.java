@@ -21,6 +21,11 @@ public class UserService {
 
     public void save(User user) {
         if (userRepository.findByEmail(user.getEmail()) == null) {
+            int id = 0;
+            while (idIsTaken(id)) {
+                id++;
+            }
+            user.setId(id);
             userRepository.save(user);
         } else {
             throw new InvalidUserException("Email already in use");
