@@ -14,6 +14,7 @@ public class ForumPost {
     private long id;
 
     private String message;
+    private String type; // news or post
 
     @ManyToOne
     @JoinColumn(name = "FK_UserId")

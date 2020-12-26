@@ -30,12 +30,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.inMemoryAuthentication()
-//                .withUser(usersConfig.getUserName()).password(passwordEncoder().encode(usersConfig.getUserPassword))
-//                .authorities(Roles.USER)
-//                .and()
-//                .withUser(usersConfig.getAdminName()).password(passwordEncoder().encode(usersConfig.getUserPassword))
-//                .authorities(Roles.USER, Roles.ADMIN, Roles.GUEST);
         auth.userDetailsService(userDetailsServiceImpl);
     }
 
@@ -52,10 +46,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/swagger-ui/**").permitAll() // testing with swagger? doesnt work :(
-                .antMatchers("/**").permitAll() // set here all urls
-                .antMatchers("/users/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/coins/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/coins").permitAll()
+                .antMatchers(HttpMethod.GET, "/posts").permitAll()
+                .antMatchers(HttpMethod.GET, "/posts/**").permitAll()
+                .antMatchers("/users/register").permitAll()
+                .antMatchers("/users/login").permitAll()
                 .anyRequest().fullyAuthenticated();
     }
 

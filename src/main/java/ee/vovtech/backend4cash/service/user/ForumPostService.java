@@ -1,5 +1,6 @@
 package ee.vovtech.backend4cash.service.user;
 
+import ee.vovtech.backend4cash.dto.PostDto;
 import ee.vovtech.backend4cash.exceptions.InvalidForumPostException;
 import ee.vovtech.backend4cash.exceptions.UserNotFoundException;
 import ee.vovtech.backend4cash.model.ForumPost;
@@ -9,6 +10,7 @@ import ee.vovtech.backend4cash.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,34 +23,42 @@ public class ForumPostService {
     @Autowired
     private ForumPostRepository forumPostRepository;
 
-    public ForumPost save(Long id, String message) {
+    public void save(Long id, String message) {
         if (message.length() > 255) {
             throw new InvalidForumPostException("ForumPost message is too long");
         }
         User user = userService.findById(id);
         ForumPost forumPost = new ForumPost(message, user);
-        return forumPostRepository.save(forumPost);
+        forumPostRepository.save(forumPost);
     }
 
-    public List<ForumPost> findAll() {
-        return forumPostRepository.findAll();
+    public List<PostDto> findAll() {
+        List<ForumPost> dbPosts = forumPostRepository.findAll();
+        List<PostDto> postDtos = new ArrayList<>();
+        for (ForumPost dbPost : dbPosts) {
+            postDtos.add(PostDto.builder().username(dbPost.getUser().getUsername()).message(dbPost.getMessage()).build());
+        }
+        return postDtos;
     }
 
-    public ForumPost findById(long id) {
-        if (forumPostRepository.findById(id).isPresent()) return forumPostRepository.findById(id).get();
+    public PostDto findById(long id) {
+        if (forumPostRepository.findById(id).isPresent()) {
+            ForumPost dbPost = forumPostRepository.findById(id).get();
+            return PostDto.builder().username(dbPost.getUser().getUsername()).message(dbPost.getMessage()).build();
+        }
         throw new UserNotFoundException();
     }
 
     public void deleteForumPost(long id) {
-        forumPostRepository.delete(findById(id));
+        if (forumPostRepository.findById(id).isPresent()) forumPostRepository.delete(forumPostRepository.findById(id).get());
     }
 
     public List<ForumPost> findAllPostsByUserId(long id) {
-        return findAll().stream().filter(post -> post.getUser().getId() == id).collect(Collectors.toList());
+        return forumPostRepository.findAll().stream().filter(post -> post.getUser().getId() == id).collect(Collectors.toList());
     }
 
     public void deleteAllPostsFromUser(long id) {
-        List<ForumPost> posts = findAll().stream().filter(e -> e.getUser().getId() == id).collect(Collectors.toList());
+        List<ForumPost> posts = forumPostRepository.findAll().stream().filter(e -> e.getUser().getId() == id).collect(Collectors.toList());
         posts.forEach(post -> deleteForumPost(post.getId()));
     }
 

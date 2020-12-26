@@ -55,10 +55,10 @@ public class JwtTokenProvider {
     private String doGenerateToken(Map<String, Object> claims, String subject) {
         long currentTimeMs = System.currentTimeMillis();
         return Jwts.builder()
-                .setClaims(claims)
-                .setSubject(subject)
-                .setIssuedAt(new Date(currentTimeMs))
-                .setExpiration(new Date(currentTimeMs + jwtConfig.getDurationMillis()))
+                .setClaims(claims) // other fields
+                .setSubject(subject) // user name
+                .setIssuedAt(new Date(currentTimeMs)) //time created
+                .setExpiration(new Date(currentTimeMs + jwtConfig.getDurationMillis())) // time to expire
                 .signWith(SignatureAlgorithm.HS512, jwtConfig.getSecret().getBytes())
                 .compact();
     }

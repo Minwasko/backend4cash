@@ -20,6 +20,10 @@ public class UpdatePricesService {
             System.out.println("not doing it");
         }
             System.out.println("doing it");
+        // TODO
+        // new schedule each few hours +100 coins to each user
+            // loop coins
+            // for each get last hour data
     }
 
 
