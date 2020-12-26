@@ -1,9 +1,11 @@
 package ee.vovtech.backend4cash.service.user;
 
+import ee.vovtech.backend4cash.dto.RegisterDto;
 import ee.vovtech.backend4cash.exceptions.UserNotFoundException;
 import ee.vovtech.backend4cash.model.ForumPost;
 import ee.vovtech.backend4cash.model.User;
 import ee.vovtech.backend4cash.repository.UserRepository;
+import ee.vovtech.backend4cash.security.DbRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,8 +18,17 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public User save(User user) {
-        return userRepository.save(user);
+    public void save(User user) {
+        userRepository.save(user);
+    }
+
+    public void registerUser(RegisterDto registerDto) {
+        User user = new User();
+        user.setUsername(registerDto.getUsername());
+        user.setPassword(registerDto.getPassword());
+        user.setEmail(registerDto.getEmail());
+        user.setRole(DbRole.USER);
+        save(user);
     }
 
     public boolean update(Long id, String infoToChange, String value) {

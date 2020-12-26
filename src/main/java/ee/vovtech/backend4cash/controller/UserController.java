@@ -31,13 +31,7 @@ public class UserController {
     private ForumPostService forumPostService;
 
     // register -> create account
-
     // login -> generate token for frontend
-
-    @PostMapping
-    public User saveUser(@RequestBody User user) {
-        return userService.save(user);
-    }
 
     @GetMapping("{id}")
     public User getUser(@PathVariable Long id) {

@@ -53,7 +53,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/").permitAll() // set here all urls
-                .antMatchers(HttpMethod.GET, "/users/**").permitAll()
+                .antMatchers("/users/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/coins").permitAll()
                 .anyRequest().fullyAuthenticated();
     }
