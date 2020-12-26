@@ -1,6 +1,7 @@
 package ee.vovtech.backend4cash.service.user;
 
 import ee.vovtech.backend4cash.dto.RegisterDto;
+import ee.vovtech.backend4cash.exceptions.InvalidUserException;
 import ee.vovtech.backend4cash.exceptions.UserNotFoundException;
 import ee.vovtech.backend4cash.model.ForumPost;
 import ee.vovtech.backend4cash.model.User;
@@ -19,17 +20,14 @@ public class UserService {
     private UserRepository userRepository;
 
     public void save(User user) {
-        userRepository.save(user);
+        if (userRepository.findByEmail(user.getEmail()) == null) {
+            userRepository.save(user);
+        } else {
+            throw new InvalidUserException("Email already in use");
+        }
+
     }
 
-    public void registerUser(RegisterDto registerDto) {
-        User user = new User();
-        user.setUsername(registerDto.getUsername());
-        user.setPassword(registerDto.getPassword());
-        user.setEmail(registerDto.getEmail());
-        user.setRole(DbRole.USER);
-        save(user);
-    }
 
     public boolean update(Long id, String infoToChange, String value) {
         User dbUser = findById(id);

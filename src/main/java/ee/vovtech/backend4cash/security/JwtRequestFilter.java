@@ -37,18 +37,18 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             chain.doFilter(request, response);
             return;
         }
-        String username = getUsername(jwtToken);
-        if (username == null) {
+        String email = getEmail(jwtToken);
+        if (email == null) {
             chain.doFilter(request, response);
             return;
         }
         if (SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userDetailsServiceImpl.loadUserByUsername(username);
+            UserDetails userDetails = userDetailsServiceImpl.loadUserByUsername(email); // we put email here, since it is a unique identifier
             if (jwtTokenProvider.validateToken(jwtToken, userDetails)) {
-                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
+                UsernamePasswordAuthenticationToken authToken =
                         new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(authToken);
             }
         }
         chain.doFilter(request, response);
@@ -62,13 +62,15 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         return requestTokenHeader.substring(7);
     }
 
-    private String getUsername(String jwtToken) {
+    private String getEmail(String jwtToken) {
         try {
-            return jwtTokenProvider.getUsernameFromToken(jwtToken);
+            return jwtTokenProvider.getEmailFromToken(jwtToken);
         } catch (IllegalArgumentException e) {
             log.error("unable to get JWT token", e);
         } catch (ExpiredJwtException e) {
             log.error("JWT token has expired", e);
+        } catch (Exception e) {
+            log.error("unexpected exception", e);
         }
         return null;
     }

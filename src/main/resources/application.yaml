@@ -27,9 +27,19 @@
 #logging:
 #  file:
 #    path: ./logs
+
+
+
+# do not comment these
 jwt:
   secret: secret
-  durationMinutes: 30
+  durationMinutes: 120
+coins:
+  updating: true
+  cron: 0 * * * * *
+# do not comment these
+
+
 # upper is for local testing, bottom is for server
 server:
   port: 8080

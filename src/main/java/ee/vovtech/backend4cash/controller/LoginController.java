@@ -1,9 +1,9 @@
 package ee.vovtech.backend4cash.controller;
 
 import ee.vovtech.backend4cash.dto.LoginDto;
+import ee.vovtech.backend4cash.dto.LoginResponse;
 import ee.vovtech.backend4cash.dto.RegisterDto;
-import ee.vovtech.backend4cash.service.user.ForumPostService;
-import ee.vovtech.backend4cash.service.user.UserService;
+import ee.vovtech.backend4cash.service.user.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,20 +15,21 @@ import org.springframework.web.bind.annotation.*;
 public class LoginController {
 
     @Autowired
-    private UserService userService;
+    private LoginService loginService;
 
 
     // register -> create account
     @PostMapping("register")
     public ResponseEntity<Void> register(@RequestBody RegisterDto registerDto) {
         // save user if info is ok
-        userService.registerUser(registerDto);
+        loginService.registerUser(registerDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
     // login -> generate token for frontend
     @PostMapping("login")
-    public void login(@RequestBody LoginDto loginDto) {
-        // generate token
+    public LoginResponse login(@RequestBody LoginDto loginDto) {
+        // generate token if credentials are OK
+        return loginService.login(loginDto);
     }
 
 }

@@ -17,7 +17,7 @@ public class JwtTokenProvider {
 
     private final JwtConfig jwtConfig;
 
-    public String getUsernameFromToken(String token) {
+    public String getEmailFromToken(String token) {
         return getClaimFromToken(token, Claims::getSubject);
     }
 
@@ -26,15 +26,17 @@ public class JwtTokenProvider {
     }
 
     public String generateToken(UserDetails userDetails) {
+        // getUsername() will return email in our case
         return doGenerateToken(new HashMap<>(), userDetails.getUsername());
     }
 
     public Boolean validateToken(String token, UserDetails userDetails) {
-        return getUsernameFromToken(token).equals(userDetails.getUsername()) && !isTokenExpired(token);
+        // getUsername() will return email in our case
+        return getEmailFromToken(token).equals(userDetails.getUsername()) && !isTokenExpired(token);
     }
 
-    public String createTokenForTests(String username) {
-        return doGenerateToken(new HashMap<>(), username);
+    public String createTokenForTests(String email) {
+        return doGenerateToken(new HashMap<>(), email);
     }
 
     private <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
@@ -46,7 +48,7 @@ public class JwtTokenProvider {
         return Jwts.parser().setSigningKey(jwtConfig.getSecret().getBytes()).parseClaimsJws(token).getBody();
     }
 
-    private Boolean isTokenExpired(String token) {
+    private boolean isTokenExpired(String token) {
         return getExpirationDateFromToken(token).before(new Date());
     }
 

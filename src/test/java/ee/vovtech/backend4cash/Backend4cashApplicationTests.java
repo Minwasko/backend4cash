@@ -13,7 +13,7 @@ class Backend4cashApplicationTests {
 
     @Test
     void name() {
-        String token = jwtTokenProvider.createTokenForTests("meme");
+        String token = jwtTokenProvider.createTokenForTests("kek@kek.ee");
         System.out.println(token);
     }
 }

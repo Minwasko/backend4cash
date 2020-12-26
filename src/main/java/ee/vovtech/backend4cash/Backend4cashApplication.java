@@ -7,7 +7,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 
 @SpringBootApplication
-//@EnableScheduling
+@EnableScheduling
 public class Backend4cashApplication {
 
 	public static void main(String[] args) {

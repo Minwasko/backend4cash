@@ -11,6 +11,7 @@ import ee.vovtech.backend4cash.security.DbRole;
 import ee.vovtech.backend4cash.service.currency.CurrencyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -26,6 +27,8 @@ public class Backend4cashApplicationInit implements CommandLineRunner {
     private UserRepository userRepository;
     @Autowired
     private ForumPostRepository forumPostRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public void run(String... args) throws UnirestException {
@@ -38,7 +41,7 @@ public class Backend4cashApplicationInit implements CommandLineRunner {
         user.setCash("100");
         user.setUsername("meme");
         user.setEmail("kek@kek.ee");
-        user.setPassword("12345lol");
+        user.setPassword(passwordEncoder.encode("12345lol"));
         user.setRole(DbRole.ADMIN);
         userRepository.save(user);
         ForumPost forumPost = new ForumPost("good", user);
