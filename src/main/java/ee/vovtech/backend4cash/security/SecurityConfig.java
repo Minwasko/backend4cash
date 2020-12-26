@@ -52,8 +52,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/swagger-ui/**").permitAll() // testing with swagger?
-                .antMatchers("/").permitAll() // set here all urls
+                .antMatchers("/swagger-ui/**").permitAll() // testing with swagger? doesnt work :(
+                .antMatchers("/**").permitAll() // set here all urls
                 .antMatchers("/users/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/coins").permitAll()
                 .anyRequest().fullyAuthenticated();
