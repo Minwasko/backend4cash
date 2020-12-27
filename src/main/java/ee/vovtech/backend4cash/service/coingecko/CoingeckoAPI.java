@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.concurrent.TimeUnit;
 
 
 @Service
@@ -81,10 +82,31 @@ public class CoingeckoAPI {
                     .queryString("to", to)
                     .asJson();
         } catch (UnirestException e) {
-            e.printStackTrace();
+            log.warn("Could not get data for " + id + "in coingeckoAPI :(");
+            log.info("Lets wait some 60 seconds and try again. Maybe their api is tired or sth...");
+            waitSomeTime();
+            log.info("Hope i am not in the recursion here...");
+            return getPriceDataBetween(id, from, to);
+            
+            
         }
         // return only needed shit and only that
         return response.getBody().getObject().getJSONArray("prices");
+    }
+
+    private static void waitSomeTime(){
+        
+        for (int i = 0; i < 6; i++){
+            try{
+                TimeUnit.SECONDS.sleep(10);
+                log.info("10 seconds passed :)");
+            } catch(InterruptedException e){
+                log.warn("Whatever thread stuff actually broke somehow.....");
+            }
+            
+        }
+
+
     }
 
 
