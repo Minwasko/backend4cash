@@ -36,7 +36,7 @@ jwt:
   durationMinutes: 120
 coins:
   updating: true
-  cron: * 0 * * * *
+  cron: 0 0 * * * *
 # ^^^ do not comment these  ^^^
 
 
