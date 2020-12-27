@@ -83,7 +83,7 @@ public class CoingeckoAPI {
                     .asJson();
         } catch (UnirestException e) {
             log.warn("Could not get data for " + id + "in coingeckoAPI :(");
-            log.info("Lets wait some 60 seconds and try again. Maybe their api is tired or sth...");
+            log.info("Lets wait some 10 seconds and try again. Maybe their api is tired or sth...");
             waitSomeTime();
             log.info("Hope i am not in the recursion here...");
             return getPriceDataBetween(id, from, to);
@@ -96,16 +96,13 @@ public class CoingeckoAPI {
 
     private static void waitSomeTime(){
         
-        for (int i = 0; i < 6; i++){
-            try{
-                TimeUnit.SECONDS.sleep(10);
-                log.info("10 seconds passed :)");
-            } catch(InterruptedException e){
-                log.warn("Whatever thread stuff actually broke somehow.....");
-            }
-            
+        try{
+            TimeUnit.SECONDS.sleep(10);
+            log.info("10 seconds passed :)");
+        } catch(InterruptedException e){
+            log.warn("Whatever thread stuff actually broke somehow.....");
         }
-
+        
 
     }
 
