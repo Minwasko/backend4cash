@@ -8,6 +8,7 @@ import ee.vovtech.backend4cash.model.User;
 import ee.vovtech.backend4cash.repository.UserRepository;
 import ee.vovtech.backend4cash.security.DbRole;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,9 +31,11 @@ public class UserService {
         } else {
             throw new InvalidUserException("Email already in use");
         }
-
     }
 
+    public void updateUser(User user) {
+        userRepository.save(user);
+    }
 
     public boolean update(Long id, String infoToChange, String value) {
         User dbUser = findById(id);
@@ -54,7 +57,7 @@ public class UserService {
                 dbUser.setStatus(value);
                 break;
         }
-        save(dbUser);
+        updateUser(dbUser);
         return true;
     }
 
@@ -69,8 +72,8 @@ public class UserService {
         return findAll().stream().filter(user -> user.getUsername().equals(nickName)).collect(Collectors.toList());
     }
 
-    public List<User> findByEmail(String email) {
-        return findAll().stream().filter(user -> user.getEmail().equals(email)).collect(Collectors.toList());
+    public User findByEmail(String email) {
+        return findAll().stream().filter(user -> user.getEmail().equals(email)).findAny().orElse(null);
     }
 
     public List<User> findAll() {

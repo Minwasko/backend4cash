@@ -64,7 +64,7 @@ public class CurrencyPriceService {
         if (totalPrice.compareTo(new BigDecimal(dbUser.getCash())) < 0) {
             dbUser.addCoins(coinId, amount);
             dbUser.setCash(new BigDecimal(dbUser.getCash()).subtract(totalPrice).toString());
-            userService.save(dbUser);
+            userService.updateUser(dbUser);
             return true;
         }
         return false;
@@ -79,7 +79,7 @@ public class CurrencyPriceService {
         if (amountLeft.compareTo(BigDecimal.ZERO) >= 0) {
             dbUser.setCash(new BigDecimal(coinPrice).multiply(new BigDecimal(amount)).add(new BigDecimal(dbUser.getCash())).toString());
             dbUser.setCoinsAmount(coinId, amountLeft.toString());
-            userService.save(dbUser);
+            userService.updateUser(dbUser);
             return true;
         }
         return false;
