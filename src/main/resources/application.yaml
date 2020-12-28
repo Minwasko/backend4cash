@@ -59,6 +59,19 @@ spring:
     url: jdbc:mysql://mysql:3306/bits4data?createDatabaseIfNotExist=true
     username: root
     password: vovan
+
+
+server:
+  ssl:
+    enabled: true
+    key-store-type: PKCS12
+    key-store: classpath:keystore/vovan.p12
+    key-store-password: vovtech
+    key-alias: vovtech
+
+trust:
+  store: classpath:keystore/vovan.p12
+  password: vovtech
 #  datasource:
 #    username: sa
 #    url: jdbc:h2:mem:testdb
