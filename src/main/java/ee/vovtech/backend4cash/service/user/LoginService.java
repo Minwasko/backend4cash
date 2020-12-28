@@ -32,6 +32,7 @@ public class LoginService {
         user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
         user.setEmail(registerDto.getEmail());
         user.setRole(DbRole.USER);
+        user.setCash("300");
         userService.save(user);
     }
 
