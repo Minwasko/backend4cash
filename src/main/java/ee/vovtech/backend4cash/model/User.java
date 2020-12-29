@@ -17,6 +17,8 @@ import java.util.stream.Collectors;
 public class User {
 
     @Id
+    @GeneratedValue(generator = "user_id_seq", strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "user_id_seq", sequenceName = "user_id_seq", allocationSize = 50)
     private long id;
 
     private String username;

@@ -1,14 +1,10 @@
 package ee.vovtech.backend4cash.service.user;
 
-import ee.vovtech.backend4cash.dto.RegisterDto;
 import ee.vovtech.backend4cash.exceptions.InvalidUserException;
 import ee.vovtech.backend4cash.exceptions.UserNotFoundException;
-import ee.vovtech.backend4cash.model.ForumPost;
 import ee.vovtech.backend4cash.model.User;
 import ee.vovtech.backend4cash.repository.UserRepository;
-import ee.vovtech.backend4cash.security.DbRole;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,11 +18,6 @@ public class UserService {
 
     public void save(User user) {
         if (userRepository.findByEmail(user.getEmail()) == null) {
-            int id = 0;
-            while (idIsTaken(id)) {
-                id++;
-            }
-            user.setId(id);
             userRepository.save(user);
         } else {
             throw new InvalidUserException("Email already in use");

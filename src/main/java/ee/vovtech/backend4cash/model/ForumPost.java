@@ -12,7 +12,7 @@ public class ForumPost {
 
     @Id
     @GeneratedValue(generator = "post_id_seq", strategy = GenerationType.SEQUENCE)
-    @SequenceGenerator(name = "user_id_seq", sequenceName = "user_id_seq", allocationSize = 50)
+    @SequenceGenerator(name = "post_id_seq", sequenceName = "post_id_seq", allocationSize = 50)
     private long id;
 
     private String message;
