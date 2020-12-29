@@ -44,7 +44,10 @@ public class Backend4cashApplicationInit implements CommandLineRunner {
         user.setPassword(passwordEncoder.encode("12345lol"));
         user.setRole(DbRole.ADMIN);
         userRepository.save(user);
-        ForumPost forumPost = new ForumPost("good", user);
+        ForumPost forumPost = new ForumPost("good meme", user);
         forumPostRepository.save(forumPost);
+        ForumPost forumPost2 = new ForumPost("good meme also good kringe", user);
+        forumPostRepository.save(forumPost2);
+
     }
 }

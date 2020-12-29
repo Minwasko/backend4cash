@@ -10,5 +10,6 @@ public class PostDto {
 
     private String message;
     private String username;
+    private long id;
 
 }

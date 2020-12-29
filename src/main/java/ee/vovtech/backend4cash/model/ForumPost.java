@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Entity @Getter @Setter @NoArgsConstructor
 public class ForumPost {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
 
     private String message;

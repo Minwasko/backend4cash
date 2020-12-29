@@ -2,6 +2,7 @@ package ee.vovtech.backend4cash.controller;
 
 
 import ee.vovtech.backend4cash.dto.PostDto;
+import ee.vovtech.backend4cash.dto.PostsRequestDto;
 import ee.vovtech.backend4cash.model.ForumPost;
 import ee.vovtech.backend4cash.security.Roles;
 import ee.vovtech.backend4cash.service.user.ForumPostService;
@@ -32,9 +33,15 @@ public class ForumPostController {
         return forumPostService.findById(id);
     }
 
+    // @GetMapping
+    // public List<PostDto> getAllForumPosts(){
+    //     return forumPostService.findAll();
+    // }
+
+    // get n th post and 5 more posts
     @GetMapping
-    public List<PostDto> getAllForumPosts(){
-        return forumPostService.findAll();
+    public List<PostDto> getPostsFrom(@RequestBody PostsRequestDto postsRequestDto){
+        return forumPostService.findFrom(postsRequestDto.getIdFrom());
     }
 
     @Secured(Roles.ADMIN)

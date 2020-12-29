@@ -32,6 +32,7 @@ public class ForumPostService {
         forumPostRepository.save(forumPost);
     }
 
+    @Deprecated // fk this
     public List<PostDto> findAll() {
         List<ForumPost> dbPosts = forumPostRepository.findAll();
         List<PostDto> postDtos = new ArrayList<>();
@@ -39,6 +40,28 @@ public class ForumPostService {
             postDtos.add(PostDto.builder().username(dbPost.getUser().getUsername()).message(dbPost.getMessage()).build());
         }
         return postDtos;
+    }
+
+    // we use this
+    public List<PostDto> findFrom(long id){
+        
+        List<PostDto> toReturn = new ArrayList<>();
+        for (long i = id; i <= id + 5; i++){
+            if(forumPostRepository.existsById(id)){
+                toReturn.add(createPostDto(forumPostRepository.findById(id).get()));
+            }
+        }
+
+        return toReturn;
+    }
+
+    private PostDto createPostDto(ForumPost post){
+
+        return PostDto.builder()
+                .id(post.getId())
+                .username(post.getUser().getUsername())
+                .message(post.getMessage())
+                .build();
     }
 
     public PostDto findById(long id) {
@@ -61,5 +84,7 @@ public class ForumPostService {
         List<ForumPost> posts = forumPostRepository.findAll().stream().filter(e -> e.getUser().getId() == id).collect(Collectors.toList());
         posts.forEach(post -> deleteForumPost(post.getId()));
     }
+
+    
 
 }
