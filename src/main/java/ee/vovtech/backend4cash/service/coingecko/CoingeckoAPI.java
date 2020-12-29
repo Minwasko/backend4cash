@@ -4,7 +4,6 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import com.mysql.cj.xdevapi.JsonArray;
 import ee.vovtech.backend4cash.repository.CurrencyRepository;
 import ee.vovtech.backend4cash.service.currency.CurrencyService;
 import org.json.JSONArray;
@@ -37,7 +36,6 @@ public class CoingeckoAPI {
     private final static int MONTH_SECONDS = 2_592_000;
     private static final Logger log = LoggerFactory.getLogger(CoingeckoAPI.class);
     // TODO: refactor stuff here
-    // get top 10 currencies, amount changed as a variable
 
     public static JSONArray getTopCurrencies() throws UnirestException {
         HttpResponse<JsonNode> response = Unirest.get(COINS_URL + "markets?")
@@ -72,7 +70,6 @@ public class CoingeckoAPI {
 
     }
 
-
     private static JSONArray getPriceDataBetween(String id, long from, long to){
 
         HttpResponse<JsonNode> response = null;
@@ -94,17 +91,11 @@ public class CoingeckoAPI {
     }
 
     private static void waitSomeTime(){
-        
         try{
             TimeUnit.SECONDS.sleep(10);
             log.info("10 seconds passed :)");
         } catch(InterruptedException e){
             log.warn("Whatever thread stuff actually broke somehow.....");
         }
-        
-
     }
-
-
-
 }
