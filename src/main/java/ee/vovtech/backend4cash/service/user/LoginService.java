@@ -17,7 +17,9 @@ import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class LoginService {
@@ -55,8 +57,9 @@ public class LoginService {
     }
 
     public LoggedInUserDto getUserByIdWithTokenCheck(long id, String token) {
-        System.out.println(token);
-        System.out.println(jwtTokenProvider.getEmailFromToken(token.substring(7)));
+        log.info(token);
+        log.info("Email from tocken: " + jwtTokenProvider.getEmailFromToken(token.substring(7)));
+        
         User userFromToken = userService.findByEmail(jwtTokenProvider.getEmailFromToken(token.substring(7)));
         if (userFromToken != null && userFromToken.getId() == id) {
             System.out.println("YOu can get info");
