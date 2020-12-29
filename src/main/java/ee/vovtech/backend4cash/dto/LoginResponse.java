@@ -12,4 +12,5 @@ public class LoginResponse {
     private String email;
     private String token;
     private DbRole role;
+    private boolean success;
 }

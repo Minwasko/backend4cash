@@ -50,6 +50,7 @@ public class LoginService {
                 .email(myUser.getUsername())
                 .token(token)
                 .role(myUser.getDbRole())
+                .success(true)
                 .build();
     }
 
