@@ -79,9 +79,4 @@ public class UserService {
         }
     }
 
-    // !!! temporary solution for id thingies in users. Has to be fixed l8r
-    public boolean idIsTaken(long userID){
-        return userRepository.existsById(userID);
-    }
-
 }
