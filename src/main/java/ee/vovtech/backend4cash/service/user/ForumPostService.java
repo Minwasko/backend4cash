@@ -47,8 +47,8 @@ public class ForumPostService {
         
         List<PostDto> toReturn = new ArrayList<>();
         for (long i = id; i <= id + 5; i++){
-            if(forumPostRepository.existsById(id)){
-                toReturn.add(createPostDto(forumPostRepository.findById(id).get()));
+            if(forumPostRepository.existsById(i)){
+                toReturn.add(createPostDto(forumPostRepository.findById(i).get()));
             }
         }
 
