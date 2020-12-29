@@ -44,8 +44,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .cors()
                 .and()
                 .csrf().disable()
-                .headers().httpStrictTransportSecurity().disable() // if not disabled front has to be https
-                .and()
+                //.headers().httpStrictTransportSecurity().disable() // if not disabled front has to be https
+                //.and()
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
