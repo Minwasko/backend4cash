@@ -2,7 +2,6 @@ package ee.vovtech.backend4cash.controller;
 
 
 import ee.vovtech.backend4cash.dto.PostDto;
-import ee.vovtech.backend4cash.dto.PostsRequestDto;
 import ee.vovtech.backend4cash.model.ForumPost;
 import ee.vovtech.backend4cash.security.Roles;
 import ee.vovtech.backend4cash.service.user.ForumPostService;
