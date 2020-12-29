@@ -8,6 +8,7 @@ import com.mysql.cj.xdevapi.JsonArray;
 import ee.vovtech.backend4cash.repository.CurrencyRepository;
 import ee.vovtech.backend4cash.service.currency.CurrencyService;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,14 +82,12 @@ public class CoingeckoAPI {
                     .queryString("from", from)
                     .queryString("to", to)
                     .asJson();
-        } catch (UnirestException e) {
+        } catch (UnirestException | JSONException e) {
             log.warn("Could not get data for " + id + "in coingeckoAPI :(");
             log.info("Lets wait some 10 seconds and try again. Maybe their api is tired or sth...");
             waitSomeTime();
             log.info("Hope i am not in the recursion here...");
             return getPriceDataBetween(id, from, to);
-            
-            
         }
         // return only needed shit and only that
         return response.getBody().getObject().getJSONArray("prices");
