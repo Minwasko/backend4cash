@@ -40,8 +40,8 @@ public class ForumPostController {
 
     // get n th post and 5 more posts
     @GetMapping
-    public List<PostDto> getPostsFrom(@RequestBody PostsRequestDto postsRequestDto){
-        return forumPostService.findFrom(postsRequestDto.getIdFrom());
+    public List<PostDto> getPostsFrom(@RequestParam long idFrom){
+        return forumPostService.findFrom(idFrom);
     }
 
     @Secured(Roles.ADMIN)
