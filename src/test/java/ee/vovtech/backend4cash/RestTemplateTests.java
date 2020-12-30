@@ -49,6 +49,8 @@ public abstract class RestTemplateTests {
 
     public <T> T assertOk(ResponseEntity<T> exchange) {
         assertNotNull(exchange.getBody());
+        System.out.println(exchange.getBody());
+        System.out.println(exchange.getStatusCodeValue());
         assertEquals(HttpStatus.OK, exchange.getStatusCode());
         return exchange.getBody();
     }
@@ -72,6 +74,7 @@ public abstract class RestTemplateTests {
         // creating a test admin
         User admin = new User();
         admin.setEmail("admin@admin.admin");
+        admin.setId(2);
         admin.setPassword(passwordEncoder.encode("admin"));
         admin.setCash("100000");
         admin.setStatus("adminStatus");
@@ -94,6 +97,7 @@ public abstract class RestTemplateTests {
         user.setCash("100000");
         user.setStatus("userStatus");
         user.setRole(DbRole.USER);
+        user.setId(3);
         user.setOwnedCoins(new ArrayList<>());
         userService.save(user);
         // login admin to get Token from response

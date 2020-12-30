@@ -16,8 +16,10 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.ArrayList;
@@ -25,11 +27,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@TestPropertySource(locations="classpath:application.yaml")
 class UserControllerTest extends RestTemplateTests {
 
 
@@ -54,20 +58,20 @@ class UserControllerTest extends RestTemplateTests {
 
     @Test
     void getUserRequiresCorrectRole() {
-        // id=1 -> admin role
-        // id=2 -> user role
+        // id=2 -> admin role
+        // id=3 -> user role
         // admin can get all both users' info
-        ResponseEntity<LoggedInUserDto> userOneFromAdmin = testRestTemplate.exchange("/users/1",
+        ResponseEntity<LoggedInUserDto> userOneFromAdmin = testRestTemplate.exchange("/users/2",
                 HttpMethod.GET, new HttpEntity<>(authorizationHeader(adminToken)), LoggedInUserDto.class);
         assertOk(userOneFromAdmin);
-        ResponseEntity<LoggedInUserDto> userTwoFromAdmin = testRestTemplate.exchange("/users/2",
+        ResponseEntity<LoggedInUserDto> userTwoFromAdmin = testRestTemplate.exchange("/users/3",
                 HttpMethod.GET, new HttpEntity<>(authorizationHeader(adminToken)), LoggedInUserDto.class);
         assertOk(userTwoFromAdmin);
         // user can only access his own info
-        ResponseEntity<LoggedInUserDto> userOneFromUser = testRestTemplate.exchange("/users/1",
+        ResponseEntity<LoggedInUserDto> userOneFromUser = testRestTemplate.exchange("/users/2",
                 HttpMethod.GET, new HttpEntity<>(authorizationHeader(userToken)), LoggedInUserDto.class);
         assertEquals(400, userOneFromUser.getStatusCodeValue());
-        ResponseEntity<LoggedInUserDto> userTwoFromUser = testRestTemplate.exchange("/users/2",
+        ResponseEntity<LoggedInUserDto> userTwoFromUser = testRestTemplate.exchange("/users/3",
                 HttpMethod.GET, new HttpEntity<>(authorizationHeader(userToken)), LoggedInUserDto.class);
         assertOk(userTwoFromUser);
     }
@@ -75,9 +79,13 @@ class UserControllerTest extends RestTemplateTests {
     @Test
     void getUsersNeedCorrectRights() {
         // normal users dont have access to this
-        ResponseEntity<List<User>> exchangeFail = testRestTemplate.exchange("/users",
-                HttpMethod.GET, new HttpEntity<>(authorizationHeader(userToken)), LIST_OF_USERS);
-        assertEquals(400, exchangeFail.getStatusCodeValue());
+        try {
+            ResponseEntity<List<User>> exchangeFail = testRestTemplate.exchange("/users",
+                    HttpMethod.GET, new HttpEntity<>(authorizationHeader(userToken)), LIST_OF_USERS);
+        } catch (Exception e) {
+            // Exception has to be thrown since user has no rights..........
+            assertEquals(e.getClass(), RestClientException.class);
+        }
         // ensure for admin users are not null
         ResponseEntity<List<User>> exchange = testRestTemplate.exchange("/users",
                 HttpMethod.GET, new HttpEntity<>(authorizationHeader(adminToken)), LIST_OF_USERS);
