@@ -5,7 +5,6 @@ import ee.vovtech.backend4cash.dto.LoggedInUserDto;
 import ee.vovtech.backend4cash.model.ForumPost;
 import ee.vovtech.backend4cash.model.User;
 import ee.vovtech.backend4cash.security.Roles;
-import ee.vovtech.backend4cash.service.currency.CurrencyPriceService;
 import ee.vovtech.backend4cash.service.user.ForumPostService;
 import ee.vovtech.backend4cash.service.user.LoginService;
 import ee.vovtech.backend4cash.service.user.UserService;
@@ -35,8 +34,8 @@ public class UserController {
 
     @Secured(Roles.ADMIN)
     @GetMapping
-    public List<User> getUsers(@RequestParam(required = false) String nickName, @RequestParam(required = false) String email) {
-        if (nickName != null) return userService.findByNickname(nickName);
+    public List<User> getUsers(@RequestParam(required = false) String username, @RequestParam(required = false) String email) {
+        if (username != null) return userService.findByUsername(username);
         else if (email != null) return List.of(userService.findByEmail(email));
         return userService.findAll();
     }
@@ -48,7 +47,7 @@ public class UserController {
     }
 
     @Secured({Roles.USER, Roles.ADMIN})
-    @PutMapping("{id}/nickname")
+    @PutMapping("{id}/username")
     public boolean updateUserUsername(@PathVariable Long id, @RequestParam String username) {
         return userService.update(id, "username", username);
     }

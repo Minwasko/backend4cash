@@ -63,8 +63,8 @@ public class UserService {
         throw new UserNotFoundException();
     }
 
-    public List<User> findByNickname(String nickName) {
-        return findAll().stream().filter(user -> user.getUsername().equals(nickName)).collect(Collectors.toList());
+    public List<User> findByUsername(String username) {
+        return findAll().stream().filter(user -> user.getUsername().equals(username)).collect(Collectors.toList());
     }
 
     public User findByEmail(String email) {
