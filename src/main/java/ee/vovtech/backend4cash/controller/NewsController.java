@@ -1,6 +1,7 @@
 package ee.vovtech.backend4cash.controller;
 
 import ee.vovtech.backend4cash.dto.NewsDto;
+import ee.vovtech.backend4cash.security.Roles;
 import ee.vovtech.backend4cash.service.user.ForumPostService;
 import ee.vovtech.backend4cash.service.user.NewsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ public class NewsController {
     @Autowired
     private NewsService newsService;
 
+    @Secured(Roles.ADMIN)
     @PostMapping
     public void saveNews(@RequestBody NewsDto newsDto){
         newsService.save(newsDto);
@@ -31,15 +33,9 @@ public class NewsController {
         return newsService.findById(id);
     }
 
+    @Secured(Roles.ADMIN)
     @DeleteMapping("{id}")
     public void delete(@PathVariable long id){
         newsService.delete(id);
     }
-
-    // save
-    // find from
-    // findbyid
-    // delete
-
-
 }
