@@ -82,4 +82,10 @@ public class UserController {
         forumPostService.deleteAllPostsFromUser(id);
     }
 
+    @Secured({Roles.ADMIN, Roles.USER})
+    @PutMapping("{id}/bablo")
+    public void addCash(@PathVariable Long id, @RequestParam Long amount){
+        userService.addCash(id, amount);
+    }
+
 }

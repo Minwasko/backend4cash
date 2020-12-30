@@ -4,12 +4,16 @@ import ee.vovtech.backend4cash.exceptions.InvalidUserException;
 import ee.vovtech.backend4cash.exceptions.UserNotFoundException;
 import ee.vovtech.backend4cash.model.User;
 import ee.vovtech.backend4cash.repository.UserRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import lombok.extern.slf4j.Slf4j;
+
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class UserService {
 
@@ -77,6 +81,11 @@ public class UserService {
         } else {
             throw new UserNotFoundException();
         }
+    }
+
+    public void addCash(Long id, Long amount){
+        log.info("Tryna add " + amount + " of cash to " + id + " account...");
+        findById(id).addCash(amount);
     }
 
 }

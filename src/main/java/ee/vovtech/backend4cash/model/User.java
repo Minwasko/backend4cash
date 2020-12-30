@@ -56,4 +56,8 @@ public class User {
                     .ifPresent(stringStringSimpleEntry -> stringStringSimpleEntry.setValue(amount));
         }
     }
+
+    public void addCash(Long amount){
+        this.cash = new BigDecimal(amount).add(BigDecimal.valueOf(amount)).toString();
+    }
 }
