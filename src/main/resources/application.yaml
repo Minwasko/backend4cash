@@ -58,7 +58,7 @@ server:
 spring:
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
   jooq:
     sql-dialect: org.hibernate.dialect.MySQLDialect
   datasource:
