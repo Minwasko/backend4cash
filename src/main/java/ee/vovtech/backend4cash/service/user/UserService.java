@@ -85,7 +85,7 @@ public class UserService {
 
     public void addCash(Long id, Long amount){
         log.info("Tryna add " + amount + " of cash to " + id + " account...");
-        findById(id).addCash(amount);
+        updateUser(findById(id).addCash(amount));
     }
 
 }

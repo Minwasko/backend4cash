@@ -57,7 +57,8 @@ public class User {
         }
     }
 
-    public void addCash(Long amount){
-        this.cash = new BigDecimal(amount).add(BigDecimal.valueOf(amount)).toString();
+    public User addCash(Long amount){
+        this.cash = new BigDecimal(cash).add(BigDecimal.valueOf(amount)).toString();
+        return this;
     }
 }
