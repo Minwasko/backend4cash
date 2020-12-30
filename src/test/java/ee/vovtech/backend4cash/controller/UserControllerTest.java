@@ -1,10 +1,14 @@
 package ee.vovtech.backend4cash.controller;
 
+import ee.vovtech.backend4cash.RestTemplateTests;
+import ee.vovtech.backend4cash.dto.LoggedInUserDto;
 import ee.vovtech.backend4cash.model.Currency;
 import ee.vovtech.backend4cash.model.ForumPost;
 import ee.vovtech.backend4cash.model.User;
 import org.junit.Ignore;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -25,102 +29,59 @@ import java.util.Objects;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class UserControllerTest {
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+class UserControllerTest extends RestTemplateTests {
 
 
     public static final ParameterizedTypeReference<List<User>> LIST_OF_USERS =
             new ParameterizedTypeReference<>() {};
     public static final ParameterizedTypeReference<List<ForumPost>> LIST_OF_POSTS =
             new ParameterizedTypeReference<>() {};
-    public static long TEST_USER_ID;
-
 
     @Autowired
     private TestRestTemplate testRestTemplate;
 
-//    @Test
-//    void usersAreNotEmpty() {
-//        ResponseEntity<List<User>> exchange = testRestTemplate.exchange("/users", HttpMethod.GET, null, LIST_OF_USERS);
-//        assertNotNull(exchange.getBody());
-//    }
-//
-//    @Test
-//    void getExactUser() {
-//        ResponseEntity<List<User>> exchange = testRestTemplate.exchange("/users", HttpMethod.GET, null, LIST_OF_USERS);
-//        assertNotNull(exchange.getBody());
-//        User dbUser = exchange.getBody().get(0);
-//        ResponseEntity<User> exchangeUser = testRestTemplate
-//                .exchange("/users/" + dbUser.getId(), HttpMethod.GET, null, User.class);
-//        User user = exchangeUser.getBody();
-//        assertNotNull(user);
-//        assertEquals(dbUser.getId(), user.getId());
-//        assertEquals("meme", user.getUsername());
-//    }
-//
-//    @Test
-//    void saveUser() {
-//        User user = new User((long) 999, "testUser", "yo@yo,com", "12345lol");
-//        ResponseEntity<User> exchange = testRestTemplate.exchange("/users", HttpMethod.POST, new HttpEntity<>(user), User.class);
-//        User dbUser = exchange.getBody();
-//        assertNotNull(dbUser);
-//        assertEquals("testUser", dbUser.getUsername());
-//        TEST_USER_ID = dbUser.getId();
-//    }
-//    // TODO: fix update test
-//
-//    @Test
-//    void updateUser() {
-//        ResponseEntity<User> exchange = testRestTemplate.exchange("/users/" + TEST_USER_ID , HttpMethod.GET, null, User.class);
-//        User dbUser = exchange.getBody();
-//        assertNotNull(dbUser);
-//        dbUser.setNickname("testUserUpdated");
-//        ResponseEntity<User> exchangeUpdated = testRestTemplate.exchange("/users/" + dbUser.getId(), HttpMethod.PUT, new HttpEntity<>(dbUser), User.class);
-//        User dbUserUpdated = exchangeUpdated.getBody();
-//        assertNotNull(dbUserUpdated);
-//        assertEquals("testUserUpdated", dbUserUpdated.getNickname());
-//        TEST_USER_ID = dbUser.getId();
-//    }
+    private String adminToken;
+    private String userToken;
 
-//    @Test
-//    void deleteUser() {
-//        ResponseEntity<User> exchange = testRestTemplate.exchange("/users/" + TEST_USER_ID , HttpMethod.GET, null, User.class);
-//        User dbUser = exchange.getBody();
-//        assertNotNull(dbUser);
-//        testRestTemplate.exchange("/users/" + dbUser.getId(), HttpMethod.DELETE, new HttpEntity<>(dbUser), Currency.class);
-//        ResponseEntity<List<User>> exchangeUsers = testRestTemplate.exchange("/users", HttpMethod.GET, null, LIST_OF_USERS);
-//        assertNotNull(exchangeUsers.getBody());
-//        assertFalse(exchangeUsers.getBody().contains(dbUser));
-//    }
-//
-//    @Test
-//    void deleteUserForumPosts() {
-//        ResponseEntity<List<User>> exchange = testRestTemplate.exchange("/users", HttpMethod.GET, null, LIST_OF_USERS);
-//        assertNotNull(exchange.getBody());
-//        User dbUser = exchange.getBody().get(0);
-//        testRestTemplate.exchange("/users/" + dbUser.getId() + "/posts", HttpMethod.DELETE, null, User.class);
-//        // old version with user having link to posts
-////        ResponseEntity<List<User>> exchangeAfterDelete = testRestTemplate.exchange("/users", HttpMethod.GET, null, LIST_OF_USERS);
-////        assertNotNull(exchangeAfterDelete.getBody());
-////        User userAfterDeletion = exchangeAfterDelete.getBody().get(0);
-//        // new version
-//        ResponseEntity<List<ForumPost>> exchangeAfterDelete = testRestTemplate.exchange("/users/" + dbUser.getId() + "/posts", HttpMethod.GET, null, LIST_OF_POSTS);
-//        assertNotNull(exchangeAfterDelete.getBody());
-//        List<ForumPost> postsAfterDelete = exchangeAfterDelete.getBody();
-//        assertEquals(new ArrayList<>(), postsAfterDelete);
-//    }
-//
-//    @Test
-//    void getUserForumPosts() {
-//        ResponseEntity<List<User>> exchange = testRestTemplate.exchange("/users", HttpMethod.GET, null, LIST_OF_USERS);
-//        assertNotNull(exchange.getBody());
-//        User dbUser = exchange.getBody().get(0);
-//        testRestTemplate.exchange("/posts?userId=" + dbUser.getId() , HttpMethod.POST, new HttpEntity<>("testMessage"), ForumPost.class);
-//        ResponseEntity<List<ForumPost>> exchangeUserPosts = testRestTemplate.exchange("/users/" + dbUser.getId() + "/posts" , HttpMethod.GET, null, LIST_OF_POSTS);
-//        assertNotNull(exchangeUserPosts);
-//        List<ForumPost> posts = exchangeUserPosts.getBody();
-//        assertNotNull(posts);
-//        assertEquals("testMessage", posts.get(0).getMessage());
-//        assertEquals(dbUser.getUsername(), posts.get(0).getUser().getUsername());
-//    }
+    @BeforeAll
+    void getTokens() {
+        adminToken = getAdminToken();
+        userToken = getUserToken();
+    }
+
+    @Test
+    void getUserRequiresCorrectRole() {
+        // id=2 -> admin role
+        // id=3 -> user role
+        // admin can get all both users' info
+        ResponseEntity<LoggedInUserDto> userOneFromAdmin = testRestTemplate.exchange("/users/2",
+                HttpMethod.GET, new HttpEntity<>(authorizationHeader(adminToken)), LoggedInUserDto.class);
+        assertOk(userOneFromAdmin);
+        ResponseEntity<LoggedInUserDto> userTwoFromAdmin = testRestTemplate.exchange("/users/3",
+                HttpMethod.GET, new HttpEntity<>(authorizationHeader(adminToken)), LoggedInUserDto.class);
+        assertOk(userTwoFromAdmin);
+        // user can only access his own info
+        ResponseEntity<LoggedInUserDto> userOneFromUser = testRestTemplate.exchange("/users/2",
+                HttpMethod.GET, new HttpEntity<>(authorizationHeader(userToken)), LoggedInUserDto.class);
+        assertEquals(400, userOneFromUser.getStatusCodeValue());
+        ResponseEntity<LoggedInUserDto> userTwoFromUser = testRestTemplate.exchange("/users/3",
+                HttpMethod.GET, new HttpEntity<>(authorizationHeader(userToken)), LoggedInUserDto.class);
+        assertOk(userTwoFromUser);
+    }
+
+    @Test
+    void getUsersNeedCorrectRights() {
+        // normal users dont have access to this
+        ResponseEntity<List<User>> exchangeFail = testRestTemplate.exchange("/users",
+                HttpMethod.GET, new HttpEntity<>(authorizationHeader(userToken)), LIST_OF_USERS);
+        assertEquals(400, exchangeFail.getStatusCodeValue());
+        // ensure for admin users are not null
+        ResponseEntity<List<User>> exchange = testRestTemplate.exchange("/users",
+                HttpMethod.GET, new HttpEntity<>(authorizationHeader(adminToken)), LIST_OF_USERS);
+        List<User> users = assertOk(exchange);
+        assertNotNull(users);
+    }
+
 
 }

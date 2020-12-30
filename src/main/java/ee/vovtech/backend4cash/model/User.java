@@ -1,6 +1,8 @@
 package ee.vovtech.backend4cash.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import ee.vovtech.backend4cash.security.DbRole;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,7 +16,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Entity @Getter @Setter @NoArgsConstructor
+@Entity @Getter @Setter @NoArgsConstructor @AllArgsConstructor
 public class User {
 
     @Id

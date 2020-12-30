@@ -30,14 +30,15 @@ class CurrencyControllerTest extends RestTemplateTests {
     private String adminToken;
     private String userToken;
 
-    @Autowired
-    private TestRestTemplate testRestTemplate;
-
     @BeforeAll
     void getTokens() {
         adminToken = getAdminToken();
         userToken = getUserToken();
     }
+
+    @Autowired
+    private TestRestTemplate testRestTemplate;
+
 
     @Test
     void getCurrencyThatDoesntExist() {

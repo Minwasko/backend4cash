@@ -7,6 +7,8 @@ import ee.vovtech.backend4cash.model.User;
 import ee.vovtech.backend4cash.security.DbRole;
 import ee.vovtech.backend4cash.security.JwtTokenProvider;
 import ee.vovtech.backend4cash.service.user.UserService;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -34,6 +36,7 @@ public abstract class RestTemplateTests {
     protected UserService userService;
     @Autowired
     protected PasswordEncoder passwordEncoder;
+
 
 
     public <T> T assertOk(ResponseEntity<T> exchange) {
