@@ -32,18 +32,6 @@ public class CurrencyController {
     }
 
     @Secured(Roles.ADMIN)
-    @PostMapping
-    public Currency saveCurrency(@RequestBody Currency currency) {
-        return currencyService.save(currency);
-    }
-
-    @Secured(Roles.ADMIN)
-    @PutMapping("{id}")
-    public Currency updateCurrency(@PathVariable String id, @RequestBody Currency currency) throws UnirestException {
-        return currencyService.updateCurrency(id, currency);
-    }
-
-    @Secured(Roles.ADMIN)
     @DeleteMapping("{id}")
     public void deleteCurrency(@PathVariable String id) throws UnirestException {
         currencyService.delete(id);

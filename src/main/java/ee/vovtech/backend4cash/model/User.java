@@ -1,6 +1,8 @@
 package ee.vovtech.backend4cash.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import ee.vovtech.backend4cash.security.DbRole;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,10 +12,11 @@ import java.math.BigDecimal;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Entity @Getter @Setter @NoArgsConstructor
+@Entity @Getter @Setter @NoArgsConstructor @AllArgsConstructor
 public class User {
 
     @Id
@@ -60,5 +63,31 @@ public class User {
     public User addCash(Long amount){
         this.cash = new BigDecimal(cash).add(BigDecimal.valueOf(amount)).toString();
         return this;
+    }
+
+    // overriding this method because Json is unable to be parsed into AbstractMap.SimpleEntry, since it has no default
+    // constructor
+    public List<Map.Entry<String, String>> getOwnedCoins() {
+        List<Map.Entry<String, String>> listForJson = new ArrayList<>();
+        for (SimpleEntry<String, String> entry : ownedCoins) {
+            Map.Entry<String, String> jsonEntry = new Map.Entry<>() {
+                @Override
+                public String getKey() {
+                    return entry.getKey();
+                }
+
+                @Override
+                public String getValue() {
+                    return entry.getValue();
+                }
+
+                @Override
+                public String setValue(String value) {
+                    return entry.getValue();
+                }
+            };
+            listForJson.add(jsonEntry);
+        }
+        return listForJson;
     }
 }

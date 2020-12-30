@@ -42,7 +42,6 @@ public class ForumPostController {
     public List<PostDto> getPostsFrom(@RequestParam long amount){
         return forumPostService.findFrom(amount);
     }
-
     @Secured(Roles.ADMIN)
     @DeleteMapping("{id}")
     public void deleteForumPost(@PathVariable("id") long id) {

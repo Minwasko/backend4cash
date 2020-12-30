@@ -48,30 +48,32 @@ server:
   port: 8080
   servlet:
     context-path: /api
-  ssl:
-    enabled: true
-    key-store-type: PKCS12
-    key-store: classpath:keystore/vovan.p12
-    key-store-password: vovtech
-    key-alias: vovtech
+#  ssl:
+#    enabled: true
+#    key-store-type: PKCS12
+#    key-store: classpath:keystore/vovan.p12
+#    key-store-password: vovtech
+#    key-alias: vovtech
 
 spring:
   jpa:
     hibernate:
       ddl-auto: create-drop
-  jooq:
-    sql-dialect: org.hibernate.dialect.MySQLDialect
   datasource:
-    url: jdbc:mysql://mysql:3306/bits4data?createDatabaseIfNotExist=true
-    username: root
-    password: vovan
-
-trust:
-  store: classpath:keystore/vovan.p12
-  password: vovtech
-#  datasource:
-#    username: sa
-#    url: jdbc:h2:mem:testdb
+    url: jdbc:h2:mem:db;DB_CLOSE_DELAY=-1
+    username: sa
+    password: sa
+    driver-class-name: org.h2.Driver
+#  spring.datasource.driver-class-name=org.h2.Driver
+#  spring.datasource.url=jdbc:h2:mem:db;DB_CLOSE_DELAY=-1
+#  spring.datasource.username=sa
+#  spring.datasource.password=sa
+#trust:
+#  store: classpath:keystore/vovan.p12
+#  password: vovtech
+  #  datasource:
+  #    username: sa
+  #    url: jdbc:h2:mem:testdb
   # This for later when i get the actual Ks
   # security:
   #   oauth2:

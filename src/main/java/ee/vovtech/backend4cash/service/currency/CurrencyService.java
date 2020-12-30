@@ -39,22 +39,8 @@ public class CurrencyService {
         return currencyRepository.save(currency);
     }
 
-
-    public Currency updateCurrency(String currencyId, Currency currency) throws UnirestException {
-        if (currencyId == null || currencyRepository.findById(currencyId).isEmpty()) {
-            throw new InvalidCurrencyException("Currency is not present in the database");
-        }  else if (!currencyId.equals(currency.getName())) {
-            throw new InvalidCurrencyException("Currencies are different");
-        }
-        Currency dbCurrency = findById(currencyId);
-        dbCurrency.setHomepageLink(currency.getHomepageLink());
-        dbCurrency.setImageRef(currency.getImageRef());
-        return currencyRepository.save(dbCurrency);
-    }
-
     public void delete(String id) throws UnirestException {
-        if (findById(id) == null) { throw new CurrencyNotFoundException(); }
-        currencyRepository.delete(findById(id));
+        currencyRepository.delete(currencyRepository.findById(id).orElseThrow(CurrencyNotFoundException::new));
     }
 
 

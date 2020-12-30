@@ -9,6 +9,7 @@ import ee.vovtech.backend4cash.repository.ForumPostRepository;
 import ee.vovtech.backend4cash.repository.UserRepository;
 import ee.vovtech.backend4cash.security.DbRole;
 import ee.vovtech.backend4cash.service.currency.CurrencyService;
+import ee.vovtech.backend4cash.service.user.ForumPostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,7 +27,7 @@ public class Backend4cashApplicationInit implements CommandLineRunner {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private ForumPostRepository forumPostRepository;
+    private ForumPostService forumPostService;
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -44,10 +45,7 @@ public class Backend4cashApplicationInit implements CommandLineRunner {
         user.setPassword(passwordEncoder.encode("12345lol"));
         user.setRole(DbRole.ADMIN);
         userRepository.save(user);
-//        ForumPost forumPost = new ForumPost("good meme", user);
-//        forumPostRepository.save(forumPost);
-//        ForumPost forumPost2 = new ForumPost("good meme also good kringe", user);
-//        forumPostRepository.save(forumPost2);
-
+        forumPostService.save(1L, "good meme");
+        forumPostService.save(1L, "even goodder memes");
     }
 }

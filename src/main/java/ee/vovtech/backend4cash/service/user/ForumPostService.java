@@ -44,7 +44,7 @@ public class ForumPostService {
 
     // we use this
     public List<PostDto> findFrom(long amount){
-        
+
         List<PostDto> toReturn = new ArrayList<>();
         long lastPostId = forumPostRepository.findAll().size();
         for (long i = lastPostId; i > lastPostId - amount; i--){
@@ -55,7 +55,6 @@ public class ForumPostService {
 
         return toReturn;
     }
-
     private PostDto createPostDto(ForumPost post){
 
         return PostDto.builder()
@@ -89,4 +88,3 @@ public class ForumPostService {
     
 
 }
-//

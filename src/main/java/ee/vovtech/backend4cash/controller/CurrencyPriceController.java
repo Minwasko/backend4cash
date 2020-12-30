@@ -28,12 +28,12 @@ public class CurrencyPriceController {
     public List<TimestampPrice> getCurrencyPriceData(@PathVariable String id) throws UnirestException {
         return currencyService.findById(id).getTimestampPrices();
     }
-
-    @Secured(Roles.ADMIN)
-    @PutMapping("{id}/pricedata") // remove??
-    public Currency updateCurrencyPriceData(@PathVariable String id, @RequestBody List<TimestampPrice> timestampPrices) {
-        return currencyPriceService.updateDB(id, timestampPrices);
-    }
+//
+//    @Secured(Roles.ADMIN)
+//    @PutMapping("{id}/pricedata") // remove??
+//    public Currency updateCurrencyPriceData(@PathVariable String id, @RequestBody List<TimestampPrice> timestampPrices) {
+//        return currencyPriceService.updateDB(id, timestampPrices);
+//    }
 
     @GetMapping("{id}/price")
     public String getCurrentPrice(@PathVariable String id) throws UnirestException {
