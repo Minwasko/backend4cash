@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity @Getter @Setter @NoArgsConstructor
-public class Post {
+public class News {
     
     @Id
     @GeneratedValue(generator = "post_id_seq", strategy = GenerationType.SEQUENCE)
@@ -17,7 +17,7 @@ public class Post {
     private String title;
     private String message;
 
-    public Post(String title, String message){
+    public News(String title, String message){
         this.title = title;
         this.message = message;
     }
