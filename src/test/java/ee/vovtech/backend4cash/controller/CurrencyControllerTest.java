@@ -32,6 +32,8 @@ class CurrencyControllerTest extends RestTemplateTests {
 
     @BeforeAll
     void getTokens() {
+        forumPostRepository.deleteAll();
+        userRepository.deleteAll();
         adminToken = getAdminToken();
         userToken = getUserToken();
     }

@@ -46,26 +46,28 @@ class UserControllerTest extends RestTemplateTests {
 
     @BeforeAll
     void getTokens() {
+        forumPostRepository.deleteAll();
+        userRepository.deleteAll();
         adminToken = getAdminToken();
         userToken = getUserToken();
     }
 
     @Test
     void getUserRequiresCorrectRole() {
-        // id=2 -> admin role
-        // id=3 -> user role
+        // id=1 -> admin role
+        // id=2 -> user role
         // admin can get all both users' info
-        ResponseEntity<LoggedInUserDto> userOneFromAdmin = testRestTemplate.exchange("/users/2",
+        ResponseEntity<LoggedInUserDto> userOneFromAdmin = testRestTemplate.exchange("/users/1",
                 HttpMethod.GET, new HttpEntity<>(authorizationHeader(adminToken)), LoggedInUserDto.class);
         assertOk(userOneFromAdmin);
-        ResponseEntity<LoggedInUserDto> userTwoFromAdmin = testRestTemplate.exchange("/users/3",
+        ResponseEntity<LoggedInUserDto> userTwoFromAdmin = testRestTemplate.exchange("/users/2",
                 HttpMethod.GET, new HttpEntity<>(authorizationHeader(adminToken)), LoggedInUserDto.class);
         assertOk(userTwoFromAdmin);
         // user can only access his own info
-        ResponseEntity<LoggedInUserDto> userOneFromUser = testRestTemplate.exchange("/users/2",
+        ResponseEntity<LoggedInUserDto> userOneFromUser = testRestTemplate.exchange("/users/1",
                 HttpMethod.GET, new HttpEntity<>(authorizationHeader(userToken)), LoggedInUserDto.class);
         assertEquals(400, userOneFromUser.getStatusCodeValue());
-        ResponseEntity<LoggedInUserDto> userTwoFromUser = testRestTemplate.exchange("/users/3",
+        ResponseEntity<LoggedInUserDto> userTwoFromUser = testRestTemplate.exchange("/users/2",
                 HttpMethod.GET, new HttpEntity<>(authorizationHeader(userToken)), LoggedInUserDto.class);
         assertOk(userTwoFromUser);
     }

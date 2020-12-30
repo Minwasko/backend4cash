@@ -4,8 +4,12 @@ import ee.vovtech.backend4cash.dto.LoginDto;
 import ee.vovtech.backend4cash.dto.LoginResponse;
 import ee.vovtech.backend4cash.model.Currency;
 import ee.vovtech.backend4cash.model.User;
+import ee.vovtech.backend4cash.repository.ForumPostRepository;
+import ee.vovtech.backend4cash.repository.NewsRepository;
+import ee.vovtech.backend4cash.repository.UserRepository;
 import ee.vovtech.backend4cash.security.DbRole;
 import ee.vovtech.backend4cash.security.JwtTokenProvider;
+import ee.vovtech.backend4cash.service.user.ForumPostService;
 import ee.vovtech.backend4cash.service.user.UserService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInstance;
@@ -34,6 +38,10 @@ public abstract class RestTemplateTests {
     protected JwtTokenProvider jwtTokenProvider;
     @Autowired
     protected UserService userService;
+    @Autowired
+    protected UserRepository userRepository;
+    @Autowired
+    protected ForumPostRepository forumPostRepository;
     @Autowired
     protected PasswordEncoder passwordEncoder;
 
