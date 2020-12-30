@@ -49,8 +49,8 @@ public class UserController {
 
     @Secured({Roles.USER, Roles.ADMIN})
     @PutMapping("{id}/nickname")
-    public boolean updateUserNickname(@PathVariable Long id, @RequestParam String nickname) {
-        return userService.update(id, "nickname", nickname);
+    public boolean updateUserUsername(@PathVariable Long id, @RequestParam String username) {
+        return userService.update(id, "username", username);
     }
 
     @Secured({Roles.USER, Roles.ADMIN})

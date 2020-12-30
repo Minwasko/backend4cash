@@ -41,7 +41,7 @@ public class UserService {
                 }
                 else return false;
                 break;
-            case "nickname":
+            case "username":
                 if (findAll().stream().noneMatch(user -> user.getUsername().equals(value))) dbUser.setUsername(value);
                 else return false;
                 break;
