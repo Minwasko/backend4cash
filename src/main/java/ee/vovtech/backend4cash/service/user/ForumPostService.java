@@ -43,10 +43,11 @@ public class ForumPostService {
     }
 
     // we use this
-    public List<PostDto> findFrom(long id){
-        
+    public List<PostDto> findFrom(long amount){
+
         List<PostDto> toReturn = new ArrayList<>();
-        for (long i = id; i <= id + 5; i++){
+        long lastPostId = forumPostRepository.findAll().size();
+        for (long i = lastPostId; i > lastPostId - amount; i--){
             if(forumPostRepository.existsById(i)){
                 toReturn.add(createPostDto(forumPostRepository.findById(i).get()));
             }
@@ -54,7 +55,6 @@ public class ForumPostService {
 
         return toReturn;
     }
-
     private PostDto createPostDto(ForumPost post){
 
         return PostDto.builder()

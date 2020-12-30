@@ -58,13 +58,13 @@ server:
 spring:
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
   jooq:
     sql-dialect: org.hibernate.dialect.MySQLDialect
   datasource:
     url: jdbc:mysql://mysql:3306/bits4data?createDatabaseIfNotExist=true
     username: root
-    password: vovan 
+    password: vovan
 
 trust:
   store: classpath:keystore/vovan.p12

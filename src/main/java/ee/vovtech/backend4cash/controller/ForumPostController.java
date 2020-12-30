@@ -39,10 +39,9 @@ public class ForumPostController {
 
     // get n th post and 5 more posts
     @GetMapping
-    public List<PostDto> getPostsFrom(@RequestParam long idFrom){
-        return forumPostService.findFrom(idFrom);
+    public List<PostDto> getPostsFrom(@RequestParam long amount){
+        return forumPostService.findFrom(amount);
     }
-
     @Secured(Roles.ADMIN)
     @DeleteMapping("{id}")
     public void deleteForumPost(@PathVariable("id") long id) {
