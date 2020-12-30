@@ -1,17 +1,17 @@
 package ee.vovtech.backend4cash.dto;
 
 import ee.vovtech.backend4cash.security.DbRole;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.ElementCollection;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import java.util.AbstractMap;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-@Getter @Setter @Builder
+@Getter @Setter @Builder @NoArgsConstructor @AllArgsConstructor
 public class LoggedInUserDto {
 
     private long id;
@@ -22,5 +22,6 @@ public class LoggedInUserDto {
     @Enumerated(EnumType.STRING)
     private DbRole role;
     @ElementCollection
-    private List<AbstractMap.SimpleEntry<String, String>> ownedCoins;
+    private List<Map.Entry<String, String>> ownedCoins;
+
 }

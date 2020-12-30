@@ -10,10 +10,4 @@ class Backend4cashApplicationTests {
 
     @Autowired
     JwtTokenProvider jwtTokenProvider;
-
-    @Test
-    void name() {
-        String token = jwtTokenProvider.createTokenForTests("kek@kek.ee");
-        System.out.println(token);
-    }
 }
