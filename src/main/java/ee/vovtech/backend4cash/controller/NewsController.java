@@ -2,7 +2,6 @@ package ee.vovtech.backend4cash.controller;
 
 import ee.vovtech.backend4cash.dto.NewsDto;
 import ee.vovtech.backend4cash.security.Roles;
-import ee.vovtech.backend4cash.service.user.ForumPostService;
 import ee.vovtech.backend4cash.service.user.NewsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
@@ -24,8 +23,8 @@ public class NewsController {
     }
 
     @GetMapping
-    public List<NewsDto> getNewsFrom(@RequestParam long amount){
-        return newsService.findFrom(amount);
+    public List<NewsDto> getNewsFromNewest(@RequestParam long amount){
+        return newsService.findFromNewest(amount);
     }
 
     @GetMapping("{id}")

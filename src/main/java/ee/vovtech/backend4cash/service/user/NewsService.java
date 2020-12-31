@@ -23,7 +23,7 @@ public class NewsService {
         newsRepository.save(news);
     }
 
-    public List<NewsDto> findFrom(long amount) {
+    public List<NewsDto> findFromNewest(long amount) {
 
         List<NewsDto> toReturn = new ArrayList<>();
         int lastPostId = newsRepository.findAll().size();

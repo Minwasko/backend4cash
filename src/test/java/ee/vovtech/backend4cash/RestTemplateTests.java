@@ -44,6 +44,8 @@ public abstract class RestTemplateTests {
     protected ForumPostRepository forumPostRepository;
     @Autowired
     protected PasswordEncoder passwordEncoder;
+    @Autowired
+    protected NewsRepository newsRepository;
 
 
 
