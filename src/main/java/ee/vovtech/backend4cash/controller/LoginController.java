@@ -29,8 +29,7 @@ public class LoginController {
         if (registerDto.getPassword().isEmpty()) throw new InvalidUserException("empty password");
         loginService.registerUser(registerDto);
         return RegisterResponse.builder().success(true).build();
-        // TODO FIX USER ID
-        //return ResponseEntity.status(HttpStatus.CREATED).build();
+
     }
     // login -> generate token for frontend
     @PostMapping("login")
