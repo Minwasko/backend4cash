@@ -1,18 +1,20 @@
 package ee.vovtech.backend4cash.controller;
 
 import ee.vovtech.backend4cash.RestTemplateTests;
+import ee.vovtech.backend4cash.dto.NewsDto;
+import ee.vovtech.backend4cash.dto.PostDto;
 import ee.vovtech.backend4cash.model.ForumPost;
 import ee.vovtech.backend4cash.model.User;
 import ee.vovtech.backend4cash.service.user.NewsService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.test.context.TestPropertySource;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,12 +22,14 @@ import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@TestPropertySource(locations="classpath:application.yaml")
 class ForumPostControllerTest extends RestTemplateTests {
 
 
     public static final ParameterizedTypeReference<List<User>> LIST_OF_USERS =
             new ParameterizedTypeReference<>() {};
-    public static final ParameterizedTypeReference<List<ForumPost>> LIST_OF_POSTS =
+    public static final ParameterizedTypeReference<List<PostDto>> LIST_OF_POSTS =
             new ParameterizedTypeReference<>() {};
 
     @Autowired
@@ -35,6 +39,8 @@ class ForumPostControllerTest extends RestTemplateTests {
 
     private String adminToken;
     private String userToken;
+    private long adminId;
+    private long userId;
 
     @BeforeAll
     void getTokens() {
@@ -42,48 +48,54 @@ class ForumPostControllerTest extends RestTemplateTests {
         userRepository.deleteAll();
         adminToken = getAdminToken();
         userToken = getUserToken();
+        adminId = userRepository.findAll().get(0).getId();
+        userId = userRepository.findAll().get(1).getId();
+        System.out.println(userRepository.findAll().stream().map(User::getRole));
+        System.out.println(userRepository.findAll().stream().map(User::getId).collect(Collectors.toList()));
+        // admin - 8
+        // user - 9
     }
 
     @Test
-    public void postsAreNotNull() {
-        ResponseEntity<List<ForumPost>> exchange = testRestTemplate.exchange("/posts", HttpMethod.GET, null, LIST_OF_POSTS);
-        assertNotNull(exchange.getBody());
+    void postsCanBeSavedAndDeleted() {
+        savePost();
+        getPostsIsNotNull();
+        deletePost();
     }
 
-    @Test
-    public void getPostById() {
-        ResponseEntity<List<ForumPost>> exchange = testRestTemplate.exchange("/posts", HttpMethod.GET, null, LIST_OF_POSTS);
-        assertNotNull(exchange.getBody());
-        ForumPost dbPost = exchange.getBody().get(0);
-        ResponseEntity<ForumPost> exchangePost = testRestTemplate.exchange("/posts/" + dbPost.getId(), HttpMethod.GET, null, ForumPost.class);
-        assertNotNull(exchangePost.getBody());
-        assertEquals(dbPost.getMessage(), exchangePost.getBody().getMessage());
+    void savePost() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", adminToken);
+        // maybe will need a different one
+        HttpEntity<String> requestEntity = new HttpEntity<String>("test Message", headers);
+        ResponseEntity<String> exchange = testRestTemplate.exchange("/posts?userId=" + adminId,
+                HttpMethod.POST, requestEntity, String.class);
+        assertEquals(200, exchange.getStatusCodeValue());
     }
 
-    @Test
-    public void saveNewPost() {
-        ResponseEntity<List<User>> exchange = testRestTemplate.exchange("/users", HttpMethod.GET, null, LIST_OF_USERS);
-        assertNotNull(exchange.getBody());
-        User dbUser = exchange.getBody().get(0);
-        testRestTemplate.exchange("/posts?userId=" + dbUser.getId() , HttpMethod.POST, new HttpEntity<>("testForumPostMessage"), ForumPost.class);
-        ResponseEntity<List<ForumPost>> exchangePosts = testRestTemplate.exchange("/posts", HttpMethod.GET, null, LIST_OF_POSTS);
-        assertNotNull(exchangePosts.getBody());
-        List<String> messages = exchangePosts.getBody().stream().map(ForumPost::getMessage).collect(Collectors.toList());
-        assertTrue(messages.contains("testForumPostMessage"));
+    void getPostsIsNotNull() {
+        ResponseEntity<List<PostDto>> exchange = testRestTemplate.exchange("/posts?amount=10",
+                HttpMethod.GET, null, LIST_OF_POSTS);
+        List<PostDto> postDtos = assertOk(exchange);
+        assertNotNull(postDtos);
     }
 
-    @Test
-    public void deletePost() {
-        ResponseEntity<List<ForumPost>> exchange = testRestTemplate.exchange("/posts", HttpMethod.GET, null, LIST_OF_POSTS);
-        assertNotNull(exchange.getBody());
-        ForumPost dbPost = exchange.getBody().get(0);
-        String oldMessage = dbPost.getMessage();
-        testRestTemplate.exchange("/posts/" + dbPost.getId(), HttpMethod.DELETE, null, ForumPost.class);
-        ResponseEntity<List<ForumPost>> exchangePosts = testRestTemplate.exchange("/posts", HttpMethod.GET, null, LIST_OF_POSTS);
-        assertNotNull(exchangePosts.getBody());
-        List<String> messages = exchangePosts.getBody().stream().map(ForumPost::getMessage).collect(Collectors.toList());
-        assertFalse(messages.contains(oldMessage));
-
+    void deletePost() {
+        // check that post exists
+        ResponseEntity<PostDto> exchangePost = testRestTemplate.exchange("/posts/1",
+                HttpMethod.GET, null, PostDto.class);
+        PostDto postDto = assertOk(exchangePost);
+        // delete that post
+        assertEquals("test Message", postDto.getMessage());
+        ResponseEntity<PostDto> exchange = testRestTemplate.exchange("/posts/1",
+                HttpMethod.DELETE, new HttpEntity<>(authorizationHeader(adminToken)), PostDto.class);
+        assertEquals(200, exchange.getStatusCodeValue());
+        // check that db has no posts
+        ResponseEntity<List<PostDto>> exchangePosts = testRestTemplate.exchange("/posts?amount=10",
+                HttpMethod.GET, null, LIST_OF_POSTS);
+        List<PostDto> postDtos = assertOk(exchangePosts);
+        assertEquals(0, postDtos.size());
     }
+
 
 }

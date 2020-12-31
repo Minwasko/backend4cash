@@ -32,15 +32,9 @@ public class ForumPostController {
         return forumPostService.findById(id);
     }
 
-    // @GetMapping
-    // public List<PostDto> getAllForumPosts(){
-    //     return forumPostService.findAll();
-    // }
-
-    // get n th post and 5 more posts
     @GetMapping
-    public List<PostDto> getPostsFrom(@RequestParam long amount){
-        return forumPostService.findFrom(amount);
+    public List<PostDto> getPostsAmount(@RequestParam long amount){
+        return forumPostService.findAmount(amount);
     }
     @Secured(Roles.ADMIN)
     @DeleteMapping("{id}")

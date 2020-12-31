@@ -47,6 +47,8 @@ class UserControllerTest extends RestTemplateTests {
 
     private String adminToken;
     private String userToken;
+    private long adminId;
+    private long userId;
 
     @BeforeAll
     void getTokens() {
@@ -54,6 +56,12 @@ class UserControllerTest extends RestTemplateTests {
         userRepository.deleteAll();
         adminToken = getAdminToken();
         userToken = getUserToken();
+        adminId = userRepository.findAll().get(0).getId();
+        userId = userRepository.findAll().get(1).getId();
+        System.out.println(userRepository.findAll().stream().map(User::getRole));
+        System.out.println(userRepository.findAll().stream().map(User::getId).collect(Collectors.toList()));
+        // admin - 6
+        // user - 7
     }
 
     @Test
@@ -61,17 +69,17 @@ class UserControllerTest extends RestTemplateTests {
         // id=2 -> admin role
         // id=3 -> user role
         // admin can get all both users' info
-        ResponseEntity<LoggedInUserDto> userOneFromAdmin = testRestTemplate.exchange("/users/2",
+        ResponseEntity<LoggedInUserDto> userOneFromAdmin = testRestTemplate.exchange("/users/" + adminId,
                 HttpMethod.GET, new HttpEntity<>(authorizationHeader(adminToken)), LoggedInUserDto.class);
         assertOk(userOneFromAdmin);
-        ResponseEntity<LoggedInUserDto> userTwoFromAdmin = testRestTemplate.exchange("/users/3",
+        ResponseEntity<LoggedInUserDto> userTwoFromAdmin = testRestTemplate.exchange("/users/" + userId,
                 HttpMethod.GET, new HttpEntity<>(authorizationHeader(adminToken)), LoggedInUserDto.class);
         assertOk(userTwoFromAdmin);
         // user can only access his own info
-        ResponseEntity<LoggedInUserDto> userOneFromUser = testRestTemplate.exchange("/users/2",
+        ResponseEntity<LoggedInUserDto> userOneFromUser = testRestTemplate.exchange("/users/" + adminId,
                 HttpMethod.GET, new HttpEntity<>(authorizationHeader(userToken)), LoggedInUserDto.class);
         assertEquals(400, userOneFromUser.getStatusCodeValue());
-        ResponseEntity<LoggedInUserDto> userTwoFromUser = testRestTemplate.exchange("/users/3",
+        ResponseEntity<LoggedInUserDto> userTwoFromUser = testRestTemplate.exchange("/users/" + userId,
                 HttpMethod.GET, new HttpEntity<>(authorizationHeader(userToken)), LoggedInUserDto.class);
         assertOk(userTwoFromUser);
     }

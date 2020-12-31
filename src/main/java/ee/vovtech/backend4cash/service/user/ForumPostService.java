@@ -43,7 +43,7 @@ public class ForumPostService {
     }
 
     // we use this
-    public List<PostDto> findFrom(long amount){
+    public List<PostDto> findAmount(long amount){
 
         List<PostDto> toReturn = new ArrayList<>();
         long lastPostId = forumPostRepository.findAll().size();

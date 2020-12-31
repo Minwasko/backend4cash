@@ -49,8 +49,8 @@ public abstract class RestTemplateTests {
 
     public <T> T assertOk(ResponseEntity<T> exchange) {
         assertNotNull(exchange.getBody());
-        System.out.println(exchange.getBody());
-        System.out.println(exchange.getStatusCodeValue());
+//        System.out.println(exchange.getBody());
+//        System.out.println(exchange.getStatusCodeValue());
         assertEquals(HttpStatus.OK, exchange.getStatusCode());
         return exchange.getBody();
     }

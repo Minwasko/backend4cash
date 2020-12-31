@@ -2,6 +2,7 @@ package ee.vovtech.backend4cash.controller;
 
 import ee.vovtech.backend4cash.dto.NewsDto;
 import ee.vovtech.backend4cash.model.News;
+import ee.vovtech.backend4cash.model.User;
 import ee.vovtech.backend4cash.service.user.NewsService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -12,10 +13,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import ee.vovtech.backend4cash.RestTemplateTests;
 import org.springframework.http.*;
+import org.springframework.test.context.TestPropertySource;
+
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@TestPropertySource(locations="classpath:application.yaml")
 class NewsControllerTest extends RestTemplateTests{
 
     @Autowired
@@ -25,6 +30,8 @@ class NewsControllerTest extends RestTemplateTests{
 
     private String adminToken;
     private String userToken;
+    private long adminId;
+    private long userId;
 
     @BeforeAll
     void getTokens() {
@@ -32,6 +39,12 @@ class NewsControllerTest extends RestTemplateTests{
         userRepository.deleteAll();
         adminToken = getAdminToken();
         userToken = getUserToken();
+        adminId = userRepository.findAll().get(0).getId();
+        userId = userRepository.findAll().get(1).getId();
+        System.out.println(userRepository.findAll().stream().map(User::getRole));
+        System.out.println(userRepository.findAll().stream().map(User::getId).collect(Collectors.toList()));
+        // admin - 6
+        // user - 7
     }
 
     @Test
