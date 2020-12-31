@@ -1,5 +1,8 @@
 package ee.vovtech.backend4cash.phones;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -7,15 +10,16 @@ import javax.persistence.OneToMany;
 import java.time.LocalDate;
 import java.util.List;
 
-@Entity
+@Entity @Getter @Setter
 public class Phone {
 
     @Id
     @GeneratedValue
+    private long id;
     private String name;
     private String manufacturer;
     private LocalDate releaseDate;
-//    ... many more
+    private float price;
     @OneToMany
     private List<App> apps;
 }
