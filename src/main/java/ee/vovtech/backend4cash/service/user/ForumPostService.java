@@ -46,9 +46,8 @@ public class ForumPostService {
                     toReturn.add(createPostDto(forumPostRepository.findById(i).get()));
                 }
             }
-            return toReturn;
         }
-        throw new InvalidForumPostException("Post not found");
+        return toReturn;
 
     }
     private PostDto createPostDto(ForumPost post){
