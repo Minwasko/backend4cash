@@ -42,11 +42,7 @@ public class UserService {
                 else return false;
                 break;
             case "username":
-                if (findAll().stream().noneMatch(user -> user.getUsername().equals(value))) dbUser.setUsername(value);
-                else return false;
-                break;
-            case "password":
-                dbUser.setPassword(value);
+                dbUser.setUsername(value);
                 break;
             case "status":
                 dbUser.setStatus(value);

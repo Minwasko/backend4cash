@@ -68,15 +68,25 @@ public class ForumPostService {
     }
 
     public void deleteForumPost(long id) {
-        if (forumPostRepository.findById(id).isPresent()) forumPostRepository.delete(forumPostRepository.findById(id).get());
+        if (forumPostRepository.findById(id).isPresent()){
+            forumPostRepository.delete(forumPostRepository.findById(id).get());
+        }
     }
 
-    public List<ForumPost> findAllPostsByUserId(long id) {
-        return forumPostRepository.findAll().stream().filter(post -> post.getUser().getId() == id).collect(Collectors.toList());
+    public List<PostDto> findAllPostsByUserId(long id) {
+        List<ForumPost> userPosts = forumPostRepository.findAll().stream().filter(post -> post.getUser().getId() == id)
+                .collect(Collectors.toList());
+        List<PostDto> postDtos = new ArrayList<>();
+        for(ForumPost post : userPosts) {
+            postDtos.add(PostDto.builder().username(post.getUser().getUsername())
+                    .message(post.getMessage()).id(post.getId()).build());
+        }
+        return postDtos;
     }
 
     public void deleteAllPostsFromUser(long id) {
-        List<ForumPost> posts = forumPostRepository.findAll().stream().filter(e -> e.getUser().getId() == id).collect(Collectors.toList());
+        List<ForumPost> posts = forumPostRepository.findAll().stream()
+                .filter(e -> e.getUser().getId() == id).collect(Collectors.toList());
         posts.forEach(post -> deleteForumPost(post.getId()));
     }
 

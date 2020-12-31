@@ -2,6 +2,7 @@ package ee.vovtech.backend4cash.controller;
 
 
 import ee.vovtech.backend4cash.dto.LoggedInUserDto;
+import ee.vovtech.backend4cash.dto.PostDto;
 import ee.vovtech.backend4cash.model.ForumPost;
 import ee.vovtech.backend4cash.model.User;
 import ee.vovtech.backend4cash.security.Roles;
@@ -53,12 +54,6 @@ public class UserController {
     }
 
     @Secured({Roles.USER, Roles.ADMIN})
-    @PutMapping("{id}/password")
-    public boolean updateUserPassword(@PathVariable Long id, @RequestParam String password) {
-        return userService.update(id, "password", password);
-    }
-
-    @Secured({Roles.USER, Roles.ADMIN})
     @PutMapping("{id}/status")
     public boolean updateUserStatus(@PathVariable Long id, @RequestParam String status) {
         return userService.update(id, "status", status);
@@ -71,7 +66,7 @@ public class UserController {
     }
 
     @GetMapping("{id}/posts")
-    public List<ForumPost> getUserForumPosts(@PathVariable Long id) {
+    public List<PostDto> getUserForumPosts(@PathVariable Long id) {
         return forumPostService.findAllPostsByUserId(id);
     }
 
