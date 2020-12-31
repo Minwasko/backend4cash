@@ -1,4 +1,4 @@
-package c_theory.question14.blogs;
+package ee.vovtech.backend4cash.blogs;
 
 public class Author {
     private String displayName;

@@ -1,5 +1,6 @@
-package c_theory.question14.blogs;
+package ee.vovtech.backend4cash.blogs;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 public class Blog {
@@ -8,6 +9,7 @@ public class Blog {
     private Integer views;
     private String url;
     private List<String> tags;
+    private Timestamp timestamp;
 //    ... many more
     private Author author;
 }
