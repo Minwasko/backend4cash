@@ -1,6 +1,7 @@
 package ee.vovtech.backend4cash.controller;
 
 import ee.vovtech.backend4cash.dto.NewsDto;
+import ee.vovtech.backend4cash.model.News;
 import ee.vovtech.backend4cash.model.User;
 import ee.vovtech.backend4cash.repository.NewsRepository;
 import ee.vovtech.backend4cash.service.user.NewsService;
@@ -56,7 +57,16 @@ class NewsControllerTest extends RestTemplateTests{
         // user - 7
     }
 
+
+
     @Test
+    public void testGetNewsFromNewest(){
+        saveNews();
+
+        getNewsFromNewest();
+        getNewsFromNewest2();
+    }
+
     public void saveNews(){
         NewsDto news4test = NewsDto.builder().title("meme").message("some meme").build();
 
@@ -70,9 +80,7 @@ class NewsControllerTest extends RestTemplateTests{
         assertEquals(1, newsService.findFromNewest(1).size());
     }
 
-    @Test
     public void getNewsFromNewest(){
-        newsRepository.deleteAll();
         postSome(10);
         ResponseEntity<List<NewsDto>> response
                 = testRestTemplate.exchange("/news/?amount=4", HttpMethod.GET, null, LIST_OF_NEWS);
@@ -83,20 +91,17 @@ class NewsControllerTest extends RestTemplateTests{
 
     }
 
-    @Test
     public void getNewsFromNewest2(){
-        newsRepository.deleteAll();
-        postSome(5);
         ResponseEntity<List<NewsDto>> response
-                = testRestTemplate.exchange("/news/?amount=10", HttpMethod.GET, null, LIST_OF_NEWS);
+                = testRestTemplate.exchange("/news/?amount=13", HttpMethod.GET, null, LIST_OF_NEWS);
         List<NewsDto> news = assertOk(response);
         assertEquals(200, response.getStatusCodeValue());
-        assertEquals(5, news.size());
-        assertEquals("meme 1", news.get(news.size() - 1).getTitle());
+        assertEquals(11, news.size());
+        assertEquals("meme", news.get(news.size() - 1).getTitle());
 
     }
 
-    //find amount 50 but get 10 posted
+
 
     private void postSome(int amount){
 
@@ -105,5 +110,4 @@ class NewsControllerTest extends RestTemplateTests{
 
         }
     }
-
 }
