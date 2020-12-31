@@ -14,8 +14,6 @@ import java.util.List;
 public class Phone {
 
     @Id
-    @GeneratedValue
-    private long id;
     private String name;
     private String manufacturer;
     private LocalDate releaseDate;
