@@ -9,12 +9,15 @@ import ee.vovtech.backend4cash.service.user.NewsService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.client.RestClientException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,6 +27,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestPropertySource(locations="classpath:application.yaml")
+@RunWith(SpringRunner.class)
 class ForumPostControllerTest extends RestTemplateTests {
 
 
@@ -41,6 +45,7 @@ class ForumPostControllerTest extends RestTemplateTests {
     private String userToken;
     private long adminId;
     private long userId;
+    private long postId;
 
     @BeforeAll
     void getTokens() {
@@ -78,23 +83,29 @@ class ForumPostControllerTest extends RestTemplateTests {
                 HttpMethod.GET, null, LIST_OF_POSTS);
         List<PostDto> postDtos = assertOk(exchange);
         assertNotNull(postDtos);
+        postId = forumPostRepository.findAll().get(0).getId();
     }
 
     void deletePost() {
         // check that post exists
-        ResponseEntity<PostDto> exchangePost = testRestTemplate.exchange("/posts/1",
+        ResponseEntity<PostDto> exchangePost = testRestTemplate.exchange("/posts/" + postId,
                 HttpMethod.GET, null, PostDto.class);
         PostDto postDto = assertOk(exchangePost);
         // delete that post
         assertEquals("test Message", postDto.getMessage());
-        ResponseEntity<PostDto> exchange = testRestTemplate.exchange("/posts/1",
+        ResponseEntity<PostDto> exchange = testRestTemplate.exchange("/posts/" + postId,
                 HttpMethod.DELETE, new HttpEntity<>(authorizationHeader(adminToken)), PostDto.class);
         assertEquals(200, exchange.getStatusCodeValue());
         // check that db has no posts
-        ResponseEntity<List<PostDto>> exchangePosts = testRestTemplate.exchange("/posts?amount=10",
-                HttpMethod.GET, null, LIST_OF_POSTS);
-        List<PostDto> postDtos = assertOk(exchangePosts);
-        assertEquals(0, postDtos.size());
+//        try {
+            ResponseEntity<List<PostDto>> exchangePosts = testRestTemplate.exchange("/posts?amount=10",
+                    HttpMethod.GET, null, LIST_OF_POSTS);
+            List<PostDto> postDtos = assertOk(exchangePosts);
+            assertEquals(0, postDtos.size());
+//        } catch (Exception e) {
+            // Exception has to be thrown since user has no rights..........
+//            assertEquals(e.getClass(), RestClientException.class);
+//        }
     }
 
 

@@ -32,28 +32,24 @@ public class ForumPostService {
         forumPostRepository.save(forumPost);
     }
 
-    @Deprecated // fk this
-    public List<PostDto> findAll() {
-        List<ForumPost> dbPosts = forumPostRepository.findAll();
-        List<PostDto> postDtos = new ArrayList<>();
-        for (ForumPost dbPost : dbPosts) {
-            postDtos.add(PostDto.builder().username(dbPost.getUser().getUsername()).message(dbPost.getMessage()).build());
-        }
-        return postDtos;
-    }
-
-    // we use this
     public List<PostDto> findAmount(long amount){
 
         List<PostDto> toReturn = new ArrayList<>();
-        long lastPostId = forumPostRepository.findAll().size();
-        for (long i = lastPostId; i > lastPostId - amount; i--){
-            if(forumPostRepository.existsById(i)){
-                toReturn.add(createPostDto(forumPostRepository.findById(i).get()));
-            }
+        ForumPost lastPost = null;
+        if (forumPostRepository.findAll().size() > 0) {
+            lastPost = forumPostRepository.findAll().get(forumPostRepository.findAll().size() - 1);
         }
+        if (lastPost != null) {
+            long lastPostId = lastPost.getId();
+            for (long i = lastPostId; i > lastPostId - amount; i--){
+                if(forumPostRepository.findById(i).isPresent()){
+                    toReturn.add(createPostDto(forumPostRepository.findById(i).get()));
+                }
+            }
+            return toReturn;
+        }
+        throw new InvalidForumPostException("Post not found");
 
-        return toReturn;
     }
     private PostDto createPostDto(ForumPost post){
 
