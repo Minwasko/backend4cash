@@ -26,9 +26,6 @@ public class ForumPostService {
     private ForumPostRepository forumPostRepository;
 
     public void save(NewForumPostDto forumPostDto) {
-        if (forumPostDto.getContent().length() > 255) {
-            throw new InvalidForumPostException("ForumPost message is too long");
-        }
         User user = userService.findByEmail(forumPostDto.getAuthorEmail());
         if (user == null) throw new InvalidUserException("user not found");
         ForumPost forumPost = new ForumPost();
