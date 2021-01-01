@@ -1,7 +1,9 @@
 package ee.vovtech.backend4cash.service.user;
 
+import ee.vovtech.backend4cash.dto.NewForumPostDto;
 import ee.vovtech.backend4cash.dto.PostDto;
 import ee.vovtech.backend4cash.exceptions.InvalidForumPostException;
+import ee.vovtech.backend4cash.exceptions.InvalidUserException;
 import ee.vovtech.backend4cash.exceptions.UserNotFoundException;
 import ee.vovtech.backend4cash.model.ForumPost;
 import ee.vovtech.backend4cash.model.User;
@@ -23,12 +25,16 @@ public class ForumPostService {
     @Autowired
     private ForumPostRepository forumPostRepository;
 
-    public void save(Long id, String message) {
-        if (message.length() > 255) {
+    public void save(NewForumPostDto forumPostDto) {
+        if (forumPostDto.getContent().length() > 255) {
             throw new InvalidForumPostException("ForumPost message is too long");
         }
-        User user = userService.findById(id);
-        ForumPost forumPost = new ForumPost(message, user);
+        User user = userService.findByEmail(forumPostDto.getAuthorEmail());
+        if (user == null) throw new InvalidUserException("user not found");
+        ForumPost forumPost = new ForumPost();
+        forumPost.setContent(forumPostDto.getContent());
+        forumPost.setTitle(forumPostDto.getTitle());
+        forumPost.setUser(user);
         forumPostRepository.save(forumPost);
     }
 
@@ -51,18 +57,19 @@ public class ForumPostService {
 
     }
     private PostDto createPostDto(ForumPost post){
-
         return PostDto.builder()
                 .id(post.getId())
-                .username(post.getUser().getUsername())
-                .message(post.getMessage())
+                .authorName(post.getUser().getUsername())
+                .content(post.getContent())
+                .title(post.getTitle())
                 .build();
     }
 
     public PostDto findById(long id) {
         if (forumPostRepository.findById(id).isPresent()) {
             ForumPost dbPost = forumPostRepository.findById(id).get();
-            return PostDto.builder().username(dbPost.getUser().getUsername()).message(dbPost.getMessage()).build();
+            return PostDto.builder().authorName(dbPost.getUser().getUsername()).content(dbPost.getContent())
+                    .title(dbPost.getTitle()).build();
         }
         throw new UserNotFoundException();
     }
@@ -78,8 +85,8 @@ public class ForumPostService {
                 .collect(Collectors.toList());
         List<PostDto> postDtos = new ArrayList<>();
         for(ForumPost post : userPosts) {
-            postDtos.add(PostDto.builder().username(post.getUser().getUsername())
-                    .message(post.getMessage()).id(post.getId()).build());
+            postDtos.add(PostDto.builder().authorName(post.getUser().getUsername()).content(post.getContent())
+                    .title(post.getTitle()).id(post.getId()).build());
         }
         return postDtos;
     }
@@ -89,7 +96,4 @@ public class ForumPostService {
                 .filter(e -> e.getUser().getId() == id).collect(Collectors.toList());
         posts.forEach(post -> deleteForumPost(post.getId()));
     }
-
-    
-
 }

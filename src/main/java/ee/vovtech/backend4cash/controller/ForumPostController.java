@@ -1,6 +1,7 @@
 package ee.vovtech.backend4cash.controller;
 
 
+import ee.vovtech.backend4cash.dto.NewForumPostDto;
 import ee.vovtech.backend4cash.dto.PostDto;
 import ee.vovtech.backend4cash.model.ForumPost;
 import ee.vovtech.backend4cash.security.Roles;
@@ -23,8 +24,8 @@ public class ForumPostController {
     @PostMapping
     // to post a forum post. Takes message and user id from the frontend and is passed to forumpostservice
     // be saved in the dee bee
-    public void saveForumPost(@RequestBody String message, @RequestParam long userId) {
-        forumPostService.save(userId, message);
+    public void saveForumPost(@RequestBody NewForumPostDto forumPostDto) {
+        forumPostService.save(forumPostDto);
     }
 
     @GetMapping("{id}")
@@ -36,6 +37,7 @@ public class ForumPostController {
     public List<PostDto> getPostsAmount(@RequestParam long amount){
         return forumPostService.findAmount(amount);
     }
+
     @Secured(Roles.ADMIN)
     @DeleteMapping("{id}")
     public void deleteForumPost(@PathVariable("id") long id) {
