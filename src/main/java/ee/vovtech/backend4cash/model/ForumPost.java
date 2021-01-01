@@ -16,6 +16,7 @@ public class ForumPost {
     private long id;
 
 
+    @Lob
     private String content;
     private String title;
 
