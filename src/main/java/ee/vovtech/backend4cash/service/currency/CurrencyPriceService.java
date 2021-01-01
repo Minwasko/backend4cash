@@ -76,7 +76,7 @@ public class CurrencyPriceService {
         AbstractMap.SimpleEntry<String, String> userCoin = dbUser.getOwnedCoinByCoinId(coinId);
         if (userCoin == null) return false;
         BigDecimal amountLeft = new BigDecimal(userCoin.getValue()).subtract(new BigDecimal(amount));
-        if (amountLeft.compareTo(new BigDecimal("0.000000001")) >= 0) {
+        if (amountLeft.compareTo(BigDecimal.ZERO) >= 0) {
             dbUser.setCash(new BigDecimal(coinPrice).multiply(new BigDecimal(amount)).add(new BigDecimal(dbUser.getCash())).toString());
             dbUser.setCoinsAmount(coinId, amountLeft.toString());
             userService.updateUser(dbUser);
