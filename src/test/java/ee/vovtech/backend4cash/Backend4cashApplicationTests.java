@@ -1,9 +1,12 @@
 package ee.vovtech.backend4cash;
 
-import org.junit.jupiter.api.Test;
+import ee.vovtech.backend4cash.security.JwtTokenProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 class Backend4cashApplicationTests {
 
+    @Autowired
+    JwtTokenProvider jwtTokenProvider;
 }

@@ -4,14 +4,18 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import ee.vovtech.backend4cash.exceptions.InvalidCurrencyException;
 import ee.vovtech.backend4cash.model.Currency;
 import ee.vovtech.backend4cash.model.TimestampPrice;
+import ee.vovtech.backend4cash.model.User;
 import ee.vovtech.backend4cash.repository.CurrencyRepository;
 import ee.vovtech.backend4cash.service.coingecko.CoingeckoAPI;
+import ee.vovtech.backend4cash.service.user.UserService;
 import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.math.BigDecimal;
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class CurrencyPriceService {
@@ -20,10 +24,12 @@ public class CurrencyPriceService {
     private CurrencyRepository currencyRepository;
     @Autowired
     private CurrencyService currencyService;
+    @Autowired
+    private UserService userService;
 
-    public enum UpdateTime {DAY, HOUR};
+    public enum UpdateTime {DAY, HOUR}
 
-    public void updatePrice(String id, UpdateTime updateTime) {
+    public void updatePrice(String id, UpdateTime updateTime) throws UnirestException {
         JSONArray data;
         if (updateTime.equals(UpdateTime.DAY)) data = CoingeckoAPI.getCurrencyPriceLastDay(id);
         else data = CoingeckoAPI.getCurrencyPriceLastHour(id);
@@ -39,20 +45,45 @@ public class CurrencyPriceService {
 
     }
 
-    // TODO fix this sh*t (sorry za mat)
     public Currency updateDB(String id, List<TimestampPrice> timestampPrices) {
-        if (currencyRepository.findById(id).isEmpty()) {
-            throw new InvalidCurrencyException("No such currency exception");
-        } else if (timestampPrices.isEmpty()) {
-            throw new InvalidCurrencyException("New price data is empty");
-        }
-//        } else if (!id.equals(timestampPrices.get(0).getCurrency().getName())) {
-//            throw new InvalidCurrencyException("Price data is for a different currency");
-//        }
+        if (currencyRepository.findById(id).isEmpty()) throw new InvalidCurrencyException("No such currency exception");
+        else if (timestampPrices.isEmpty()) throw new InvalidCurrencyException("New price data is empty");
         Currency dbCurrency = currencyRepository.findById(id).get();
         dbCurrency.setTimestampPrices(timestampPrices);
         currencyRepository.save(dbCurrency);
         return dbCurrency;
+    }
+
+    public String getCurrentPrice(String id) throws UnirestException {
+        Currency dbCurrency = currencyService.findById(id);
+        return dbCurrency.getTimestampPrices().get(dbCurrency.getTimestampPrices().size() - 1).getPrice();
+    }
+
+    public boolean tryToBuyCoins(long userId, String coinId, String amount) throws UnirestException {
+        User dbUser = userService.findById(userId);
+        BigDecimal totalPrice = new BigDecimal(getCurrentPrice(coinId)).multiply(new BigDecimal(amount));
+        if (totalPrice.compareTo(new BigDecimal(dbUser.getCash())) < 0) {
+            dbUser.addCoins(coinId, amount);
+            dbUser.setCash(new BigDecimal(dbUser.getCash()).subtract(totalPrice).toString());
+            userService.updateUser(dbUser);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean tryToSellCoins(long userId, String coinId, String amount) throws UnirestException {
+        User dbUser = userService.findById(userId);
+        String coinPrice = getCurrentPrice(coinId);
+        AbstractMap.SimpleEntry<String, String> userCoin = dbUser.getOwnedCoinByCoinId(coinId);
+        if (userCoin == null) return false;
+        BigDecimal amountLeft = new BigDecimal(userCoin.getValue()).subtract(new BigDecimal(amount));
+        if (amountLeft.compareTo(BigDecimal.ZERO) >= 0) {
+            dbUser.setCash(new BigDecimal(coinPrice).multiply(new BigDecimal(amount)).add(new BigDecimal(dbUser.getCash())).toString());
+            dbUser.setCoinsAmount(coinId, amountLeft.toString());
+            userService.updateUser(dbUser);
+            return true;
+        }
+        return false;
     }
 }
 

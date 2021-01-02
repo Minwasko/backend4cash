@@ -2,19 +2,19 @@ package ee.vovtech.backend4cash.controller;
 
 
 import com.mashape.unirest.http.exceptions.UnirestException;
-import ee.vovtech.backend4cash.model.Currency;
 import ee.vovtech.backend4cash.model.TimestampPrice;
-import ee.vovtech.backend4cash.service.coingecko.CoingeckoAPI;
 import ee.vovtech.backend4cash.service.currency.CurrencyPriceService;
 import ee.vovtech.backend4cash.service.currency.CurrencyService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
-@RequestMapping({"/coins", "/coins2"})
-@CrossOrigin(origins = {"http://localhost:4003", "http://localhost:4200"}, maxAge = 3600)
+@RequestMapping("/coins")
 public class CurrencyPriceController {
 
     @Autowired
@@ -23,13 +23,13 @@ public class CurrencyPriceController {
     private CurrencyService currencyService;
 
     @GetMapping("{id}/pricedata")
-    public List<TimestampPrice> getCurrencyPriceData(@PathVariable String id) {
-        return currencyService.findById(id).getTimestampPrices();
+    public List<TimestampPrice> getCurrencyPriceData(@PathVariable String id) throws UnirestException {
+        return currencyService.findById(id.replace(" ", "-")).getTimestampPrices();
     }
 
-    @PutMapping("{id}/pricedata")
-    public Currency updateCurrencyPriceData(@PathVariable String id, @RequestBody List<TimestampPrice> timestampPrices) {
-        return currencyPriceService.updateDB(id, timestampPrices);
+    @GetMapping("{id}/price")
+    public String getCurrentPrice(@PathVariable String id) throws UnirestException {
+        return currencyPriceService.getCurrentPrice(id.replace(" ", "-"));
     }
 
 }

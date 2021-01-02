@@ -1,0 +1,38 @@
+# Token duration
+jwt:
+  secret: secret
+  durationMinutes: 120
+# coin autoupdate setting
+coins:
+  updating: true
+  cron: 0 0 * * * *
+
+server:
+  # app port
+  port: 8080
+  servlet:
+    context-path: /api
+  # ssl stuff
+  ssl:
+    enabled: true
+    key-store-type: PKCS12
+    key-store: classpath:keystore/vovan.p12
+    key-store-password: vovtech
+    key-alias: vovtech
+
+spring:
+  jpa:
+    hibernate:
+      # what to do with the db when start the app?
+      ddl-auto: create-drop
+  jooq:
+    sql-dialect: org.hibernate.dialect.MySQLDialect
+  # db stuff
+  datasource:
+    url: jdbc:mysql://mysql:3306/bits4data?createDatabaseIfNotExist=true
+    username: root
+    password: vovan
+
+trust:
+  store: classpath:keystore/vovan.p12
+  password: vovtech

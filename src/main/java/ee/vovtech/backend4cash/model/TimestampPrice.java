@@ -1,16 +1,14 @@
 package ee.vovtech.backend4cash.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-
+import javax.persistence.*;
 import java.io.Serializable;
 
-@Entity
+@Entity @Getter @Setter @NoArgsConstructor
 public class TimestampPrice implements Serializable {
 
     @Id
@@ -29,45 +27,9 @@ public class TimestampPrice implements Serializable {
     @JsonIgnore
     private Currency currency;
 
-
-    public TimestampPrice() {
-    }
-
     public TimestampPrice(Currency currency, long timestamp, String price) {
         this.timestamp = timestamp;
         this.price = price;
-        this.currency = currency;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public long getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(long timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    public String getPrice() {
-        return price;
-    }
-
-    public void setPrice(String price) {
-        this.price = price;
-    }
-
-    public Currency getCurrency() {
-        return currency;
-    }
-
-    public void setCurrency(Currency currency) {
         this.currency = currency;
     }
 }

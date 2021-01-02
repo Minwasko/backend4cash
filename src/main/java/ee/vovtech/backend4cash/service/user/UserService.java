@@ -1,35 +1,54 @@
 package ee.vovtech.backend4cash.service.user;
 
+import ee.vovtech.backend4cash.exceptions.InvalidUserException;
 import ee.vovtech.backend4cash.exceptions.UserNotFoundException;
-import ee.vovtech.backend4cash.model.ForumPost;
 import ee.vovtech.backend4cash.model.User;
 import ee.vovtech.backend4cash.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class UserService {
 
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private ForumPostService forumPostService;
-
-    public User save(User user) {
-        return userRepository.save(user);
+    public void save(User user) {
+        if (userRepository.findByEmail(user.getEmail()) == null) {
+            userRepository.save(user);
+        } else {
+            throw new InvalidUserException("Email already in use");
+        }
     }
 
-    public User update(Long id, User user) {
+    public void updateUser(User user) {
+        userRepository.save(user);
+    }
+
+    public boolean update(Long id, String infoToChange, String value) {
         User dbUser = findById(id);
-        dbUser.setNickname(user.getNickname());
-        save(dbUser);
-        return dbUser;
+        switch (infoToChange) {
+            case "email":
+                if (findAll().stream().noneMatch(user -> user.getEmail().equals(value))) {
+                    dbUser.setEmail(value);
+                }
+                else return false;
+                break;
+            case "username":
+                dbUser.setUsername(value);
+                break;
+            case "status":
+                dbUser.setStatus(value);
+                break;
+        }
+        updateUser(dbUser);
+        return true;
     }
-
 
     public User findById(Long id) {
         if (userRepository.findById(id).isPresent()) {
@@ -38,12 +57,12 @@ public class UserService {
         throw new UserNotFoundException();
     }
 
-    public List<User> findByNickname(String nickName) {
-        return findAll().stream().filter(user -> user.getNickname().equals(nickName)).collect(Collectors.toList());
+    public List<User> findByUsername(String username) {
+        return findAll().stream().filter(user -> user.getUsername().equals(username)).collect(Collectors.toList());
     }
 
-    public List<User> findByEmail(String email) {
-        return findAll().stream().filter(user -> user.getEmail().equals(email)).collect(Collectors.toList());
+    public User findByEmail(String email) {
+        return findAll().stream().filter(user -> user.getEmail().equals(email)).findAny().orElse(null);
     }
 
     public List<User> findAll() {
@@ -58,9 +77,8 @@ public class UserService {
         }
     }
 
-    // !!! temporary solution for id thingies in users. Has to be fixed l8r
-    public boolean idIsTaken(long userID){
-        return userRepository.existsById(userID);
+    public void addCash(Long id, Long amount){
+        log.info("Trying to add " + amount + " of cash to " + id + " account...");
+        updateUser(findById(id).addCash(amount));
     }
-
 }

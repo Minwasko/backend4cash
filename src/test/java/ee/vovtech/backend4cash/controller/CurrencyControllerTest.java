@@ -1,11 +1,13 @@
 package ee.vovtech.backend4cash.controller;
 
-import com.mashape.unirest.http.exceptions.UnirestException;
+import ee.vovtech.backend4cash.RestTemplateTests;
+import ee.vovtech.backend4cash.dto.LoggedInUserDto;
 import ee.vovtech.backend4cash.model.Currency;
-import ee.vovtech.backend4cash.model.TimestampPrice;
-import ee.vovtech.backend4cash.repository.CurrencyRepository;
-import ee.vovtech.backend4cash.service.currency.CurrencyService;
+import ee.vovtech.backend4cash.model.User;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -13,32 +15,59 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class CurrencyControllerTest {
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@TestPropertySource(locations="classpath:application.yaml")
+@RunWith(SpringRunner.class)
+class CurrencyControllerTest extends RestTemplateTests {
 
     public static final ParameterizedTypeReference<List<Currency>> LIST_OF_CURRENCIES =
             new ParameterizedTypeReference<>() {};
 
+    private String adminToken;
+    private String userToken;
+    private long adminId;
+    private long userId;
+
+    @BeforeAll
+    void getTokens() {
+        forumPostRepository.deleteAll();
+        userRepository.deleteAll();
+        adminToken = getAdminToken();
+        userToken = getUserToken();
+        adminId = userRepository.findAll().get(0).getId();
+        userId = userRepository.findAll().get(1).getId();
+    }
+
     @Autowired
     private TestRestTemplate testRestTemplate;
 
+
     @Test
-    void coinsAreNotEmpty() {
+    void getCurrencyThatDoesntExist() {
+        ResponseEntity<Currency> exchange = testRestTemplate.exchange("/coins/" + "thisCurrencyIsNotReal", HttpMethod.GET, null, Currency.class);
+        assertEquals(404, exchange.getStatusCodeValue());
+    }
+
+    @Test
+    void coinsAreNotEmpty() { // coins have ben loaded into db on init
         ResponseEntity<List<Currency>> exchange = testRestTemplate.exchange("/coins", HttpMethod.GET, null, LIST_OF_CURRENCIES);
-        System.out.println(exchange.getBody());
-        assertNotNull(exchange.getBody());
+        List<Currency> currencies = assertOk(exchange);
+        assertNotNull(currencies);
     }
 
     @Test
     void queryForExactCoin() {
         ResponseEntity<Currency> exchange = testRestTemplate.exchange("/coins/" + "bitcoin", HttpMethod.GET, null, Currency.class);
-        Currency coin = exchange.getBody();
-        assertNotNull(coin);
+        Currency coin = assertOk(exchange);
         // assert values exist
         assertEquals("bitcoin", coin.getName());
         assertNotNull(coin.getHomepageLink());
@@ -46,46 +75,66 @@ class CurrencyControllerTest {
     }
 
     @Test
-    void saveNewCoin() {
-        Currency currency = new Currency();
-        currency.setName("testCurrency");
-        currency.setImageRef("imageRef");
-        currency.setHomepageLink("homePageLink");
-        currency.setTimestampPrices(List.of(new TimestampPrice(currency, 10, "10")));
-        ResponseEntity<Currency> exchange = testRestTemplate.exchange("/coins", HttpMethod.POST, new HttpEntity<>(currency), Currency.class);
-        Currency receivedCurrency = exchange.getBody();
-        assertNotNull(receivedCurrency);
-        assertEquals("testCurrency", receivedCurrency.getName());
-        assertEquals("homePageLink", receivedCurrency.getHomepageLink());
-        assertEquals("imageRef", receivedCurrency.getImageRef());
+    void saveNewCoin() { // coin is saved when get method is called for a coin, that is not in the db
+        ResponseEntity<Currency> exchange = testRestTemplate.exchange("/coins/" + "dogecoin",
+                HttpMethod.GET, null, Currency.class);
+        Currency currency = assertOk(exchange);
+        assertEquals("dogecoin", currency.getName());
+        assertNotNull(currency.getHomepageLink());
+        assertNotNull(currency.getImageRef());
     }
 
     @Test
-    void updateNewCoin() {
-        Currency currency = new Currency();
-        currency.setName("testCurrency");
-        currency.setImageRef("imageRefUpdated");
-        currency.setHomepageLink("homePageLinkUpdated");
-        currency.setTimestampPrices(List.of(new TimestampPrice(currency, 10, "10")));
-        ResponseEntity<Currency> exchange = testRestTemplate.exchange("/coins/" + "testCurrency", HttpMethod.PUT, new HttpEntity<>(currency), Currency.class);
-        Currency updatedCurrency = exchange.getBody();
-        assertNotNull(updatedCurrency);
-        System.out.println(updatedCurrency);
-        assertEquals("testCurrency", updatedCurrency.getName());
-        assertEquals("homePageLinkUpdated", updatedCurrency.getHomepageLink());
-        assertEquals("imageRefUpdated", updatedCurrency.getImageRef());
-    }
-
-    @Test
-    void deleteNewCoin() {
-        ResponseEntity<Currency> exchange = testRestTemplate.exchange("/coins/" + "testCurrency", HttpMethod.GET, null, Currency.class);
-        Currency currency = exchange.getBody();
-        assertNotNull(currency);
-        testRestTemplate.exchange("/coins/" + "testCurrency", HttpMethod.DELETE, null, Currency.class);
+    void deleteNewCoin() { // to delete we need admin token
+        ResponseEntity<Currency> exchange = testRestTemplate.exchange("/coins/" + "dogecoin", HttpMethod.GET, null, Currency.class);
+        Currency currency = assertOk(exchange);
+        assertEquals("dogecoin", currency.getName());
+        testRestTemplate.exchange("/coins/" + "dogecoin", HttpMethod.DELETE, new HttpEntity<>(authorizationHeader(adminToken)), Currency.class);
         ResponseEntity<List<Currency>> newCoinsList = testRestTemplate.exchange("/coins", HttpMethod.GET, null, LIST_OF_CURRENCIES);
-        List<Currency> currencies = newCoinsList.getBody();
-        assertNotNull(currencies);
-        assertFalse(currencies.contains(currency));
+        List<Currency> currencies = assertOk(newCoinsList);
+        assertFalse(currencies.stream().map(Currency::getName).collect(Collectors.toList()).contains("dogecoin"));
     }
 
+    @Test
+    void userCanBuyAndSellCoins(){
+        // doing it this way because order is important and junit5 prefers chaos
+        buyCoins();
+        sellCoins();
+    }
+
+    void buyCoins() {
+        ResponseEntity<Boolean> exchange = testRestTemplate.exchange("/coins/" + "bitcoin" + "/buy" + "?amount=1&userId=" + userId,
+                HttpMethod.PUT, new HttpEntity<>(authorizationHeader(userToken)), Boolean.class);
+        Boolean response = assertOk(exchange);
+        assertTrue(response);
+        // get user info to see his coins and cash
+        ResponseEntity<LoggedInUserDto> userExchange = testRestTemplate.exchange("/users/" + userId,
+                HttpMethod.GET, new HttpEntity<>(authorizationHeader(userToken)), LoggedInUserDto.class);
+        LoggedInUserDto userInfo = assertOk(userExchange);
+        assertEquals("bitcoin", userInfo.getOwnedCoins().get(0).getKey());
+        assertNotEquals(Float.valueOf("100000"), Float.valueOf(userInfo.getCash()));
+        // user cant buy too many coins
+        ResponseEntity<Boolean> exchangeFalse = testRestTemplate.exchange("/coins/" + "bitcoin" + "/buy" + "?amount=100000000&userId=" + userId,
+                HttpMethod.PUT, new HttpEntity<>(authorizationHeader(userToken)), Boolean.class);
+        Boolean responseFalse = assertOk(exchangeFalse);
+        assertFalse(responseFalse);
+    }
+
+    void sellCoins() {
+        ResponseEntity<Boolean> exchange = testRestTemplate.exchange("/coins/" + "bitcoin" + "/sell" + "?amount=1&userId=" + userId,
+                HttpMethod.PUT, new HttpEntity<>(authorizationHeader(userToken)), Boolean.class);
+        Boolean response = assertOk(exchange);
+        assertTrue(response);
+        // get user info to see his coins and cash
+        ResponseEntity<LoggedInUserDto> userExchange = testRestTemplate.exchange("/users/" + userId,
+                HttpMethod.GET, new HttpEntity<>(authorizationHeader(userToken)), LoggedInUserDto.class);
+        LoggedInUserDto userInfo = assertOk(userExchange);
+        assertEquals(0, userInfo.getOwnedCoins().size());
+        assertEquals(Float.valueOf("100000"), Float.valueOf(userInfo.getCash()));
+        // user cant sell coins he doesnt have
+        ResponseEntity<Boolean> exchangeFalse = testRestTemplate.exchange("/coins/" + "bitcoin" + "/sell" + "?amount=1&userId=" + userId,
+                HttpMethod.PUT, new HttpEntity<>(authorizationHeader(userToken)), Boolean.class);
+        Boolean responseFalse = assertOk(exchangeFalse);
+        assertFalse(responseFalse);
+    }
 }

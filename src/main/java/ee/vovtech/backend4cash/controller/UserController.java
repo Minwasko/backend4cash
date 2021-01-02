@@ -1,25 +1,19 @@
 package ee.vovtech.backend4cash.controller;
 
 
-import ee.vovtech.backend4cash.model.ForumPost;
+import ee.vovtech.backend4cash.dto.LoggedInUserDto;
+import ee.vovtech.backend4cash.dto.PostDto;
 import ee.vovtech.backend4cash.model.User;
+import ee.vovtech.backend4cash.security.Roles;
 import ee.vovtech.backend4cash.service.user.ForumPostService;
+import ee.vovtech.backend4cash.service.user.LoginService;
 import ee.vovtech.backend4cash.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = {"http://localhost:4003", "http://localhost:4200"}, maxAge = 3600)
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -28,52 +22,62 @@ public class UserController {
     private UserService userService;
     @Autowired
     private ForumPostService forumPostService;
+    @Autowired
+    private LoginService loginService;
 
-    @PostMapping
-    public User saveUser(@RequestBody User user) {
-        return userService.save(user);
-    }
-
+    @Secured({Roles.ADMIN, Roles.USER})
     @GetMapping("{id}")
-    public User getUser(@PathVariable Long id) {
-        return userService.findById(id);
+    public LoggedInUserDto getUser(@PathVariable Long id, @RequestHeader(name="Authorization") String token) {
+        return loginService.getUserByIdWithTokenCheck(id, token);
     }
 
+    @Secured(Roles.ADMIN)
     @GetMapping
-    public List<User> getUsers(@RequestParam(required = false) String nickName, @RequestParam(required = false) String email) {
-        if (nickName != null) {
-            return userService.findByNickname(nickName);
-        } else if (email != null) {
-            return userService.findByEmail(email);
-        }
+    public List<User> getUsers(@RequestParam(required = false) String username, @RequestParam(required = false) String email) {
+        if (username != null) return userService.findByUsername(username);
+        else if (email != null) return List.of(userService.findByEmail(email));
         return userService.findAll();
     }
-    @GetMapping("check/{id}")
-    public boolean idIsTaken(@PathVariable Long id){
-        return userService.idIsTaken(id);
+
+    @Secured({Roles.USER, Roles.ADMIN})
+    @PutMapping("{id}/email") // email, nickname, password, status
+    public boolean updateUserEmail(@PathVariable Long id, @RequestParam String email) {
+        return userService.update(id, "email", email);
     }
 
-    @PutMapping("{id}")
-    public User updateUser(@PathVariable Long id, @RequestBody User user) {
-        return userService.update(id, user);
+    @Secured({Roles.USER, Roles.ADMIN})
+    @PutMapping("{id}/username")
+    public boolean updateUserUsername(@PathVariable Long id, @RequestParam String username) {
+        return userService.update(id, "username", username);
     }
 
+    @Secured({Roles.USER, Roles.ADMIN})
+    @PutMapping("{id}/status")
+    public boolean updateUserStatus(@PathVariable Long id, @RequestParam String status) {
+        return userService.update(id, "status", status);
+    }
+
+    @Secured(Roles.ADMIN)
     @DeleteMapping("{id}")
     public void deleteUser(@PathVariable Long id) {
         userService.delete(id);
     }
 
     @GetMapping("{id}/posts")
-    // See users forum posts
-    public List<ForumPost> getUserForumPosts(@PathVariable Long id) {
+    public List<PostDto> getUserForumPosts(@PathVariable Long id) {
         return forumPostService.findAllPostsByUserId(id);
     }
 
+    @Secured(Roles.ADMIN)
     @DeleteMapping("{id}/posts")
-    // See users forum posts
     public void deleteAllUserForumPosts(@PathVariable Long id) {
         forumPostService.deleteAllPostsFromUser(id);
     }
 
+    @Secured({Roles.ADMIN, Roles.USER})
+    @PutMapping("{id}/bablo")
+    public void addCash(@PathVariable Long id, @RequestParam Long amount){
+        userService.addCash(id, amount);
+    }
 
 }
