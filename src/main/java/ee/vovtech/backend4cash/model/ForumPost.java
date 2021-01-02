@@ -16,7 +16,7 @@ public class ForumPost {
     private long id;
 
 
-    @Lob
+    @Column(columnDefinition = "TEXT")
     private String content;
     private String title;
 
