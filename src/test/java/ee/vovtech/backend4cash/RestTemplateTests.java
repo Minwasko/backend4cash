@@ -2,35 +2,26 @@ package ee.vovtech.backend4cash;
 
 import ee.vovtech.backend4cash.dto.LoginDto;
 import ee.vovtech.backend4cash.dto.LoginResponse;
-import ee.vovtech.backend4cash.model.Currency;
 import ee.vovtech.backend4cash.model.User;
 import ee.vovtech.backend4cash.repository.ForumPostRepository;
 import ee.vovtech.backend4cash.repository.NewsRepository;
 import ee.vovtech.backend4cash.repository.UserRepository;
 import ee.vovtech.backend4cash.security.DbRole;
 import ee.vovtech.backend4cash.security.JwtTokenProvider;
-import ee.vovtech.backend4cash.service.user.ForumPostService;
 import ee.vovtech.backend4cash.service.user.UserService;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public abstract class RestTemplateTests {
-//    public static final ParameterizedTypeReference<List<Currency>> HEROES_LIST = new ParameterizedTypeReference<>() {
-//    };
-//    public static final Class<HeroDto> HERO = HeroDto.class;
 
     @Autowired
     protected TestRestTemplate testRestTemplate;
@@ -51,8 +42,6 @@ public abstract class RestTemplateTests {
 
     public <T> T assertOk(ResponseEntity<T> exchange) {
         assertNotNull(exchange.getBody());
-//        System.out.println(exchange.getBody());
-//        System.out.println(exchange.getStatusCodeValue());
         assertEquals(HttpStatus.OK, exchange.getStatusCode());
         return exchange.getBody();
     }
@@ -61,15 +50,6 @@ public abstract class RestTemplateTests {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", token);
         return headers;
-    }
-
-    public LoginDto user(String name, String password) {
-        return new LoginDto(name, password);
-    }
-
-    public <T> HttpEntity<T> entity(String username) {
-        HttpHeaders headers = authorizationHeader(username);
-        return new HttpEntity<>(headers);
     }
 
     public String getAdminToken() {

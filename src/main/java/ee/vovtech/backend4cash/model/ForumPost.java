@@ -24,10 +24,4 @@ public class ForumPost {
     @JoinColumn(name = "FK_UserId")
     private User user;
 
-    public ForumPost(String content, String title, User user) {
-        this.title = title;
-        this.user = user;
-        this.content = content;
-    }
-
 }

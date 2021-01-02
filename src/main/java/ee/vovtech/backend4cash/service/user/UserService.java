@@ -78,8 +78,7 @@ public class UserService {
     }
 
     public void addCash(Long id, Long amount){
-        log.info("Tryna add " + amount + " of cash to " + id + " account...");
+        log.info("Trying to add " + amount + " of cash to " + id + " account...");
         updateUser(findById(id).addCash(amount));
     }
-
 }

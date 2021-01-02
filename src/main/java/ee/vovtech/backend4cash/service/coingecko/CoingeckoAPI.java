@@ -31,7 +31,6 @@ public class CoingeckoAPI {
     private final static String COINS_URL = "https://api.coingecko.com/api/v3/coins/";
     private final static String DEFAULT_CURRENCY = "usd";
     public final static int AMOUNT_OF_CURRENCIES = 8;
-    private final static int MONTH_SECONDS = 2_592_000;
     private static final Logger log = LoggerFactory.getLogger(CoingeckoAPI.class);
 
     public static JSONArray getTopCurrencies() throws UnirestException {

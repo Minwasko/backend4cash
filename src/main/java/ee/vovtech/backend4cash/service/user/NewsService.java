@@ -50,8 +50,4 @@ public class NewsService {
         newsRepository.delete(newsRepository.findById(id).orElseThrow(() -> new InvalidNewsException("No news wit that id")));
     }
 
-    //save
-    //find from
-    //findbyid
-    //delete
 }

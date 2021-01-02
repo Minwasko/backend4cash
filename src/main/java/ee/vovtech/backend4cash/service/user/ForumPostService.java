@@ -2,7 +2,6 @@ package ee.vovtech.backend4cash.service.user;
 
 import ee.vovtech.backend4cash.dto.NewForumPostDto;
 import ee.vovtech.backend4cash.dto.PostDto;
-import ee.vovtech.backend4cash.exceptions.InvalidForumPostException;
 import ee.vovtech.backend4cash.exceptions.InvalidUserException;
 import ee.vovtech.backend4cash.exceptions.UserNotFoundException;
 import ee.vovtech.backend4cash.model.ForumPost;

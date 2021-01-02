@@ -1,7 +1,6 @@
 package ee.vovtech.backend4cash.controller;
 
 import ee.vovtech.backend4cash.dto.NewsDto;
-import ee.vovtech.backend4cash.model.News;
 import ee.vovtech.backend4cash.model.User;
 import ee.vovtech.backend4cash.repository.NewsRepository;
 import ee.vovtech.backend4cash.service.user.NewsService;
@@ -51,10 +50,6 @@ class NewsControllerTest extends RestTemplateTests{
         userToken = getUserToken();
         adminId = userRepository.findAll().get(0).getId();
         userId = userRepository.findAll().get(1).getId();
-        System.out.println(userRepository.findAll().stream().map(User::getRole));
-        System.out.println(userRepository.findAll().stream().map(User::getId).collect(Collectors.toList()));
-        // admin - 6
-        // user - 7
     }
 
 

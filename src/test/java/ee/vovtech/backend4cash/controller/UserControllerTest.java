@@ -4,10 +4,7 @@ import ee.vovtech.backend4cash.RestTemplateTests;
 import ee.vovtech.backend4cash.dto.LoggedInUserDto;
 import ee.vovtech.backend4cash.dto.NewForumPostDto;
 import ee.vovtech.backend4cash.dto.PostDto;
-import ee.vovtech.backend4cash.model.Currency;
-import ee.vovtech.backend4cash.model.ForumPost;
 import ee.vovtech.backend4cash.model.User;
-import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -22,16 +19,9 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClientException;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -64,8 +54,6 @@ class UserControllerTest extends RestTemplateTests {
         userToken = getUserToken();
         adminId = userRepository.findAll().get(0).getId();
         userId = userRepository.findAll().get(1).getId();
-        System.out.println(userRepository.findAll().stream().map(User::getRole));
-        System.out.println(userRepository.findAll().stream().map(User::getId).collect(Collectors.toList()));
     }
 
     @Test

@@ -9,7 +9,6 @@ import ee.vovtech.backend4cash.model.User;
 import ee.vovtech.backend4cash.security.DbRole;
 import ee.vovtech.backend4cash.security.JwtTokenProvider;
 import ee.vovtech.backend4cash.security.MyUser;
-import ee.vovtech.backend4cash.security.MyUserDetailsService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -81,5 +80,4 @@ public class LoginService {
         }
         throw new InvalidUserException("Trying to access another users info");
     }
-
 }

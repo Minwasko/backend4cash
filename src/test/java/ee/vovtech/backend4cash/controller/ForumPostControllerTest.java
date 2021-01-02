@@ -2,9 +2,7 @@ package ee.vovtech.backend4cash.controller;
 
 import ee.vovtech.backend4cash.RestTemplateTests;
 import ee.vovtech.backend4cash.dto.NewForumPostDto;
-import ee.vovtech.backend4cash.dto.NewsDto;
 import ee.vovtech.backend4cash.dto.PostDto;
-import ee.vovtech.backend4cash.model.ForumPost;
 import ee.vovtech.backend4cash.model.User;
 import ee.vovtech.backend4cash.service.user.NewsService;
 import org.junit.jupiter.api.BeforeAll;
@@ -18,7 +16,6 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.web.client.RestClientException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -53,10 +50,6 @@ class ForumPostControllerTest extends RestTemplateTests {
         userToken = getUserToken();
         adminId = userRepository.findAll().get(0).getId();
         userId = userRepository.findAll().get(1).getId();
-        System.out.println(userRepository.findAll().stream().map(User::getRole));
-        System.out.println(userRepository.findAll().stream().map(User::getId).collect(Collectors.toList()));
-        // admin - 8
-        // user - 9
     }
 
     @Test
@@ -97,15 +90,10 @@ class ForumPostControllerTest extends RestTemplateTests {
                 HttpMethod.DELETE, new HttpEntity<>(authorizationHeader(adminToken)), PostDto.class);
         assertEquals(200, exchange.getStatusCodeValue());
         // check that db has no posts
-//        try {
-            ResponseEntity<List<PostDto>> exchangePosts = testRestTemplate.exchange("/posts?amount=10",
-                    HttpMethod.GET, null, LIST_OF_POSTS);
-            List<PostDto> postDtos = assertOk(exchangePosts);
-            assertEquals(0, postDtos.size());
-//        } catch (Exception e) {
-            // Exception has to be thrown since user has no rights..........
-//            assertEquals(e.getClass(), RestClientException.class);
-//        }
+        ResponseEntity<List<PostDto>> exchangePosts = testRestTemplate.exchange("/posts?amount=10",
+                HttpMethod.GET, null, LIST_OF_POSTS);
+        List<PostDto> postDtos = assertOk(exchangePosts);
+        assertEquals(0, postDtos.size());
     }
 
 

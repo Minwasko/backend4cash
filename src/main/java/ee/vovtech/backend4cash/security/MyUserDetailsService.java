@@ -34,8 +34,6 @@ public class MyUserDetailsService implements UserDetailsService {
     }
 
     private Collection<? extends GrantedAuthority> getAuthorities(User user) {
-        // admin has all authorities
-        // others have only their respective role
         return getRoles(user)
                 .map(DbRole::toSpringRole)
                 .map(SimpleGrantedAuthority::new)

@@ -5,7 +5,6 @@ import ee.vovtech.backend4cash.dto.LoggedInUserDto;
 import ee.vovtech.backend4cash.model.Currency;
 import ee.vovtech.backend4cash.model.User;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.runner.RunWith;
@@ -46,10 +45,6 @@ class CurrencyControllerTest extends RestTemplateTests {
         userToken = getUserToken();
         adminId = userRepository.findAll().get(0).getId();
         userId = userRepository.findAll().get(1).getId();
-        System.out.println(userRepository.findAll().stream().map(User::getRole));
-        System.out.println(userRepository.findAll().stream().map(User::getId).collect(Collectors.toList()));
-        // admin - 2
-        // user - 3
     }
 
     @Autowired

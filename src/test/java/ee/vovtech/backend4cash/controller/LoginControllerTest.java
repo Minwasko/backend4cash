@@ -1,9 +1,8 @@
 package ee.vovtech.backend4cash.controller;
 
 import ee.vovtech.backend4cash.RestTemplateTests;
-import ee.vovtech.backend4cash.dto.LoginDto;
-import ee.vovtech.backend4cash.dto.NewsDto;
 import ee.vovtech.backend4cash.dto.RegisterDto;
+import ee.vovtech.backend4cash.dto.RegisterResponse;
 import ee.vovtech.backend4cash.model.User;
 import ee.vovtech.backend4cash.service.user.UserService;
 import org.junit.jupiter.api.Test;
@@ -41,13 +40,7 @@ class LoginControllerTest extends RestTemplateTests {
         HttpEntity<RegisterDto> requestEntity = new HttpEntity<>(buildADude(), headers);
         ResponseEntity<String> response = testRestTemplate.exchange("/users/register", HttpMethod.POST, requestEntity, String.class);
         assertEquals(200, response.getStatusCodeValue());
-        System.out.println(userService.findAll().stream().map(User::getUsername).collect(Collectors.toList()));
         assertNotNull(userService.findByEmail("aufer322@some.org"));
-
-    }
-
-    @Test
-    public void loginTest(){
 
     }
 

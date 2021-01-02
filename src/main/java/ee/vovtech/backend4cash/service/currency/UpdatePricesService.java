@@ -31,7 +31,4 @@ public class UpdatePricesService {
         }
             log.info("Successfully updated all planned currencies.");
     }
-
-
-
 }
