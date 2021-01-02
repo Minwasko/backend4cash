@@ -6,8 +6,6 @@ import lombok.*;
 import javax.persistence.ElementCollection;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import java.util.AbstractMap;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 

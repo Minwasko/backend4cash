@@ -6,7 +6,6 @@ import ee.vovtech.backend4cash.exceptions.UserNotFoundException;
 import ee.vovtech.backend4cash.model.ForumPost;
 import ee.vovtech.backend4cash.model.User;
 import ee.vovtech.backend4cash.repository.ForumPostRepository;
-import ee.vovtech.backend4cash.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

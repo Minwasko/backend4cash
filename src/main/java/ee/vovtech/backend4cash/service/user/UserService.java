@@ -4,11 +4,9 @@ import ee.vovtech.backend4cash.exceptions.InvalidUserException;
 import ee.vovtech.backend4cash.exceptions.UserNotFoundException;
 import ee.vovtech.backend4cash.model.User;
 import ee.vovtech.backend4cash.repository.UserRepository;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import lombok.extern.slf4j.Slf4j;
-
 
 import java.util.List;
 import java.util.stream.Collectors;

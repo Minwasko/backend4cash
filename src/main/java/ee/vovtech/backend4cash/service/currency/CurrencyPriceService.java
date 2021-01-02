@@ -13,7 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class CurrencyPriceService {
@@ -43,7 +45,6 @@ public class CurrencyPriceService {
 
     }
 
-    // TODO fix this sh*t (sorry za mat) :(
     public Currency updateDB(String id, List<TimestampPrice> timestampPrices) {
         if (currencyRepository.findById(id).isEmpty()) throw new InvalidCurrencyException("No such currency exception");
         else if (timestampPrices.isEmpty()) throw new InvalidCurrencyException("New price data is empty");

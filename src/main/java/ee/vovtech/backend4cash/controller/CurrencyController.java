@@ -1,8 +1,8 @@
 package ee.vovtech.backend4cash.controller;
 
-import ee.vovtech.backend4cash.security.Roles;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import ee.vovtech.backend4cash.model.Currency;
+import ee.vovtech.backend4cash.security.Roles;
 import ee.vovtech.backend4cash.service.currency.CurrencyPriceService;
 import ee.vovtech.backend4cash.service.currency.CurrencyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +10,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-//@CrossOrigin(origins = {"https://bits4cash.tk", "https://www.bits4cash.tk", "https://frontend4cashdev"}, maxAge = 3600)
+
 @RestController
 @RequestMapping("/coins")
 public class CurrencyController {

@@ -4,19 +4,18 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import ee.vovtech.backend4cash.exceptions.CurrencyNotFoundException;
 import ee.vovtech.backend4cash.exceptions.InvalidCurrencyException;
 import ee.vovtech.backend4cash.model.Currency;
-import ee.vovtech.backend4cash.model.TimestampPrice;
 import ee.vovtech.backend4cash.repository.CurrencyRepository;
 import ee.vovtech.backend4cash.service.coingecko.CoingeckoAPI;
+import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
+@Slf4j
 @Service
 public class CurrencyService {
 
@@ -46,14 +45,10 @@ public class CurrencyService {
 
     public List<Currency> initCoins() throws UnirestException {
         JSONArray coins = CoingeckoAPI.getTopCurrencies(); // get top 10 coins
-        System.out.println(coins.length());
-        System.out.println(coins.toString());
         for (int i = 0; i < coins.length(); i++) {
             JSONObject coin = coins.getJSONObject(i);
-            System.out.println(coin.toString());// data of each coin
+            log.info("Coin initialized: " + coin.toString());// data of each coin
             String name = coin.get("id").toString();
-            System.out.println(name);
-            System.out.println(currencyRepository.findAll());
             if (currencyRepository.findById(name).isEmpty()) createNewCoin(name);
         }
         return currencyRepository.findAll();

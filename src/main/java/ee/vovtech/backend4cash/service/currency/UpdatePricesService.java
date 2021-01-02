@@ -1,15 +1,16 @@
 package ee.vovtech.backend4cash.service.currency;
 
-import ee.vovtech.backend4cash.service.currency.CurrencyPriceService.UpdateTime;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import ee.vovtech.backend4cash.model.Currency;
+import ee.vovtech.backend4cash.service.currency.CurrencyPriceService.UpdateTime;
 import lombok.AllArgsConstructor;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
-import com.mashape.unirest.http.exceptions.UnirestException;
-
+@Slf4j
 @Service
 @AllArgsConstructor
 public class UpdatePricesService {
@@ -21,14 +22,14 @@ public class UpdatePricesService {
     @Scheduled(cron = "${coins.cron}", zone = "Europe/Tallinn")
     public void updatePrices() throws UnirestException {
         if (updatePricesConfig.notUpdating()) {
-            System.out.println("not doing it");
+            log.warn("Currency auto update turned off in the config");
         }
         List<Currency> currencies = currencyService.findAll();
         for(Currency currency : currencies){
             currencyPriceService.updatePrice(currency.getName(), UpdateTime.HOUR);
-            System.out.println("Updated " + currency.getName());
+            log.info("Successfully updated " + currency.getName());
         }
-            System.out.println("doing it");
+            log.info("Successfully updated all planned currencies.");
     }
 
 

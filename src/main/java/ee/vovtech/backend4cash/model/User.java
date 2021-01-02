@@ -1,6 +1,5 @@
 package ee.vovtech.backend4cash.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import ee.vovtech.backend4cash.security.DbRole;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

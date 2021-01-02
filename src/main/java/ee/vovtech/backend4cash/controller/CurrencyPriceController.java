@@ -2,21 +2,19 @@ package ee.vovtech.backend4cash.controller;
 
 
 import com.mashape.unirest.http.exceptions.UnirestException;
-import ee.vovtech.backend4cash.model.Currency;
 import ee.vovtech.backend4cash.model.TimestampPrice;
-import ee.vovtech.backend4cash.security.Roles;
-import ee.vovtech.backend4cash.service.coingecko.CoingeckoAPI;
 import ee.vovtech.backend4cash.service.currency.CurrencyPriceService;
 import ee.vovtech.backend4cash.service.currency.CurrencyService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/coins")
-//@CrossOrigin(origins = {"https://bits4cash.tk", "https://www.bits4cash.tk", "https://frontend4cashdev"}, maxAge = 3600)
 public class CurrencyPriceController {
 
     @Autowired
@@ -28,12 +26,6 @@ public class CurrencyPriceController {
     public List<TimestampPrice> getCurrencyPriceData(@PathVariable String id) throws UnirestException {
         return currencyService.findById(id).getTimestampPrices();
     }
-//
-//    @Secured(Roles.ADMIN)
-//    @PutMapping("{id}/pricedata") // remove??
-//    public Currency updateCurrencyPriceData(@PathVariable String id, @RequestBody List<TimestampPrice> timestampPrices) {
-//        return currencyPriceService.updateDB(id, timestampPrices);
-//    }
 
     @GetMapping("{id}/price")
     public String getCurrentPrice(@PathVariable String id) throws UnirestException {

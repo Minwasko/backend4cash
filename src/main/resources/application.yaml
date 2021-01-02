@@ -1,53 +1,18 @@
-#server:
-#  servlet:
-#    context-path: /api
-#spring:
-#  jackson:
-#    default-property-inclusion: non_null
-#  jpa:
-#    properties:
-#      hibernate:
-#        dialect: org.hibernate.dialect.H2Dialect
-#        temp:
-#          use_jdbc_metadata_defaults : false
-#    hibernate:
-#      ddl-auto: create
-#  datasource:
-#    #    url: jdbc:h2:mem:db;DB_CLOSE_DELAY=-1 # this one is in memory
-#    url: jdbc:h2:./h2/heroes;AUTO_SERVER=TRUE # this one is on the disk, notice the h2 folder and contents it creates
-#    driverClassName: org.h2.Driver
-#    username: sa
-#    password: sa
-#  h2:
-#    console:
-#      #      this enables http://localhost:8080/h2-console
-#      enabled: true
-##  profiles:
-##    active: default
-#logging:
-#  file:
-#    path: ./logs
-
-
-
-# vvv do not comment these  vvv
+# Token duration
 jwt:
   secret: secret
   durationMinutes: 120
+# coin autoupdate setting
 coins:
   updating: true
   cron: 0 0 * * * *
-# ^^^ do not comment these  ^^^
-
-
-# upper is for local testing, bottom is for server
-
-
 
 server:
+  # app port
   port: 8080
   servlet:
     context-path: /api
+  # ssl stuff
   ssl:
     enabled: true
     key-store-type: PKCS12
@@ -58,9 +23,11 @@ server:
 spring:
   jpa:
     hibernate:
+      # what to do with the db when start the app?
       ddl-auto: create-drop
   jooq:
     sql-dialect: org.hibernate.dialect.MySQLDialect
+  # db stuff
   datasource:
     url: jdbc:mysql://mysql:3306/bits4data?createDatabaseIfNotExist=true
     username: root
@@ -69,13 +36,3 @@ spring:
 trust:
   store: classpath:keystore/vovan.p12
   password: vovtech
-#  datasource:
-#    username: sa
-#    url: jdbc:h2:mem:testdb
-  # This for later when i get the actual Ks
-  # security:
-  #   oauth2:
-  #     resourceserver:
-  #       jwt:
-  #         issuer-uri:
-  #         jwk-ser-uri:

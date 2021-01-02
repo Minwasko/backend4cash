@@ -6,18 +6,17 @@ import ee.vovtech.backend4cash.dto.LoginResponse;
 import ee.vovtech.backend4cash.dto.RegisterDto;
 import ee.vovtech.backend4cash.exceptions.InvalidUserException;
 import ee.vovtech.backend4cash.model.User;
-import ee.vovtech.backend4cash.repository.UserRepository;
-import ee.vovtech.backend4cash.security.*;
+import ee.vovtech.backend4cash.security.DbRole;
+import ee.vovtech.backend4cash.security.JwtTokenProvider;
+import ee.vovtech.backend4cash.security.MyUser;
+import ee.vovtech.backend4cash.security.MyUserDetailsService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.parameters.P;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
@@ -27,7 +26,6 @@ public class LoginService {
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
-    private final MyUserDetailsService myUserDetailsService;
     private final JwtTokenProvider jwtTokenProvider;
 
     public void registerUser(RegisterDto registerDto) {
@@ -57,12 +55,9 @@ public class LoginService {
     }
 
     public LoggedInUserDto getUserByIdWithTokenCheck(long id, String token) {
-        log.info(token);
-        log.info("Email from tocken: " + jwtTokenProvider.getEmailFromToken(token.substring(7)));
         
         User userFromToken = userService.findByEmail(jwtTokenProvider.getEmailFromToken(token.substring(7)));
         if (userFromToken != null && userFromToken.getId() == id) {
-            System.out.println("YOu can get info");
             return LoggedInUserDto.builder()
                     .id(userFromToken.getId())
                     .username(userFromToken.getUsername())

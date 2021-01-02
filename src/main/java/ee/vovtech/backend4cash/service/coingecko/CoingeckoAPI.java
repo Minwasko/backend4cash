@@ -26,8 +26,6 @@ public class CoingeckoAPI {
     @Autowired
     CurrencyRepository currencyRepository;
 
-    // Our coins "top 10 coins"
-    // https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=10page=1&sparkline=false
 
     // Api url to get coins price
     private final static String COINS_URL = "https://api.coingecko.com/api/v3/coins/";
@@ -35,7 +33,6 @@ public class CoingeckoAPI {
     public final static int AMOUNT_OF_CURRENCIES = 8;
     private final static int MONTH_SECONDS = 2_592_000;
     private static final Logger log = LoggerFactory.getLogger(CoingeckoAPI.class);
-    // TODO: refactor stuff here
 
     public static JSONArray getTopCurrencies() throws UnirestException {
         HttpResponse<JsonNode> response = Unirest.get(COINS_URL + "markets?")
@@ -86,7 +83,7 @@ public class CoingeckoAPI {
             log.info("Hope i am not in the recursion here...");
             return getPriceDataBetween(id, from, to);
         }
-        // return only needed shit and only that
+
         return response.getBody().getObject().getJSONArray("prices");
     }
 

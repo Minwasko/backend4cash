@@ -3,7 +3,6 @@ package ee.vovtech.backend4cash.controller;
 
 import ee.vovtech.backend4cash.dto.LoggedInUserDto;
 import ee.vovtech.backend4cash.dto.PostDto;
-import ee.vovtech.backend4cash.model.ForumPost;
 import ee.vovtech.backend4cash.model.User;
 import ee.vovtech.backend4cash.security.Roles;
 import ee.vovtech.backend4cash.service.user.ForumPostService;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-//@CrossOrigin(origins = {"https://bits4cash.tk", "https://www.bits4cash.tk", "https://frontend4cashdev"}, maxAge = 3600)
 @RestController
 @RequestMapping("/users")
 public class UserController {
