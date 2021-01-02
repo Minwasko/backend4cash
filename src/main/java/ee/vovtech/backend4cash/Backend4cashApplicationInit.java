@@ -33,11 +33,10 @@ public class Backend4cashApplicationInit implements CommandLineRunner {
         currencyRepository.saveAll(coins); // adding coins to database
 
         User user = new User();
-        user.setId(1);
         user.setCash("100");
-        user.setUsername("meme");
-        user.setEmail("kek@kek.ee");
-        user.setPassword(passwordEncoder.encode("12345lol"));
+        user.setUsername("vovan");
+        user.setEmail("vovan@vovtech.com");
+        user.setPassword(passwordEncoder.encode("vovan"));
         user.setRole(DbRole.ADMIN);
         userRepository.save(user);
     }
