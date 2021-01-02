@@ -29,15 +29,15 @@ public class Backend4cashApplicationInit implements CommandLineRunner {
     @Override
     public void run(String... args) throws UnirestException {
 
-        List<Currency> coins = currencyService.initCoins(); // get data from server
-        currencyRepository.saveAll(coins); // adding coins to database
-
-        User user = new User();
-        user.setCash("100");
-        user.setUsername("vovan");
-        user.setEmail("vovan@vovtech.com");
-        user.setPassword(passwordEncoder.encode("vovan"));
-        user.setRole(DbRole.ADMIN);
-        userRepository.save(user);
+//        List<Currency> coins = currencyService.initCoins(); // get data from server
+//        currencyRepository.saveAll(coins); // adding coins to database
+//
+//        User user = new User();
+//        user.setCash("100");
+//        user.setUsername("vovan");
+//        user.setEmail("vovan@vovtech.com");
+//        user.setPassword(passwordEncoder.encode("vovan"));
+//        user.setRole(DbRole.ADMIN);
+//        userRepository.save(user);
     }
 }

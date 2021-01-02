@@ -24,7 +24,7 @@ spring:
   jpa:
     hibernate:
       # what to do with the db when start the app?
-      ddl-auto: create-drop
+      ddl-auto: update
   jooq:
     sql-dialect: org.hibernate.dialect.MySQLDialect
   # db stuff
