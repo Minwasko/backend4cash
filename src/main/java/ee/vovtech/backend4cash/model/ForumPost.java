@@ -15,15 +15,19 @@ public class ForumPost {
     @SequenceGenerator(name = "forum_post_id_seq", sequenceName = "forum_post_id_seq", allocationSize = 50)
     private long id;
 
-    private String message;
+
+    @Lob
+    private String content;
+    private String title;
 
     @ManyToOne
     @JoinColumn(name = "FK_UserId")
     private User user;
 
-    public ForumPost(String message, User user) {
+    public ForumPost(String content, String title, User user) {
+        this.title = title;
         this.user = user;
-        this.message = message;
+        this.content = content;
     }
 
 }

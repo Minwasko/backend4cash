@@ -12,8 +12,6 @@ import java.time.LocalDate;
 public class App {
 
     @Id
-    @GeneratedValue
-    private long id;
     private String name;
     private String author;
     private LocalDate latestUpdate;

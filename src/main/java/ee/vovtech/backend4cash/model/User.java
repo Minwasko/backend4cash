@@ -51,7 +51,7 @@ public class User {
     }
 
     public void setCoinsAmount(String coinId, String amount) {
-        if (new BigDecimal(amount).equals(BigDecimal.ZERO)) {
+        if (new BigDecimal(amount).compareTo(new BigDecimal("0.0000001")) < 0) {
             ownedCoins = ownedCoins.stream().filter(e -> !e.getKey().equals(coinId)).collect(Collectors.toList());
         } else {
             ownedCoins.stream().filter(e -> e.getKey().equals(coinId)).findAny()

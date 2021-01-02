@@ -48,9 +48,9 @@ public class PhonesController {
     }
 
     //todo C create a method to query single phone
-    @GetMapping("{id}")
-    public Phone getPhoneById(@PathVariable Long id) {
-        // return phoneRepository.findById(id)
+    @GetMapping("{name}")
+    public Phone getPhoneByName(@PathVariable String name) { // name == id
+        // return phoneRepository.findByName(name)
         return null;
     }
 
@@ -61,31 +61,31 @@ public class PhonesController {
     }
 
     //todo E create a method to update a phone
-    @PutMapping("{id}")
-    public void updatePhone(@PathVariable long id, @RequestBody Phone newPhone) {
-        // Phone phone = phoneRepository.findById(id);
+    @PutMapping("{name}")
+    public void updatePhone(@PathVariable String name, @RequestBody Phone newPhone) {
+        // Phone phone = phoneRepository.findByName(name);
         // phone.setName(newPhone.getName());
         // repeat for other fields
         // phoneRepository.save(phone)
     }
 
     //todo F create a method to delete a phone
-    @DeleteMapping("{id}")
-    public void deletePhone(@PathVariable long id) {
-        // phoneRepository.delete(phoneRepository.findById(id))
+    @DeleteMapping("{name}")
+    public void deletePhone(@PathVariable String name) {
+        // phoneRepository.delete(phoneRepository.findByName(name))
     }
 
     //todo G assuming each phone has apps installed (one-to-many relation) create a method to query phone's apps
-    @GetMapping("{id}/apps")
-    public List<App> getPhoneApps(@PathVariable long id) {
-        // phoneRepository.findById(id).getApps()
+    @GetMapping("{name}/apps")
+    public List<App> getPhoneApps(@PathVariable String name) {
+        // phoneRepository.findByName(name).getApps()
         return null;
     }
 
     //todo H create a method to update phone's price (and nothing else)
-    @PutMapping("{id}/price")
-    public void updatePhonePrice(@PathVariable long id, @RequestParam float price) {
-        // Phone phone = phoneRepository.findById(id);
+    @PutMapping("{name}/price")
+    public void updatePhonePrice(@PathVariable String name, @RequestParam float price) {
+        // Phone phone = phoneRepository.findByName(name);
         // phone.setPrice(price);
         // phoneRepository.save(phone)
     }

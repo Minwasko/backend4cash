@@ -24,12 +24,12 @@ public class CurrencyPriceController {
 
     @GetMapping("{id}/pricedata")
     public List<TimestampPrice> getCurrencyPriceData(@PathVariable String id) throws UnirestException {
-        return currencyService.findById(id).getTimestampPrices();
+        return currencyService.findById(id.replace(" ", "-")).getTimestampPrices();
     }
 
     @GetMapping("{id}/price")
     public String getCurrentPrice(@PathVariable String id) throws UnirestException {
-        return currencyPriceService.getCurrentPrice(id);
+        return currencyPriceService.getCurrentPrice(id.replace(" ", "-"));
     }
 
 }

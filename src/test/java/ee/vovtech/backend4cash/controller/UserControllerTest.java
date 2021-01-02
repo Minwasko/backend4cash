@@ -2,6 +2,7 @@ package ee.vovtech.backend4cash.controller;
 
 import ee.vovtech.backend4cash.RestTemplateTests;
 import ee.vovtech.backend4cash.dto.LoggedInUserDto;
+import ee.vovtech.backend4cash.dto.NewForumPostDto;
 import ee.vovtech.backend4cash.dto.PostDto;
 import ee.vovtech.backend4cash.model.Currency;
 import ee.vovtech.backend4cash.model.ForumPost;
@@ -145,9 +146,10 @@ class UserControllerTest extends RestTemplateTests {
 
     void postAPost() {
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", userToken);
-        // maybe will need a different one
-        HttpEntity<String> requestEntity = new HttpEntity<String>("test Message", headers);
+        headers.set("Authorization", adminToken);
+        NewForumPostDto forumPostDto = NewForumPostDto.builder().authorEmail("user@user.user")
+                .content("test message").title("test title").build();
+        HttpEntity<NewForumPostDto> requestEntity = new HttpEntity<>(forumPostDto, headers);
         ResponseEntity<String> exchange = testRestTemplate.exchange("/posts?userId=" + userId,
                 HttpMethod.POST, requestEntity, String.class);
         assertEquals(200, exchange.getStatusCodeValue());
@@ -157,7 +159,7 @@ class UserControllerTest extends RestTemplateTests {
         ResponseEntity<List<PostDto>> exchange = testRestTemplate.exchange("/users/" + userId + "/posts",
                 HttpMethod.GET, new HttpEntity<>(authorizationHeader(userToken)), LIST_OF_POSTS);
         List<PostDto> postDtos = assertOk(exchange);
-        assertEquals("test Message", postDtos.get(0).getMessage());
+        assertEquals("test message", postDtos.get(0).getContent());
     }
 
     void deleteUsersPosts() {

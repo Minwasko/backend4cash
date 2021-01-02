@@ -1,6 +1,7 @@
 package ee.vovtech.backend4cash.controller;
 
 import ee.vovtech.backend4cash.RestTemplateTests;
+import ee.vovtech.backend4cash.dto.NewForumPostDto;
 import ee.vovtech.backend4cash.dto.NewsDto;
 import ee.vovtech.backend4cash.dto.PostDto;
 import ee.vovtech.backend4cash.model.ForumPost;
@@ -30,9 +31,6 @@ import static org.junit.jupiter.api.Assertions.*;
 @RunWith(SpringRunner.class)
 class ForumPostControllerTest extends RestTemplateTests {
 
-
-    public static final ParameterizedTypeReference<List<User>> LIST_OF_USERS =
-            new ParameterizedTypeReference<>() {};
     public static final ParameterizedTypeReference<List<PostDto>> LIST_OF_POSTS =
             new ParameterizedTypeReference<>() {};
 
@@ -71,10 +69,11 @@ class ForumPostControllerTest extends RestTemplateTests {
     void savePost() {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", adminToken);
-        // maybe will need a different one
-        HttpEntity<String> requestEntity = new HttpEntity<String>("test Message", headers);
-        ResponseEntity<String> exchange = testRestTemplate.exchange("/posts?userId=" + adminId,
-                HttpMethod.POST, requestEntity, String.class);
+        NewForumPostDto forumPostDto = NewForumPostDto.builder().authorEmail("user@user.user")
+                .content("test message").title("test title").build();
+        HttpEntity<NewForumPostDto> requestEntity = new HttpEntity<>(forumPostDto, headers);
+        ResponseEntity<NewForumPostDto> exchange = testRestTemplate.exchange("/posts",
+                HttpMethod.POST, requestEntity, NewForumPostDto.class);
         assertEquals(200, exchange.getStatusCodeValue());
     }
 
@@ -92,7 +91,8 @@ class ForumPostControllerTest extends RestTemplateTests {
                 HttpMethod.GET, null, PostDto.class);
         PostDto postDto = assertOk(exchangePost);
         // delete that post
-        assertEquals("test Message", postDto.getMessage());
+        assertEquals("test message", postDto.getContent());
+        assertEquals("test title", postDto.getTitle());
         ResponseEntity<PostDto> exchange = testRestTemplate.exchange("/posts/" + postId,
                 HttpMethod.DELETE, new HttpEntity<>(authorizationHeader(adminToken)), PostDto.class);
         assertEquals(200, exchange.getStatusCodeValue());

@@ -28,24 +28,24 @@ public class CurrencyController {
 
     @GetMapping("{id}")
     public Currency getCurrency(@PathVariable String id) throws UnirestException {
-        return currencyService.findById(id);
+        return currencyService.findById(id.replace(" ", "-"));
     }
 
     @Secured(Roles.ADMIN)
     @DeleteMapping("{id}")
     public void deleteCurrency(@PathVariable String id) throws UnirestException {
-        currencyService.delete(id);
+        currencyService.delete(id.replace(" ", "-"));
     }
 
     @Secured({Roles.USER, Roles.ADMIN})
     @PutMapping("{coinId}/buy")
     public boolean buyCoins(@PathVariable("coinId") String coinId, @RequestParam String amount, @RequestParam Long userId) throws UnirestException {
-        return currencyPriceService.tryToBuyCoins(userId, coinId, amount);
+        return currencyPriceService.tryToBuyCoins(userId, coinId.replace(" ", "-"), amount);
     }
 
     @Secured({Roles.USER, Roles.ADMIN})
     @PutMapping("{coinId}/sell")
     public boolean sellCoins(@PathVariable("coinId") String coinId, @RequestParam String amount, @RequestParam Long userId) throws UnirestException {
-        return currencyPriceService.tryToSellCoins(userId, coinId, amount);
+        return currencyPriceService.tryToSellCoins(userId, coinId.replace(" ", "-"), amount);
     }
 }
