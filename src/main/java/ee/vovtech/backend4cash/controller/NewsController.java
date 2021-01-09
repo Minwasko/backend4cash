@@ -22,7 +22,7 @@ public class NewsController {
         newsService.save(newsDto);
     }
 
-    @GetMapping
+    @GetMapping({"/"m "/test"})
     public List<NewsDto> getNewsFromNewest(@RequestParam long amount){
         return newsService.findFromNewest(amount);
     }
