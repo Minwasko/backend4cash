@@ -13,7 +13,7 @@ http://localhost:8069/api/swagger-ui/index.html#/
 
 
 ### ...or if you only want to take a look  
-Just use your browser to connect to this website: http://bits4cash.tk
+Just use your browser to connect to this website: https://bits4cash.tk
 
 
 ### Team  
